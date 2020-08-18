@@ -1,8 +1,8 @@
 #pragma once
 
-#include <gm/gm.h>
+#include <toy/toy.h>
 
-#include <gm/base/log.h>
+#include <toy/base/log.h>
 
 #include <stdarg.h>
 
@@ -10,72 +10,72 @@
 ///
 /// Diagnostic utilities.
 
-/// \def GM_ASSERT( expr )
+/// \def TOY_ASSERT( expr )
 ///
 /// Asserts that the expression \p expr is \em true in debug builds. If \p expr evalutes \em false,
 /// an error message will be printed with contextual information including the failure site.
 ///
 /// In release builds, this is compiled out.
-#ifdef GM_DEBUG
-#define GM_ASSERT( expr )                                                                                              \
+#ifdef TOY_DEBUG
+#define TOY_ASSERT( expr )                                                                                              \
     if ( !( expr ) )                                                                                                   \
     {                                                                                                                  \
-        GM_NS::_Assert( #expr, __FILE__, __LINE__ );                                                                   \
+        TOY_NS::_Assert( #expr, __FILE__, __LINE__ );                                                                   \
     }
 #else
-#define GM_ASSERT( expr, ... ) void()
+#define TOY_ASSERT( expr, ... ) void()
 #endif
 
-/// \def GM_ASSERT_MSG( expr, format, ... )
+/// \def TOY_ASSERT_MSG( expr, format, ... )
 ///
-/// Similar to \ref GM_ASSERT, with the addition of a formatted message when the expression \p expr fails to evaluate
+/// Similar to \ref TOY_ASSERT, with the addition of a formatted message when the expression \p expr fails to evaluate
 /// in debug builds.
-#ifdef GM_DEBUG
-#define GM_ASSERT_MSG( expr, format, ... )                                                                             \
+#ifdef TOY_DEBUG
+#define TOY_ASSERT_MSG( expr, format, ... )                                                                             \
     if ( !( expr ) )                                                                                                   \
     {                                                                                                                  \
-        GM_NS::_Assert( #expr, __FILE__, __LINE__ );                                                                   \
-        GM_LOG_ERROR( format, ##__VA_ARGS__ );                                                                         \
+        TOY_NS::_Assert( #expr, __FILE__, __LINE__ );                                                                   \
+        TOY_LOG_ERROR( format, ##__VA_ARGS__ );                                                                         \
     }
 #else
-#define GM_ASSERT_MSG( expr, format, ... ) void()
+#define TOY_ASSERT_MSG( expr, format, ... ) void()
 #endif
 
-/// \def GM_VERIFY( expr )
+/// \def TOY_VERIFY( expr )
 ///
 /// Verifies that the expression \p expr evaluates to \em true at runtime. If \p expr evalutes \em false,
 /// an error message will be printed with contextual information including the failure site.
 ///
-/// GM_VERIFY is different from \ref GM_ASSERT in that it does \em not get compiled out for release builds,
+/// TOY_VERIFY is different from \ref TOY_ASSERT in that it does \em not get compiled out for release builds,
 /// so use sparingly!
-#define GM_VERIFY( expr )                                                                                              \
+#define TOY_VERIFY( expr )                                                                                              \
     if ( !( expr ) )                                                                                                   \
     {                                                                                                                  \
-        GM_NS::_Assert( #expr, __FILE__, __LINE__ );                                                                   \
+        TOY_NS::_Assert( #expr, __FILE__, __LINE__ );                                                                   \
     }
 
-/// \def GM_VERIFY_MSG( expr, format, ... )
+/// \def TOY_VERIFY_MSG( expr, format, ... )
 ///
-/// Similar to \ref GM_VERIFY, with the addition of a formatted message when the expression \p expr fails to evaluate.
-#define GM_VERIFY_MSG( expr, format, ... )                                                                             \
+/// Similar to \ref TOY_VERIFY, with the addition of a formatted message when the expression \p expr fails to evaluate.
+#define TOY_VERIFY_MSG( expr, format, ... )                                                                             \
     if ( !( expr ) )                                                                                                   \
     {                                                                                                                  \
-        GM_NS::_Verify( #expr, __FILE__, __LINE__ );                                                                   \
-        GM_LOG_ERROR( format, ##__VA_ARGS__ );                                                                         \
+        TOY_NS::_Verify( #expr, __FILE__, __LINE__ );                                                                   \
+        TOY_LOG_ERROR( format, ##__VA_ARGS__ );                                                                         \
     }
 
-GM_NS_OPEN
+TOY_NS_OPEN
 
-/// Not intended to be used directly, \ref GM_ASSERT instead.
-GM_HOST_DEVICE inline void _Assert( const char* i_expression, const char* i_file, size_t i_line )
+/// Not intended to be used directly, \ref TOY_ASSERT instead.
+TOY_HOST_DEVICE inline void _Assert( const char* i_expression, const char* i_file, size_t i_line )
 {
-    GM_LOG_ERROR( "Assertion failed for expression: %s, at %s:%lu\n", i_expression, i_file, i_line );
+    TOY_LOG_ERROR( "Assertion failed for expression: %s, at %s:%lu\n", i_expression, i_file, i_line );
 }
 
-/// Not intended to be used directly, \ref GM_VERIFY instead.
-GM_HOST_DEVICE inline void _Verify( const char* i_expression, const char* i_file, size_t i_line )
+/// Not intended to be used directly, \ref TOY_VERIFY instead.
+TOY_HOST_DEVICE inline void _Verify( const char* i_expression, const char* i_file, size_t i_line )
 {
-    GM_LOG_ERROR( "Verification failed for expression: %s, at %s:%lu\n", i_expression, i_file, i_line );
+    TOY_LOG_ERROR( "Verification failed for expression: %s, at %s:%lu\n", i_expression, i_file, i_line );
 }
 
-GM_NS_CLOSE
+TOY_NS_CLOSE
