@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.17)
 
 # Project Name
 project(
-    CMakeTemplate
+    Toy
     VERSION 0.0
-    DESCRIPTION "Basic template for starting out a new CMake-based project."
-    LANGUAGES CXX
+    DESCRIPTION "A CUDA-based toy ray tracer."
+    LANGUAGES CXX CUDA
 )
 
 # Options
@@ -41,7 +41,6 @@ if(BUILD_DOCUMENTATION)
             ${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in
         INPUTS
             ${CMAKE_CURRENT_SOURCE_DIR}/src/
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/exampleSharedLibrary/
     )
 endif()
 
@@ -50,4 +49,4 @@ add_subdirectory(thirdparty)
 add_subdirectory(src)
 
 # Install exported targets.
-export_project(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in)
+#export_project(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in)
