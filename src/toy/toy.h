@@ -4,7 +4,7 @@
 ///
 /// CUDA-based toy ray tracer.
 
-#include <toy/utils/export.h>
+#include <toy/core/export.h>
 
 /// \def TOY_API
 ///

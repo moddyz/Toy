@@ -12,7 +12,7 @@ cpp_library(${ROOT_PREFIX}_${LIBRARY_SUFFIX}
     CPPFILES
         ${CPPFILES}
     LIBRARIES
-        toy_utils
+        toy_core
 )
 
 if (BUILD_TESTING)

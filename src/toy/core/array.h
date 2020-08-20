@@ -5,7 +5,7 @@
 /// Core array class, abstracting memory allocation
 
 #include <toy/toy.h>
-#include <toy/utils/diagnostic.h>
+#include <toy/core/diagnostic.h>
 
 TOY_NS_OPEN
 
@@ -16,10 +16,16 @@ template < typename ValueT, typename AllocatorT >
 class Array
 {
 public:
+
+    //-------------------------------------------------------------------------
+    /// \name Construction
+    //-------------------------------------------------------------------------
+
     /// Default constructor of an empty array.
     ///
-    /// The underlying buffer pointer is \p nullptr at this point, so be cautious
-    /// when accessing this pointer though \ref GetBuffer.
+    /// The underlying buffer pointer will be initialized to \p nullptr.
+    ///
+    /// \sa GetBuffer
     Array()
     {
     }
@@ -31,6 +37,10 @@ public:
     {
         TOY_VERIFY( Resize( i_size ) );
     }
+
+    //-------------------------------------------------------------------------
+    /// \name Operations
+    //-------------------------------------------------------------------------
 
     /// Update the size of this array.
     ///
@@ -53,14 +63,20 @@ public:
             return true;
         }
 
-        // Allocate new buffer.
+        // Try an allocate a new buffer.
         void* newBuffer = AllocatorT::Allocate( i_size * sizeof( ValueT ) );
+        if ( newBuffer == nullptr )
+        {
+            return false;
+        }
 
         // If there is an existing buffer, perform data migration.
         if ( m_buffer != nullptr )
         {
-            size_t bytesToCopy = std::min( m_size, i_size );
-            TOY_VERIFY( AllocatorT::Copy( /* dst */ newBuffer, /* src */ m_buffer,  ) );
+            size_t elementsToCopy = std::min( m_size, i_size );
+            TOY_VERIFY( AllocatorT::Copy( /* dst */ newBuffer,
+                                          /* src */ m_buffer,
+                                          /* numBytes */ elementsToCopy * sizeof( ValueT ) ) );
             AllocatorT::Deallocate( m_buffer );
         }
 
@@ -72,6 +88,10 @@ public:
     {
         TOY_VERIFY( Resize( 0 ) );
     }
+
+    //-------------------------------------------------------------------------
+    /// \name Buffer access
+    //-------------------------------------------------------------------------
 
     /// Get the underlying buffer pointer to the array.
     ///
