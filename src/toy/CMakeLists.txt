@@ -1,4 +1,4 @@
-set(ROOT_PREFIX "pbr")
+set(ROOT_PREFIX "toy")
 
 # Top level headers.
 file(GLOB HEADERS *.h)

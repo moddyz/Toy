@@ -11,6 +11,8 @@ cpp_library(${ROOT_PREFIX}_${LIBRARY_SUFFIX}
         ${HEADERS}
     CPPFILES
         ${CPPFILES}
+    LIBRARIES
+        toy_core
 )
 
 if (BUILD_TESTING)
