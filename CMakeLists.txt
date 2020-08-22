@@ -8,6 +8,8 @@ project(
     LANGUAGES CXX CUDA
 )
 
+find_package(CUDAToolkit)
+
 # Options
 option(BUILD_DOCUMENTATION "Build doxygen documentation." ON)
 

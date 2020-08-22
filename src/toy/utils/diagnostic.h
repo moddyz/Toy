@@ -2,11 +2,11 @@
 
 #include <toy/toy.h>
 
-#include <toy/core/log.h>
+#include <toy/utils/log.h>
 
 #include <stdarg.h>
 
-/// \file core/diagnostic.h
+/// \file utils/diagnostic.h
 ///
 /// Diagnostic utilities.
 

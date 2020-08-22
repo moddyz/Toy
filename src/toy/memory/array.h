@@ -1,21 +1,23 @@
 #pragma once
 
-/// \file core/array.h
+/// \file memory/array.h
 ///
 /// Core array class, abstracting memory allocation
 
-#include <toy/toy.h>
-#include <toy/core/diagnostic.h>
+#include <toy/utils/diagnostic.h>
+
+#include <toy/memory/residency.h>
 
 TOY_NS_OPEN
 
 /// \class Array
 ///
 /// Array interface, for abstracting away memory allocation details of a specified device.
-template < typename ValueT, typename AllocatorT >
+template < typename ValueT, Residency ResidencyT >
 class Array
 {
 public:
+    using AllocatorT = typename _GetAllocator< ResidencyT >::AllocatorT;
 
     //-------------------------------------------------------------------------
     /// \name Construction
@@ -39,8 +41,13 @@ public:
     }
 
     //-------------------------------------------------------------------------
-    /// \name Operations
+    /// \name Size
     //-------------------------------------------------------------------------
+
+    size_t GetSize() const
+    {
+        return m_size;
+    }
 
     /// Update the size of this array.
     ///
@@ -60,6 +67,7 @@ public:
             TOY_ASSERT( m_buffer != nullptr );
             TOY_VERIFY( AllocatorT::Deallocate( m_buffer ) );
             m_buffer = nullptr;
+            m_size   = 0;
             return true;
         }
 
@@ -77,10 +85,14 @@ public:
             TOY_VERIFY( AllocatorT::Copy( /* dst */ newBuffer,
                                           /* src */ m_buffer,
                                           /* numBytes */ elementsToCopy * sizeof( ValueT ) ) );
-            AllocatorT::Deallocate( m_buffer );
+            TOY_VERIFY( AllocatorT::Deallocate( m_buffer ) );
         }
 
+        // Assign new buffer ptr & size.
         m_buffer = newBuffer;
+        m_size   = i_size;
+
+        return true;
     }
 
     /// Empty the array, by clearing the underlying memory.

@@ -1,6 +1,6 @@
 #pragma once
 
-/// \file core/log.h
+/// \file utils/log.h
 ///
 /// Logging utility functions.
 

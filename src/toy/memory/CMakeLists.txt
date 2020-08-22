@@ -12,7 +12,7 @@ cpp_library(${ROOT_PREFIX}_${LIBRARY_SUFFIX}
     CPPFILES
         ${CPPFILES}
     LIBRARIES
-        toy_core
+        CUDA::cudart
 )
 
 if (BUILD_TESTING)
