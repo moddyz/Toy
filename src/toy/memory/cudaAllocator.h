@@ -45,19 +45,6 @@ public:
         TOY_ASSERT( o_buffer != nullptr );
         return CUDA_CHECK_ERROR( cudaFree( o_buffer ) );
     }
-
-    /// Synchronous copy a region of memory.
-    ///
-    /// \param i_dstBuffer Starting address of the destination buffer.
-    /// \param i_srcBuffer Starting address of the source buffer.
-    /// \param i_numBytes Number of bytes to copy.
-    ///
-    /// \return Whether the copy was performed successfully.
-    static inline bool Copy( void* i_dstBuffer, void* i_srcBuffer, size_t i_numBytes )
-    {
-        TOY_ASSERT( o_buffer != nullptr );
-        return CUDA_CHECK_ERROR( cudaMemcpy( i_dstBuffer, i_srcBuffer, i_numBytes, cudaMemcpyDeviceToDevice ) );
-    }
 };
 
 TOY_NS_CLOSE

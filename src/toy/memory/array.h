@@ -4,6 +4,7 @@
 ///
 /// Core array class, abstracting memory allocation
 
+#include <toy/memory/copy.h>
 #include <toy/memory/residency.h>
 #include <toy/utils/diagnostic.h>
 
@@ -51,14 +52,29 @@ public:
         }
     }
 
-    /// Copy constructor.
+    /// Homogenous residency copy constructor.
     Array( const Array< ValueT, ResidencyT >& i_array )
     {
         TOY_VERIFY( _Copy( i_array ) );
     }
 
-    /// Copy assignment operator.
+    /// Heterogenous residency copy constructor.
+    template < Residency SrcResidencyT >
+    Array( const Array< ValueT, SrcResidencyT >& i_array )
+    {
+        TOY_VERIFY( _Copy( i_array ) );
+    }
+
+    /// Homogenous copy assignment operator.
     Array< ValueT, ResidencyT >& operator=( const Array< ValueT, ResidencyT >& i_array )
+    {
+        TOY_VERIFY( _Copy( i_array ) );
+        return *this;
+    }
+
+    /// Heterogenous copy assignment operator.
+    template < Residency SrcResidencyT >
+    Array< ValueT, ResidencyT >& operator=( const Array< ValueT, SrcResidencyT >& i_array )
     {
         TOY_VERIFY( _Copy( i_array ) );
         return *this;
@@ -117,9 +133,10 @@ public:
         if ( m_buffer != nullptr )
         {
             size_t elementsToCopy = std::min( m_size, i_size );
-            TOY_VERIFY( AllocatorT::Copy( /* dst */ newBuffer,
-                                          /* src */ m_buffer,
-                                          /* numBytes */ elementsToCopy * sizeof( ValueT ) ) );
+            bool   result         = Copy< ResidencyT, ResidencyT >::Execute( /* dst */ newBuffer,
+                                                                   /* src */ m_buffer,
+                                                                   /* numBytes */ elementsToCopy * sizeof( ValueT ) );
+            TOY_VERIFY( result );
             TOY_VERIFY( AllocatorT::Deallocate( m_buffer ) );
         }
 
@@ -153,7 +170,8 @@ public:
 
 private:
     // Helper method to copy the attributes and data from a source array into this array.
-    bool _Copy( const Array< ValueT, ResidencyT >& i_array )
+    template < Residency SrcResidencyT >
+    bool _Copy( const Array< ValueT, SrcResidencyT >& i_array )
     {
         if ( !i_array.IsEmpty() )
         {
@@ -162,9 +180,9 @@ private:
                 return false;
             }
 
-            return AllocatorT::Copy( /* dst */ m_buffer,
-                                     /* src */ i_array.GetBuffer(),
-                                     /* numBytes */ m_size * sizeof( ValueT ) );
+            return Copy< ResidencyT, SrcResidencyT >::Execute( /* dst */ m_buffer,
+                                                               /* src */ i_array.GetBuffer(),
+                                                               /* numBytes */ m_size * sizeof( ValueT ) );
         }
         else
         {
