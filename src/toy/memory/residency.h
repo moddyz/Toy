@@ -23,7 +23,7 @@ enum Residency
 /// \struct _GetAllocator
 ///
 /// Template structure for resolving the Allocator class from the Residency enum.
-template< Residency ResidencyT >
+template < Residency ResidencyT >
 struct _GetAllocator
 {
 };

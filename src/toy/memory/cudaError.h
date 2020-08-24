@@ -13,8 +13,7 @@
 /// \macro CUDA_CHECK_ERROR
 ///
 /// Check the error status.  On non-success, log to stderr and continue exceution.
-#define CUDA_CHECK_ERROR( val )                                                                                     \
-    TOY_NS::_CudaCheckError( ( val ), #val, __FILE__, __LINE__ )
+#define CUDA_CHECK_ERROR( val ) TOY_NS::_CudaCheckError( ( val ), #val, __FILE__, __LINE__ )
 
 TOY_NS_OPEN
 

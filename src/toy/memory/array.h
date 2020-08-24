@@ -4,8 +4,8 @@
 ///
 /// Core array class, abstracting memory allocation
 
-#include <toy/utils/diagnostic.h>
 #include <toy/memory/residency.h>
+#include <toy/utils/diagnostic.h>
 
 #include <algorithm>
 

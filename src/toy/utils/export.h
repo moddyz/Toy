@@ -9,7 +9,7 @@
 #include <toy/utils/os.h>
 
 #if defined( TOY_WINDOWS )
-#    define TOY_EXPORT __declspec( dllexport )
+#define TOY_EXPORT __declspec( dllexport )
 #else
-#    define TOY_EXPORT
+#define TOY_EXPORT
 #endif

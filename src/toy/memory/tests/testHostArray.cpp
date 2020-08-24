@@ -2,7 +2,7 @@
 
 #include <toy/memory/array.h>
 
-using ValueT = float;
+using ValueT                               = float;
 static constexpr toy::Residency ResidencyT = toy::Host;
 
 TEST_CASE( "HostArray_DefaultConstructor" )
