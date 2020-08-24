@@ -28,12 +28,14 @@ struct _GetAllocator
 {
 };
 
+/// Specialization to associate the HostAllocator class with the Host residency enum.
 template <>
 struct _GetAllocator< Host >
 {
     using AllocatorT = HostAllocator;
 };
 
+/// Specialization to associate the CudaAllocator class with the Cuda residency enum.
 template <>
 struct _GetAllocator< Cuda >
 {

@@ -5,8 +5,9 @@
 /// Core array class, abstracting memory allocation
 
 #include <toy/utils/diagnostic.h>
-
 #include <toy/memory/residency.h>
+
+#include <algorithm>
 
 TOY_NS_OPEN
 
@@ -14,9 +15,10 @@ TOY_NS_OPEN
 ///
 /// Array interface, for abstracting away memory allocation details of a specified device.
 template < typename ValueT, Residency ResidencyT >
-class Array
+class Array final
 {
 public:
+    /// \typedfe AllocatorT
     using AllocatorT = typename _GetAllocator< ResidencyT >::AllocatorT;
 
     //-------------------------------------------------------------------------
@@ -28,25 +30,58 @@ public:
     /// The underlying buffer pointer will be initialized to \p nullptr.
     ///
     /// \sa GetBuffer
-    Array()
-    {
-    }
+    Array() = default;
 
     /// Initialize this array with a specified size.
     ///
     /// \param i_size The size to initialize this array to.
-    Array( size_t i_size )
+    explicit Array( size_t i_size )
     {
         TOY_VERIFY( Resize( i_size ) );
+    }
+
+    /// Deconstructor.
+    ///
+    /// The underlying buffer is deallocated if the array size is non-zero.
+    ~Array()
+    {
+        if ( m_buffer != nullptr )
+        {
+            TOY_VERIFY( AllocatorT::Deallocate( m_buffer ) );
+        }
+    }
+
+    /// Copy constructor.
+    Array( const Array< ValueT, ResidencyT >& i_array )
+    {
+        TOY_VERIFY( _Copy( i_array ) );
+    }
+
+    /// Copy assignment operator.
+    Array< ValueT, ResidencyT >& operator=( const Array< ValueT, ResidencyT >& i_array )
+    {
+        TOY_VERIFY( _Copy( i_array ) );
+        return *this;
     }
 
     //-------------------------------------------------------------------------
     /// \name Size
     //-------------------------------------------------------------------------
 
-    size_t GetSize() const
+    /// Get the size or number of elements in the array.
+    ///
+    /// \return The array size.
+    inline size_t GetSize() const
     {
         return m_size;
+    }
+
+    /// Check if the array is empty.
+    ///
+    /// This is equivalent to GetSize() == 0.
+    inline bool IsEmpty() const
+    {
+        return GetSize() == 0;
     }
 
     /// Update the size of this array.
@@ -117,6 +152,26 @@ public:
     }
 
 private:
+    // Helper method to copy the attributes and data from a source array into this array.
+    bool _Copy( const Array< ValueT, ResidencyT >& i_array )
+    {
+        if ( !i_array.IsEmpty() )
+        {
+            if ( !Resize( i_array.GetSize() ) )
+            {
+                return false;
+            }
+
+            return AllocatorT::Copy( /* dst */ m_buffer,
+                                     /* src */ i_array.GetBuffer(),
+                                     /* numBytes */ m_size * sizeof( ValueT ) );
+        }
+        else
+        {
+            return true;
+        }
+    }
+
     size_t m_size   = 0;
     void*  m_buffer = nullptr;
 };

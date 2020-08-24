@@ -46,7 +46,7 @@ public:
         return CUDA_CHECK_ERROR( cudaFree( o_buffer ) );
     }
 
-    /// Copy a region of memory.
+    /// Synchronous copy a region of memory.
     ///
     /// \param i_dstBuffer Starting address of the destination buffer.
     /// \param i_srcBuffer Starting address of the source buffer.
