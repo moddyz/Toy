@@ -4,7 +4,10 @@
 ///
 /// Core array class, abstracting memory allocation
 
+#include <toy/memory/allocate.h>
 #include <toy/memory/copy.h>
+#include <toy/memory/deallocate.h>
+#include <toy/memory/fill.h>
 #include <toy/memory/residency.h>
 #include <toy/utils/diagnostic.h>
 
@@ -15,13 +18,15 @@ TOY_NS_OPEN
 /// \class Array
 ///
 /// Array interface, for abstracting away memory allocation details of a specified device.
+///
+/// \tparam ValueT Type of the elements in this array.
+/// \tparam ResidencyT Where the memory resides.
+///
+/// \pre ValueT Must be default constructable.
 template < typename ValueT, Residency ResidencyT >
 class Array final
 {
 public:
-    /// \typedfe AllocatorT
-    using AllocatorT = typename _GetAllocator< ResidencyT >::AllocatorT;
-
     //-------------------------------------------------------------------------
     /// \name Construction
     //-------------------------------------------------------------------------
@@ -41,6 +46,15 @@ public:
         TOY_VERIFY( Resize( i_size ) );
     }
 
+    /// Initialize this array with a specified size, with an initialized value for all the
+    /// elements.
+    ///
+    /// \param i_size The size to initialize this array to.
+    explicit Array( size_t i_size, const ValueT& i_value )
+    {
+        TOY_VERIFY( Resize( i_size, i_value ) );
+    }
+
     /// Deconstructor.
     ///
     /// The underlying buffer is deallocated if the array size is non-zero.
@@ -48,7 +62,7 @@ public:
     {
         if ( m_buffer != nullptr )
         {
-            TOY_VERIFY( AllocatorT::Deallocate( m_buffer ) );
+            TOY_VERIFY( Deallocate< ResidencyT >::Execute( m_buffer ) );
         }
     }
 
@@ -81,7 +95,7 @@ public:
     }
 
     //-------------------------------------------------------------------------
-    /// \name Size
+    /// \name Operations
     //-------------------------------------------------------------------------
 
     /// Get the size or number of elements in the array.
@@ -100,57 +114,53 @@ public:
         return GetSize() == 0;
     }
 
-    /// Update the size of this array.
+    /// Resize this array.
     ///
-    /// \param i_size The size to resize the array to.
+    /// \param i_newSize The size to resize the array to.
     ///
     /// \return Success state of this operation.
-    inline bool Resize( size_t i_size )
+    inline bool Resize( size_t i_newSize )
     {
-        if ( m_size == i_size )
-        {
-            return true;
-        }
+        return _Resize( i_newSize );
+    }
 
-        // Resizing to 0 is a special scenario.  The buffer is de-allocated and set to nullptr.
-        if ( i_size == 0 )
-        {
-            TOY_ASSERT( m_buffer != nullptr );
-            TOY_VERIFY( AllocatorT::Deallocate( m_buffer ) );
-            m_buffer = nullptr;
-            m_size   = 0;
-            return true;
-        }
-
-        // Try an allocate a new buffer.
-        void* newBuffer = AllocatorT::Allocate( i_size * sizeof( ValueT ) );
-        if ( newBuffer == nullptr )
+    /// Resize this array, with initialized value.
+    ///
+    /// \param i_newSize The size to resize the array to.
+    /// \param i_value The value to fill in the expanded region from the resize.
+    ///
+    /// \return Success state of this operation.
+    inline bool Resize( size_t i_newSize, const ValueT& i_value )
+    {
+        size_t oldSize = m_size;
+        if ( !_Resize( i_newSize ) )
         {
             return false;
         }
 
-        // If there is an existing buffer, perform data migration.
-        if ( m_buffer != nullptr )
-        {
-            size_t elementsToCopy = std::min( m_size, i_size );
-            bool   result         = Copy< ResidencyT, ResidencyT >::Execute( /* dst */ newBuffer,
-                                                                   /* src */ m_buffer,
-                                                                   /* numBytes */ elementsToCopy * sizeof( ValueT ) );
-            TOY_VERIFY( result );
-            TOY_VERIFY( AllocatorT::Deallocate( m_buffer ) );
-        }
-
-        // Assign new buffer ptr & size.
-        m_buffer = newBuffer;
-        m_size   = i_size;
-
-        return true;
+        return _Fill( oldSize, m_size, i_value );
     }
 
     /// Empty the array, by clearing the underlying memory.
     inline void Clear()
     {
         TOY_VERIFY( Resize( 0 ) );
+    }
+
+    //-------------------------------------------------------------------------
+    /// \name Element access
+    //-------------------------------------------------------------------------
+
+    const ValueT& operator[]( size_t i_index ) const
+    {
+        TOY_VERIFY( m_buffer != nullptr );
+        return m_buffer[ i_index ];
+    }
+
+    ValueT& operator[]( size_t i_index )
+    {
+        TOY_VERIFY( m_buffer != nullptr );
+        return m_buffer[ i_index ];
     }
 
     //-------------------------------------------------------------------------
@@ -165,7 +175,7 @@ public:
     inline ValueT* GetBuffer() const
     {
         TOY_ASSERT_MSG( m_buffer != nullptr, "Attempted to get null buffer pointer.\n" );
-        return static_cast< ValueT* >( m_buffer );
+        return m_buffer;
     }
 
 private:
@@ -180,9 +190,10 @@ private:
                 return false;
             }
 
-            return Copy< ResidencyT, SrcResidencyT >::Execute( /* dst */ m_buffer,
-                                                               /* src */ i_array.GetBuffer(),
-                                                               /* numBytes */ m_size * sizeof( ValueT ) );
+            return Copy< SrcResidencyT, ResidencyT >::Execute(
+                /* numBytes */ m_size * sizeof( ValueT ),
+                /* src */ i_array.GetBuffer(),
+                /* dst */ m_buffer );
         }
         else
         {
@@ -190,8 +201,65 @@ private:
         }
     }
 
-    size_t m_size   = 0;
-    void*  m_buffer = nullptr;
+    // Utility method for resizing this current array.
+    bool _Resize( size_t i_newSize )
+    {
+        if ( m_size == i_newSize )
+        {
+            return true;
+        }
+
+        // Resizing to 0 is a special scenario.  The buffer is de-allocated and set to nullptr.
+        if ( i_newSize == 0 )
+        {
+            TOY_ASSERT( m_buffer != nullptr );
+            TOY_VERIFY( Deallocate< ResidencyT >::Execute( m_buffer ) );
+            m_buffer = nullptr;
+            m_size   = 0;
+            return true;
+        }
+
+        // Try an allocate a new buffer.
+        void* newBuffer = Allocate< ResidencyT >::Execute( i_newSize * sizeof( ValueT ) );
+        if ( newBuffer == nullptr )
+        {
+            return false;
+        }
+
+        // If there is an existing buffer, perform data migration.
+        if ( m_buffer != nullptr )
+        {
+            // Migrate existing buffer.
+            size_t elementsToCopy = std::min( m_size, i_newSize );
+            bool   result         = Copy< ResidencyT, ResidencyT >::Execute(
+                /* numBytes */ elementsToCopy * sizeof( ValueT ),
+                /* src */ m_buffer,
+                /* dst */ newBuffer );
+            TOY_VERIFY( result );
+            TOY_VERIFY( Deallocate< ResidencyT >::Execute( m_buffer ) );
+        }
+
+        // Assign new buffer ptr & size.
+        m_buffer = static_cast< ValueT* >( newBuffer );
+        m_size   = i_newSize;
+
+        //
+
+        return true;
+    }
+
+    // Fill a range within this array with a value.
+    inline bool _Fill( size_t i_begin, size_t i_end, const ValueT& i_value )
+    {
+        TOY_ASSERT( i_begin < i_end );
+        TOY_ASSERT( i_end < m_size );
+        size_t numElements = i_end - i_begin;
+        Fill< ResidencyT >::Execute( numElements, i_value, m_buffer + i_begin );
+        return true;
+    }
+
+    size_t  m_size   = 0;
+    ValueT* m_buffer = nullptr;
 };
 
 TOY_NS_CLOSE
