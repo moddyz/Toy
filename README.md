@@ -1,6 +1,6 @@
 # Toy
 
-CUDA-based toy ray tracer. 
+CUDA-based ray tracer. 
 
 This project is for experimenting with ray tracing algorithms on a GPU.
 
