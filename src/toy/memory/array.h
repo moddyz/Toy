@@ -8,6 +8,7 @@
 #include <toy/memory/copy.h>
 #include <toy/memory/deallocate.h>
 #include <toy/memory/fill.h>
+#include <toy/memory/index.h>
 #include <toy/memory/residency.h>
 #include <toy/utils/diagnostic.h>
 
@@ -151,16 +152,16 @@ public:
     /// \name Element access
     //-------------------------------------------------------------------------
 
-    const ValueT& operator[]( size_t i_index ) const
+    inline const ValueT& operator[]( size_t i_index ) const
     {
         TOY_VERIFY( m_buffer != nullptr );
-        return m_buffer[ i_index ];
+        return Index< ResidencyT >::Execute( m_buffer, i_index );
     }
 
-    ValueT& operator[]( size_t i_index )
+    inline ValueT& operator[]( size_t i_index )
     {
         TOY_VERIFY( m_buffer != nullptr );
-        return m_buffer[ i_index ];
+        return Index< ResidencyT >::Execute( m_buffer, i_index );
     }
 
     //-------------------------------------------------------------------------
@@ -181,7 +182,7 @@ public:
 private:
     // Helper method to copy the attributes and data from a source array into this array.
     template < Residency SrcResidencyT >
-    bool _Copy( const Array< ValueT, SrcResidencyT >& i_array )
+    inline bool _Copy( const Array< ValueT, SrcResidencyT >& i_array )
     {
         if ( !i_array.IsEmpty() )
         {
@@ -202,7 +203,7 @@ private:
     }
 
     // Utility method for resizing this current array.
-    bool _Resize( size_t i_newSize )
+    inline bool _Resize( size_t i_newSize )
     {
         if ( m_size == i_newSize )
         {
