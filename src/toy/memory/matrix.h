@@ -27,6 +27,9 @@ public:
     /// \name Construction
     //-------------------------------------------------------------------------
 
+    /// Default constructor of an empty matrix.
+    Matrix() = default;
+
     /// Initialize this matrix with a specified size.
     ///
     /// \param i_rows Number of rows in this matrix.
@@ -44,7 +47,7 @@ public:
     /// \param i_value Value to set for the elements of this matrix.
     explicit Matrix( size_t i_rows, size_t i_cols, const ValueT& i_value )
     {
-        Resize( i_rows, i_cols );
+        Resize( i_rows, i_cols, i_value );
     }
 
     /// Homogenous residency copy constructor.
@@ -96,7 +99,7 @@ public:
     {
         TOY_ASSERT( i_row < m_rows );
         TOY_ASSERT( i_col < m_cols );
-        return m_array[ i_row * m_cols + i_column ];
+        return m_array[ i_row * m_cols + i_col ];
     }
 
     /// Row-column indexed element access.
@@ -104,7 +107,7 @@ public:
     {
         TOY_ASSERT( i_row < m_rows );
         TOY_ASSERT( i_col < m_cols );
-        return m_array[ i_row * m_cols + i_column ];
+        return m_array[ i_row * m_cols + i_col ];
     }
 
     //-------------------------------------------------------------------------
@@ -182,6 +185,14 @@ public:
         }
     }
 
+    /// Empty the matrix, removing the underlying buffer.
+    inline void Clear()
+    {
+        m_array.Clear();
+        m_rows = 0;
+        m_cols = 0;
+    }
+
     //-------------------------------------------------------------------------
     /// \name Buffer access
     //-------------------------------------------------------------------------
@@ -205,8 +216,8 @@ private:
     {
         if ( m_array._Copy( i_matrix.m_array ) )
         {
-            m_width  = i_matrix.m_width;
-            m_height = i_matrix.m_height;
+            m_rows = i_matrix.m_rows;
+            m_cols = i_matrix.m_cols;
             return true;
         }
         else

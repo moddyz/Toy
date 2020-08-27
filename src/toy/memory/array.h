@@ -17,6 +17,7 @@
 TOY_NS_OPEN
 
 // Forward declarations.
+template < typename ValueT, Residency ResidencyT >
 class Matrix;
 
 /// \class Array
@@ -183,7 +184,7 @@ public:
     }
 
 private:
-    friend class Matrix;
+    friend class Matrix< ValueT, ResidencyT >;
 
     // Helper method to copy the attributes and data from a source array into this array.
     template < Residency SrcResidencyT >
