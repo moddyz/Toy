@@ -19,9 +19,8 @@ ProgramArgs ParseCommandLineArguments( int i_argc, char** i_argv )
     // Parse command line arguments.
     cxxopts::Options parser( "simpleImageOutput", "Writes out an." );
 
-    parser.add_option( "HELP", {"h,help", "Print usage."} );
-    parser.add_option( "OUTPUT",
-                       {"o,output", "Output file", cxxopts::value< std::string >()->default_value( "out.jpg" )} );
+    parser.add_option( "", {"h,help", "Print usage."} );
+    parser.add_option( "", {"o,output", "Output file", cxxopts::value< std::string >()->default_value( "out.jpg" )} );
     auto args = parser.parse( i_argc, i_argv );
     if ( args.count( "help" ) > 0 )
     {
