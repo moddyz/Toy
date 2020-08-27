@@ -2,7 +2,7 @@
 
 /// \file memory/array.h
 ///
-/// Core array class, abstracting memory allocation
+/// Core array class.
 
 #include <toy/memory/allocate.h>
 #include <toy/memory/copy.h>
@@ -16,9 +16,12 @@
 
 TOY_NS_OPEN
 
+// Forward declarations.
+class Matrix;
+
 /// \class Array
 ///
-/// Array interface, for abstracting away memory allocation details of a specified device.
+/// One-dimensional array class, with templated value type and memory residency.
 ///
 /// \tparam ValueT Type of the elements in this array.
 /// \tparam ResidencyT Where the memory resides.
@@ -180,6 +183,8 @@ public:
     }
 
 private:
+    friend class Matrix;
+
     // Helper method to copy the attributes and data from a source array into this array.
     template < Residency SrcResidencyT >
     inline bool _Copy( const Array< ValueT, SrcResidencyT >& i_array )
