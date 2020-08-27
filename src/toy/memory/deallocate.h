@@ -38,7 +38,7 @@ struct Deallocate< Cuda >
     static inline bool Execute( void* o_buffer )
     {
         TOY_ASSERT( o_buffer != nullptr );
-        return CUDA_CHECK_ERROR( cudaFree( o_buffer ) );
+        return CUDA_CHECK( cudaFree( o_buffer ) );
     }
 };
 

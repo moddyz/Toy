@@ -38,7 +38,7 @@ struct Allocate< Cuda >
     {
         TOY_ASSERT( i_numBytes != 0 );
         void* devicePtr = nullptr;
-        if ( CUDA_CHECK_ERROR( cudaMallocManaged( &devicePtr, i_numBytes ) ) )
+        if ( CUDA_CHECK( cudaMallocManaged( &devicePtr, i_numBytes ) ) )
         {
             return devicePtr;
         }

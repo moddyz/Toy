@@ -39,7 +39,7 @@ struct Copy< Cuda, Cuda >
     static inline bool Execute( size_t i_numBytes, const void* i_srcBuffer, void* o_dstBuffer )
     {
         TOY_ASSERT( o_buffer != nullptr );
-        return CUDA_CHECK_ERROR( cudaMemcpy( o_dstBuffer, i_srcBuffer, i_numBytes, cudaMemcpyDeviceToDevice ) );
+        return CUDA_CHECK( cudaMemcpy( o_dstBuffer, i_srcBuffer, i_numBytes, cudaMemcpyDeviceToDevice ) );
     }
 };
 
@@ -50,7 +50,7 @@ struct Copy< Host, Cuda >
     static inline bool Execute( size_t i_numBytes, const void* i_srcBuffer, void* o_dstBuffer )
     {
         TOY_ASSERT( o_buffer != nullptr );
-        return CUDA_CHECK_ERROR( cudaMemcpy( o_dstBuffer, i_srcBuffer, i_numBytes, cudaMemcpyHostToDevice ) );
+        return CUDA_CHECK( cudaMemcpy( o_dstBuffer, i_srcBuffer, i_numBytes, cudaMemcpyHostToDevice ) );
     }
 };
 
@@ -61,7 +61,7 @@ struct Copy< Cuda, Host >
     static inline bool Execute( size_t i_numBytes, const void* i_srcBuffer, void* o_dstBuffer )
     {
         TOY_ASSERT( o_buffer != nullptr );
-        return CUDA_CHECK_ERROR( cudaMemcpy( o_dstBuffer, i_srcBuffer, i_numBytes, cudaMemcpyDeviceToHost ) );
+        return CUDA_CHECK( cudaMemcpy( o_dstBuffer, i_srcBuffer, i_numBytes, cudaMemcpyDeviceToHost ) );
     }
 };
 
