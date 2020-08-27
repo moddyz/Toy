@@ -9,6 +9,10 @@
 /// the template paramteers, thus is evaluated by the compiler even if the template
 /// specialization is not being called anywhere!
 
+#include <toy/toy.h>
+
+#include <type_traits>
+
 TOY_NS_OPEN
 
 template < typename T >
