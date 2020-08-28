@@ -1,4 +1,4 @@
-#include <toy/imaging/writeImage.h>
+#include <toy/present/writeImage.h>
 
 #include <gm/types/intRange.h>
 

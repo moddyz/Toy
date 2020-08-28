@@ -20,8 +20,10 @@ endif()
 
 # Discover macros.
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
-                      ${CMAKE_CURRENT_SOURCE_DIR}/cmake/macros)
+                      ${CMAKE_CURRENT_SOURCE_DIR}/cmake/macros
+                      ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 include(Public)
+find_package(GLFW REQUIRED)
 
 # Testing.
 if(BUILD_TESTING)

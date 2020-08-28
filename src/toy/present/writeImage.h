@@ -1,6 +1,6 @@
 #pragma once
 
-/// \file imaging/writer.h
+/// \file present/writer.h
 ///
 /// Utilities for writing a image to disk.
 

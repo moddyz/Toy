@@ -1,6 +1,6 @@
 #include <cxxopts.hpp>
 
-#include <toy/imaging/writeImage.h>
+#include <toy/present/writeImage.h>
 #include <toy/memory/matrix.h>
 #include <toy/utils/log.h>
 
