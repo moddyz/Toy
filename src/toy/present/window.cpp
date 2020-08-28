@@ -5,9 +5,11 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
+#include <GL/gl.h>
+
 TOY_NS_OPEN
 
-Window::Window( const std::string& i_title, const gm::Vec2i& i_dimensions )
+Window::Window( const char* i_title, const gm::Vec2i& i_dimensions )
 {
     glfwSetErrorCallback( _ErrorCallback );
     if ( !glfwInit() )
@@ -19,7 +21,7 @@ Window::Window( const std::string& i_title, const gm::Vec2i& i_dimensions )
     glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 0 );
     glfwWindowHint( GLFW_VISIBLE, GLFW_TRUE );
 
-    m_handle = glfwCreateWindow( i_dimensions.X(), i_dimensions.Y(), i_title.c_str(), nullptr, nullptr );
+    m_handle = glfwCreateWindow( i_dimensions.X(), i_dimensions.Y(), i_title, nullptr, nullptr );
     if ( !m_handle )
     {
         glfwTerminate();
@@ -34,7 +36,13 @@ Window::Window( const std::string& i_title, const gm::Vec2i& i_dimensions )
 
     // Number of screen updates to wait from the time glfwSwapBuffers was called before swapping and returning.
     glfwSwapInterval( 1 );
-};
+}
+
+Window::~Window()
+{
+    glfwDestroyWindow( m_handle );
+    glfwTerminate();
+}
 
 void Window::Run()
 {
@@ -50,11 +58,74 @@ void Window::Run()
     while ( !glfwWindowShouldClose( m_handle ) )
     {
         Render();
-        Present();
+        _Present();
 
         glfwSwapBuffers( m_handle );
         glfwPollEvents();
     }
+}
+
+void Window::OnResize( const gm::Vec2i& i_dimensions )
+{
+    m_image.Resize( i_dimensions.Y(), i_dimensions.X() );
+    m_frameBufferSize = i_dimensions;
+}
+
+void Window::_Present()
+{
+    GetImage( m_image );
+    if ( m_frameBufferTexture == 0 )
+    {
+        glGenTextures( 1, &m_frameBufferTexture );
+    }
+
+    glBindTexture( GL_TEXTURE_2D, m_frameBufferTexture );
+    GLenum texFormat = GL_RGBA;
+    GLenum texelType = GL_UNSIGNED_BYTE;
+    glTexImage2D( GL_TEXTURE_2D,
+                  0,
+                  texFormat,
+                  m_frameBufferSize.X(),
+                  m_frameBufferSize.Y(),
+                  0,
+                  GL_RGBA,
+                  texelType,
+                  m_image.GetBuffer() );
+
+    glDisable( GL_LIGHTING );
+    glColor3f( 1, 1, 1 );
+
+    glMatrixMode( GL_MODELVIEW );
+    glLoadIdentity();
+
+    glEnable( GL_TEXTURE_2D );
+    glBindTexture( GL_TEXTURE_2D, m_frameBufferTexture );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+
+    glDisable( GL_DEPTH_TEST );
+
+    glViewport( 0, 0, m_frameBufferSize.X(), m_frameBufferSize.Y() );
+
+    glMatrixMode( GL_PROJECTION );
+    glLoadIdentity();
+    glOrtho( 0.f, ( float ) m_frameBufferSize.X(), 0.f, ( float ) m_frameBufferSize.Y(), -1.f, 1.f );
+
+    glBegin( GL_QUADS );
+    {
+        glTexCoord2f( 0.f, 0.f );
+        glVertex3f( 0.f, 0.f, 0.f );
+
+        glTexCoord2f( 0.f, 1.f );
+        glVertex3f( 0.f, ( float ) m_frameBufferSize.Y(), 0.f );
+
+        glTexCoord2f( 1.f, 1.f );
+        glVertex3f( ( float ) m_frameBufferSize.X(), ( float ) m_frameBufferSize.Y(), 0.f );
+
+        glTexCoord2f( 1.f, 0.f );
+        glVertex3f( ( float ) m_frameBufferSize.X(), 0.f, 0.f );
+    }
+    glEnd();
 }
 
 /* static */

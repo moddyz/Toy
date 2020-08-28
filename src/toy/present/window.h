@@ -4,7 +4,7 @@
 ///
 /// An application window for presentation purposes.
 
-#include <toy/toy.h>
+#include <toy/memory/matrix.h>
 
 #include <gm/types/vec2i.h>
 
@@ -22,23 +22,25 @@ public:
     /// Initialize the application window.
     ///
     /// \param i_title The title of the application window.
-    Window( const std::string& i_title, const gm::Vec2i& i_dimensions );
-    ~Window();
+    explicit Window( const char* i_title, const gm::Vec2i& i_dimensions );
+    virtual ~Window();
 
     /// Execute the main render loop.
     void Run();
 
+protected:
     /// Executes the render process to produce a single frame.
     virtual void Render() = 0;
 
-    /// Present the last rendered frame in the window.
-    virtual void Present() = 0;
+    /// Gets the image from the last render.
+    ///
+    /// \param o_image Image buffer to fill.
+    virtual void GetImage( Matrix< uint32_t, Host >& o_image ) = 0;
 
-protected:
     /// Respond to a window resize event.
     ///
     /// \param i_dimensions The new dimensions for this window.
-    virtual void OnResize( const gm::Vec2i& i_dimensions ){};
+    virtual void OnResize( const gm::Vec2i& i_dimensions );
 
     /// Respond to a key press event.
     ///
@@ -60,6 +62,9 @@ protected:
     virtual void OnMouseButton( int i_button, int i_action, int i_modifiers ){};
 
 private:
+    // Present the last rendered frame in the window.
+    void _Present();
+
     // GLFW callbacks.
     static void _ErrorCallback( int i_error, const char* i_description );
     static void _KeyCallback( GLFWwindow* i_glfwWindow, int i_key, int i_scanCode, int i_action, int i_modifiers );
@@ -67,7 +72,12 @@ private:
     static void _MouseButtonCallback( GLFWwindow* i_glfwWindow, int i_button, int i_action, int i_modifiers );
     static void _FrameBufferSizeCallback( GLFWwindow* i_glfwWindow, int i_width, int i_height );
 
+    // Handle to the underlying GLFW window instance.
     GLFWwindow* m_handle = nullptr;
+
+    gm::Vec2i                m_frameBufferSize;
+    uint32_t                 m_frameBufferTexture = 0;
+    Matrix< uint32_t, Host > m_image;
 };
 
 TOY_NS_CLOSE
