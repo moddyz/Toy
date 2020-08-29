@@ -32,10 +32,10 @@ protected:
     /// Executes the render process to produce a single frame.
     virtual void Render() = 0;
 
-    /// Gets the image from the last render.
+    /// Converts the last rendered image into a 2D texture for display purposes.
     ///
-    /// \param o_image Image buffer to fill.
-    virtual void GetImage( Matrix< uint32_t, Host >& o_image ) = 0;
+    /// \param o_texture Texture buffer to fill.
+    virtual void ConvertImageToTexture( toy::Matrix< uint32_t, toy::Host >& o_texture ) = 0;
 
     /// Respond to a window resize event.
     ///
@@ -77,7 +77,7 @@ private:
 
     gm::Vec2i                m_frameBufferSize;
     uint32_t                 m_frameBufferTexture = 0;
-    Matrix< uint32_t, Host > m_image;
+    Matrix< uint32_t, Host > m_texture;
 };
 
 TOY_NS_CLOSE

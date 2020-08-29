@@ -67,13 +67,13 @@ void Window::Run()
 
 void Window::OnResize( const gm::Vec2i& i_dimensions )
 {
-    m_image.Resize( i_dimensions.Y(), i_dimensions.X() );
+    m_texture.Resize( i_dimensions.Y(), i_dimensions.X() );
     m_frameBufferSize = i_dimensions;
 }
 
 void Window::_Present()
 {
-    GetImage( m_image );
+    ConvertImageToTexture( m_texture );
     if ( m_frameBufferTexture == 0 )
     {
         glGenTextures( 1, &m_frameBufferTexture );
@@ -90,7 +90,7 @@ void Window::_Present()
                   0,
                   GL_RGBA,
                   texelType,
-                  m_image.GetBuffer() );
+                  m_texture.GetBuffer() );
 
     glDisable( GL_LIGHTING );
     glColor3f( 1, 1, 1 );

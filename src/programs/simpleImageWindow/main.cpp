@@ -28,9 +28,9 @@ protected:
         }
     }
 
-    virtual void GetImage( toy::Matrix< uint32_t, toy::Host >& o_image ) override
+    virtual void ConvertImageToTexture( toy::Matrix< uint32_t, toy::Host >& o_texture ) override
     {
-        ConvertImageVec3fToUint32( m_image, o_image );
+        ConvertImageVec3fToUint32( m_image, o_texture );
     }
 
     virtual void OnResize( const gm::Vec2i& i_dimensions ) override
