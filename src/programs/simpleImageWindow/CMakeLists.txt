@@ -7,7 +7,8 @@ cpp_program(
         CUDA::cudart
         toy_utils
         toy_memory
-        toy_present
+        toy_imaging
+        toy_app
         gm
         cxxopts
 )

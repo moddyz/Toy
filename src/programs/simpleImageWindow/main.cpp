@@ -1,7 +1,9 @@
 #include <cxxopts.hpp>
 
+#include <toy/app/window.h>
+#include <toy/imaging/convert.h>
+#include <toy/imaging/extent.h>
 #include <toy/memory/matrix.h>
-#include <toy/present/window.h>
 #include <toy/utils/log.h>
 
 #include <gm/types/vec2iRange.h>
@@ -18,38 +20,27 @@ public:
 protected:
     virtual void Render() override
     {
-        gm::Vec2iRange bounds( gm::Vec2i( 0, 0 ), gm::Vec2i( m_imageBuffer.GetColumns(), m_imageBuffer.GetRows() ) );
-        for ( gm::Vec2i coord : bounds )
+        for ( gm::Vec2i coord : toy::GetImageExtent( m_image ) )
         {
-            m_imageBuffer( coord.Y(), coord.X() ) =
-                gm::Vec3f( ( float ) coord.X() / ( float ) m_imageBuffer.GetColumns(),
-                           ( float ) coord.Y() / ( float ) m_imageBuffer.GetRows(),
-                           0.0f );
+            m_image( coord.Y(), coord.X() ) = gm::Vec3f( ( float ) coord.X() / ( float ) m_image.GetColumns(),
+                                                         ( float ) coord.Y() / ( float ) m_image.GetRows(),
+                                                         0.0f );
         }
     }
 
     virtual void GetImage( toy::Matrix< uint32_t, toy::Host >& o_image ) override
     {
-        gm::Vec2iRange bounds( gm::Vec2i( 0, 0 ), gm::Vec2i( m_imageBuffer.GetColumns(), m_imageBuffer.GetRows() ) );
-        for ( gm::Vec2i coord : bounds )
-        {
-            const gm::Vec3f& inPixel = m_imageBuffer( coord.Y(), coord.X() );
-
-            uint8_t* outPixel = reinterpret_cast< uint8_t* >( &o_image( coord.Y(), coord.X() ) );
-            outPixel[ 0 ]     = static_cast< uint8_t >( 255.999 * inPixel[ 0 ] );
-            outPixel[ 1 ]     = static_cast< uint8_t >( 255.999 * inPixel[ 1 ] );
-            outPixel[ 2 ]     = static_cast< uint8_t >( 255.999 * inPixel[ 2 ] );
-        }
+        ConvertImageVec3fToUint32( m_image, o_image );
     }
 
     virtual void OnResize( const gm::Vec2i& i_dimensions ) override
     {
         toy::Window::OnResize( i_dimensions );
-        m_imageBuffer.Resize( i_dimensions.Y(), i_dimensions.X() );
+        m_image.Resize( i_dimensions.Y(), i_dimensions.X() );
     }
 
 private:
-    toy::Matrix< gm::Vec3f, toy::Host > m_imageBuffer;
+    toy::Matrix< gm::Vec3f, toy::Host > m_image;
 };
 
 int main( int i_argc, char** i_argv )

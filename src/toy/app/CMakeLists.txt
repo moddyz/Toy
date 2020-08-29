@@ -19,7 +19,3 @@ cpp_library(${ROOT_PREFIX}_${LIBRARY_SUFFIX}
         stb
         toy_memory
 )
-
-if (BUILD_TESTING)
-    add_subdirectory(tests)
-endif()

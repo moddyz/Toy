@@ -1,6 +1,7 @@
 #include <cxxopts.hpp>
 
-#include <toy/present/writeImage.h>
+#include <toy/imaging/export.h>
+#include <toy/imaging/extent.h>
 #include <toy/memory/matrix.h>
 #include <toy/utils/log.h>
 
@@ -40,15 +41,14 @@ int main( int i_argc, char** i_argv )
     TOY_LOG_INFO( "[Starting simpleImageOutput...]\n" );
     TOY_LOG_INFO( "\nOutput image file: %s\n", args.m_outFilePath.c_str() );
 
-    toy::Matrix< gm::Vec3f, toy::Host > imageBuffer( 480, 640 );
-    gm::Vec2iRange bounds( gm::Vec2i( 0, 0 ), gm::Vec2i( imageBuffer.GetColumns(), imageBuffer.GetRows() ) );
-    for ( gm::Vec2i coord : bounds )
+    toy::Matrix< gm::Vec3f, toy::Host > image( 480, 640 );
+    for ( gm::Vec2i coord : toy::GetImageExtent( image ) )
     {
-        imageBuffer( coord.Y(), coord.X() ) = gm::Vec3f( ( float ) coord.X() / ( float ) imageBuffer.GetColumns(),
-                                                         ( float ) coord.Y() / ( float ) imageBuffer.GetRows(),
-                                                         0.0f );
+        image( coord.Y(), coord.X() ) = gm::Vec3f( ( float ) coord.X() / ( float ) image.GetColumns(),
+                                                   ( float ) coord.Y() / ( float ) image.GetRows(),
+                                                   0.0f );
     }
-    toy::WriteRGBImage( imageBuffer, args.m_outFilePath );
+    toy::ExportJpeg( image, args.m_outFilePath );
 
     return 0;
 }
