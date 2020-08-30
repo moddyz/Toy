@@ -1,6 +1,6 @@
 #include <cxxopts.hpp>
 
-#include <toy/app/window.h>
+#include <toy/application/window.h>
 #include <toy/imaging/convert.h>
 #include <toy/imaging/extent.h>
 #include <toy/memory/matrix.h>

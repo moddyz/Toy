@@ -1,6 +1,6 @@
 #pragma once
 
-/// \file app/window.h
+/// \file application/window.h
 ///
 /// An application window for presentation purposes.
 

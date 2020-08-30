@@ -8,7 +8,7 @@ cpp_program(
         toy_utils
         toy_memory
         toy_imaging
-        toy_app
+        toy_application
         gm
         cxxopts
 )

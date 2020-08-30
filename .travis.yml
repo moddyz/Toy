@@ -11,15 +11,20 @@ jobs:
             - cmake
             - graphviz
             - doxygen
-#   - os: linux
-#     dist: bionic
-#     compiler: gcc
-#     addons:
-#       apt:
-#         packages:
-#           - cmake
-#           - graphviz
-#           - doxygen
+            - nvidia-cuda-toolkit
+   - os: linux
+     dist: bionic
+     compiler: gcc
+     addons:
+       apt:
+         packages:
+           - cmake
+           - graphviz
+           - doxygen
+           - nvidia-cuda-toolkit
+           - libgl1-mesa-dev
+           - libglfw3
+           - libglfw3-dev
 
 install:
   - echo ${PATH}
