@@ -13,9 +13,11 @@ cpp_library(${ROOT_PREFIX}_${LIBRARY_SUFFIX}
         ${CPPFILES}
     LIBRARIES
         ${GLFW_LIBRARIES}
+        ${GLEW_LIBRARIES}
         ${OPENGL_LIBRARIES}
         CUDA::cudart
         gm
         stb
         toy_memory
+        toy_imaging
 )

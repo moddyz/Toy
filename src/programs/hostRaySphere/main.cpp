@@ -8,9 +8,9 @@
 #include <toy/model/ray.h>
 #include <toy/utils/log.h>
 
+#include <gm/functions/linearInterpolation.h>
 #include <gm/types/vec2iRange.h>
 #include <gm/types/vec3f.h>
-#include <gm/functions/linearInterpolation.h>
 
 class HostRaySphereWindow : public toy::Window
 {
@@ -26,7 +26,7 @@ public:
     }
 
 protected:
-    virtual void Render() override
+    virtual void Render( uint32_t* o_frameData ) override
     {
         // Cast a ray per pixel to compute the color.
         for ( gm::Vec2i coord : toy::GetImageExtent( m_image ) )
@@ -47,11 +47,9 @@ protected:
 
             m_image( coord.Y(), coord.X() ) = color;
         }
-    }
 
-    virtual void ConvertImageToTexture( toy::Matrix< uint32_t, toy::Host >& o_texture ) override
-    {
-        toy::ConvertImageVec3fToUint32( m_image, o_texture );
+        ConvertImageVec3fToUint32( m_image, m_texture );
+        CUDA_CHECK( cudaMemcpy( o_frameData, m_texture.GetBuffer(), m_texture.GetByteSize(), cudaMemcpyHostToDevice ) );
     }
 
     virtual void OnResize( const gm::Vec2i& i_dimensions ) override
@@ -62,6 +60,7 @@ protected:
 
 private:
     toy::Matrix< gm::Vec3f, toy::Host > m_image;
+    toy::Matrix< uint32_t, toy::Host >  m_texture;
     toy::Camera                         m_camera;
 };
 

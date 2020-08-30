@@ -6,6 +6,11 @@
 
 #include <stdio.h>
 
+/// \def TOY_LOG_DEBUG( msgFormat, ... )
+///
+/// Logs a formatted message at the \em DEBUG level.
+#define TOY_LOG_DEBUG( msgFormat, ... ) printf( msgFormat, ##__VA_ARGS__ );
+
 /// \def TOY_LOG_INFO( msgFormat, ... )
 ///
 /// Logs a formatted message at the \em INFO level.

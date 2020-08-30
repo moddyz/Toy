@@ -122,6 +122,14 @@ public:
         return m_rows * m_cols;
     }
 
+    /// Get the number of bytes allocated for this matrix.
+    ///
+    /// \return The number of bytes.
+    inline size_t GetByteSize() const
+    {
+        return GetSize() * sizeof( ValueT );
+    }
+
     /// Get the height of this matrix.
     ///
     /// \return The height.

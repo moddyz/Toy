@@ -13,6 +13,9 @@ class GLFWwindow;
 
 TOY_NS_OPEN
 
+// Forward declarations.
+class CudaGLFrameBuffer;
+
 /// \class Window
 ///
 /// Base class for initializing a window for presenting rendered frames.
@@ -29,13 +32,15 @@ public:
     void Run();
 
 protected:
-    /// Executes the render process to produce a single frame.
-    virtual void Render() = 0;
-
-    /// Converts the last rendered image into a 2D texture for display purposes.
+    /// Executes the render computation, and write into \p o_frameData.
     ///
-    /// \param o_texture Texture buffer to fill.
-    virtual void ConvertImageToTexture( toy::Matrix< uint32_t, toy::Host >& o_texture ) = 0;
+    /// \p o_frameData can be treated like a CUDA device buffer.
+    ///
+    /// The size of \p o_frameBuffer is Width * Height * sizeof( uint32_t ).
+    /// It is a RGBA buffer with 8 bits or 1 byte allocated for each channel.
+    ///
+    /// \param o_frameData The frame buffer.
+    virtual void Render( uint32_t* o_frameData ) = 0;
 
     /// Respond to a window resize event.
     ///
@@ -62,9 +67,6 @@ protected:
     virtual void OnMouseButton( int i_button, int i_action, int i_modifiers ){};
 
 private:
-    // Present the last rendered frame in the window.
-    void _Present();
-
     // GLFW callbacks.
     static void _ErrorCallback( int i_error, const char* i_description );
     static void _KeyCallback( GLFWwindow* i_glfwWindow, int i_key, int i_scanCode, int i_action, int i_modifiers );
@@ -75,9 +77,8 @@ private:
     // Handle to the underlying GLFW window instance.
     GLFWwindow* m_handle = nullptr;
 
-    gm::Vec2i                m_frameBufferSize;
-    uint32_t                 m_frameBufferTexture = 0;
-    Matrix< uint32_t, Host > m_texture;
+    // CUDA GL Imaging pipeline.
+    CudaGLFrameBuffer* m_frameBuffer = nullptr;
 };
 
 TOY_NS_CLOSE

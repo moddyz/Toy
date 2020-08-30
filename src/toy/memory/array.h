@@ -111,6 +111,14 @@ public:
         return m_size;
     }
 
+    /// Get the number of bytes allocated for this array.
+    ///
+    /// \return The number of bytes.
+    inline size_t GetByteSize() const
+    {
+        return m_size * sizeof( ValueT );
+    }
+
     /// Check if the array is empty.
     ///
     /// This is equivalent to GetSize() == 0.

@@ -1,11 +1,12 @@
 #include <toy/app/window.h>
+#include <toy/imaging/cudaGLFrameBuffer.h>
 #include <toy/utils/diagnostic.h>
 #include <toy/utils/log.h>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#include <GL/gl.h>
+#include <GL/glew.h>
 
 TOY_NS_OPEN
 
@@ -36,6 +37,13 @@ Window::Window( const char* i_title, const gm::Vec2i& i_dimensions )
 
     // Number of screen updates to wait from the time glfwSwapBuffers was called before swapping and returning.
     glfwSwapInterval( 1 );
+
+    // Initialize GLEW.
+    if ( glewInit() != GLEW_OK )
+    {
+        glfwTerminate();
+        exit( EXIT_FAILURE );
+    }
 }
 
 Window::~Window()
@@ -57,8 +65,15 @@ void Window::Run()
 
     while ( !glfwWindowShouldClose( m_handle ) )
     {
-        Render();
-        _Present();
+        TOY_ASSERT( m_frameBuffer != nullptr );
+
+        // CUDA Computation step.
+        uint32_t* frameData = m_frameBuffer->ComputeFrameBegin();
+        Render( frameData );
+        m_frameBuffer->ComputeFrameEnd( frameData );
+
+        // Display the computed frame.
+        m_frameBuffer->DrawFrame();
 
         glfwSwapBuffers( m_handle );
         glfwPollEvents();
@@ -67,65 +82,17 @@ void Window::Run()
 
 void Window::OnResize( const gm::Vec2i& i_dimensions )
 {
-    m_texture.Resize( i_dimensions.Y(), i_dimensions.X() );
-    m_frameBufferSize = i_dimensions;
-}
+    TOY_ASSERT( i_dimensions.X() != 0 & i_dimensions.Y() != 0 );
 
-void Window::_Present()
-{
-    ConvertImageToTexture( m_texture );
-    if ( m_frameBufferTexture == 0 )
+    if ( m_frameBuffer == nullptr )
     {
-        glGenTextures( 1, &m_frameBufferTexture );
+        m_frameBuffer = new CudaGLFrameBuffer( i_dimensions.X(), i_dimensions.Y() );
     }
-
-    glBindTexture( GL_TEXTURE_2D, m_frameBufferTexture );
-    GLenum texFormat = GL_RGBA;
-    GLenum texelType = GL_UNSIGNED_BYTE;
-    glTexImage2D( GL_TEXTURE_2D,
-                  0,
-                  texFormat,
-                  m_frameBufferSize.X(),
-                  m_frameBufferSize.Y(),
-                  0,
-                  GL_RGBA,
-                  texelType,
-                  m_texture.GetBuffer() );
-
-    glDisable( GL_LIGHTING );
-    glColor3f( 1, 1, 1 );
-
-    glMatrixMode( GL_MODELVIEW );
-    glLoadIdentity();
-
-    glEnable( GL_TEXTURE_2D );
-    glBindTexture( GL_TEXTURE_2D, m_frameBufferTexture );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-
-    glDisable( GL_DEPTH_TEST );
-
-    glViewport( 0, 0, m_frameBufferSize.X(), m_frameBufferSize.Y() );
-
-    glMatrixMode( GL_PROJECTION );
-    glLoadIdentity();
-    glOrtho( 0.f, ( float ) m_frameBufferSize.X(), 0.f, ( float ) m_frameBufferSize.Y(), -1.f, 1.f );
-
-    glBegin( GL_QUADS );
+    else if ( m_frameBuffer->GetWidth() != i_dimensions.X() || m_frameBuffer->GetHeight() != i_dimensions.Y() )
     {
-        glTexCoord2f( 0.f, 0.f );
-        glVertex3f( 0.f, 0.f, 0.f );
-
-        glTexCoord2f( 0.f, 1.f );
-        glVertex3f( 0.f, ( float ) m_frameBufferSize.Y(), 0.f );
-
-        glTexCoord2f( 1.f, 1.f );
-        glVertex3f( ( float ) m_frameBufferSize.X(), ( float ) m_frameBufferSize.Y(), 0.f );
-
-        glTexCoord2f( 1.f, 0.f );
-        glVertex3f( ( float ) m_frameBufferSize.X(), 0.f, 0.f );
+        delete m_frameBuffer;
+        m_frameBuffer = new CudaGLFrameBuffer( i_dimensions.X(), i_dimensions.Y() );
     }
-    glEnd();
 }
 
 /* static */
