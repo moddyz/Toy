@@ -1,6 +1,6 @@
 #pragma once
 
-/// \file rendering/camera.h
+/// \file model/camera.h
 ///
 /// Camera representation.
 

@@ -1,8 +1,8 @@
 #pragma once
 
-/// \file ray.h
+/// \file model/ray.h
 ///
-/// A representation of a ray.
+/// Ray model.
 
 #include <toy/toy.h>
 

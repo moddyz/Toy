@@ -4,8 +4,8 @@
 #include <toy/imaging/convert.h>
 #include <toy/imaging/extent.h>
 #include <toy/memory/matrix.h>
-#include <toy/rendering/camera.h>
-#include <toy/rendering/ray.h>
+#include <toy/model/camera.h>
+#include <toy/model/ray.h>
 #include <toy/utils/log.h>
 
 #include <gm/types/vec2iRange.h>
