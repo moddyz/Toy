@@ -12,10 +12,10 @@
 #include <gm/types/vec2iRange.h>
 #include <gm/types/vec3f.h>
 
-class HostRaySphereWindow : public toy::Window
+class SimpleRaySphereWindow : public toy::Window
 {
 public:
-    explicit HostRaySphereWindow( const char* i_title, const gm::Vec2i& i_dimensions )
+    explicit SimpleRaySphereWindow( const char* i_title, const gm::Vec2i& i_dimensions )
         : toy::Window( i_title, i_dimensions )
         , m_camera( /* origin */ gm::Vec3f( 0, 0, 0 ),
                     /* lookAt */ gm::Vec3f( 0, 0, 1 ),
@@ -66,9 +66,9 @@ private:
 
 int main( int i_argc, char** i_argv )
 {
-    TOY_LOG_INFO( "[Starting hostRaySphere...]\n" );
+    TOY_LOG_INFO( "[Starting simpleRaySphere...]\n" );
 
-    HostRaySphereWindow window( "Toy: hostRaySphere", gm::Vec2i( 640, 480 ) );
+    SimpleRaySphereWindow window( "Toy: simpleRaySphere", gm::Vec2i( 640, 480 ) );
     window.Run();
 
     return 0;
