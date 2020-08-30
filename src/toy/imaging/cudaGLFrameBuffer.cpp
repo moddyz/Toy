@@ -14,7 +14,7 @@ CudaGLFrameBuffer::CudaGLFrameBuffer( int i_width, int i_height )
     : m_width( i_width )
     , m_height( i_height )
 {
-    TOY_LOG_DEBUG( "Creating imaging pipeline with dimensions (w=%i, h=%i).\n", m_width, m_height );
+    TOY_LOG_DEBUG( "Creating frame buffer with dimensions (w=%i, h=%i).\n", m_width, m_height );
 
     //
     // 1. Allocate GL buffer.
@@ -55,7 +55,7 @@ CudaGLFrameBuffer::CudaGLFrameBuffer( int i_width, int i_height )
 
 CudaGLFrameBuffer::~CudaGLFrameBuffer()
 {
-    TOY_LOG_DEBUG( "Destroying imaging pipeline.\n" );
+    TOY_LOG_DEBUG( "Destroying frame buffer.\n" );
     cudaGraphicsUnregisterResource( m_graphicsResource );
     glDeleteBuffers( 1, &m_pixelBufferId );
     glDeleteTextures( 1, &m_textureId );
