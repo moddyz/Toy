@@ -9,6 +9,7 @@
 #include <toy/utils/log.h>
 
 #include <gm/functions/linearInterpolation.h>
+#include <gm/functions/raySphereIntersection.h>
 #include <gm/types/vec2iRange.h>
 #include <gm/types/vec3f.h>
 
@@ -42,10 +43,7 @@ protected:
             // Normalize the direction of the ray.
             ray.Direction() = gm::Normalize( ray.Direction() );
 
-            float     weight = 0.5f * ray.Direction().Y() + 1.0;
-            gm::Vec3f color = gm::LinearInterpolation( gm::Vec3f( 1.0, 1.0, 1.0 ), gm::Vec3f( 0.5, 0.7, 1.0 ), weight );
-
-            m_image( coord.Y(), coord.X() ) = color;
+            m_image( coord.Y(), coord.X() ) = _ShadePixel( ray );
         }
 
         ConvertImageVec3fToUint32( m_image, m_texture );
@@ -59,6 +57,25 @@ protected:
     }
 
 private:
+    static gm::Vec3f _ShadePixel( const toy::Ray& i_ray )
+    {
+        // Test for sphere intersection (hard-coded placement of the sphere)
+        gm::FloatRange intersections;
+        if ( gm::RaySphereIntersection( gm::Vec3f( 0, 0, 1.0 ),
+                                        0.5,
+                                        i_ray.Origin(),
+                                        i_ray.Direction(),
+                                        intersections ) > 0 )
+        {
+            return gm::Vec3f( 1, 0, 0 );
+        }
+
+        // Compute background color, by interpolating between two colors with the weight as the function of the ray
+        // direction.
+        float weight = 0.5f * i_ray.Direction().Y() + 1.0;
+        return gm::LinearInterpolation( gm::Vec3f( 1.0, 1.0, 1.0 ), gm::Vec3f( 0.5, 0.7, 1.0 ), weight );
+    }
+
     toy::Matrix< gm::Vec3f, toy::Host > m_image;
     toy::Matrix< uint32_t, toy::Host >  m_texture;
     toy::Camera                         m_camera;
