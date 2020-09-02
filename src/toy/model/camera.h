@@ -100,7 +100,12 @@ public:
     /// The origin is where rays originate.
     ///
     /// \return the origin of the camera.
-    inline gm::Vec3f Origin() const
+    inline const gm::Vec3f& Origin() const
+    {
+        return m_origin;
+    }
+
+    inline gm::Vec3f& Origin()
     {
         return m_origin;
     }

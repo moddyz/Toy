@@ -13,6 +13,9 @@
 #include <gm/types/vec2iRange.h>
 #include <gm/types/vec3f.h>
 
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+
 class SimpleRaySphereWindow : public toy::Window
 {
 public:
@@ -54,6 +57,21 @@ protected:
     {
         toy::Window::OnResize( i_dimensions );
         m_image.Resize( i_dimensions.Y(), i_dimensions.X() );
+    }
+
+    virtual void OnKeyPress( int i_key, int i_action, int i_modifiers ) override
+    {
+        TOY_LOG_DEBUG( "OnKeyPress: %i, %i, %i\n", i_key, i_action, i_modifiers );
+
+        switch ( i_key )
+        {
+        case GLFW_KEY_UP:
+            m_camera.Origin().Z() += 0.1;
+            break;
+        case GLFW_KEY_DOWN:
+            m_camera.Origin().Z() -= 0.1;
+            break;
+        }
     }
 
 private:

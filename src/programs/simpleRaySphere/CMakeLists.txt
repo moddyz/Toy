@@ -4,6 +4,7 @@ cpp_program(
     CPPFILES
         main.cpp
     LIBRARIES
+        ${GLFW_LIBRARIES}
         CUDA::cudart
         toy_utils
         toy_memory
