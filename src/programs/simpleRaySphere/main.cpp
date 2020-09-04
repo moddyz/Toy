@@ -4,7 +4,7 @@
 #include <toy/imaging/convert.h>
 #include <toy/imaging/extent.h>
 #include <toy/memory/matrix.h>
-#include <toy/model/camera.h>
+#include <toy/model/lookAtCamera.h>
 #include <toy/model/ray.h>
 #include <toy/utils/log.h>
 
@@ -96,7 +96,7 @@ private:
 
     toy::Matrix< gm::Vec3f, toy::Host > m_image;
     toy::Matrix< uint32_t, toy::Host >  m_texture;
-    toy::Camera                         m_camera;
+    toy::LookAtCamera                   m_camera;
 };
 
 int main( int i_argc, char** i_argv )
