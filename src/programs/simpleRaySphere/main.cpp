@@ -47,8 +47,9 @@ protected:
                               ( v * m_cameraView.NearVertical() ) );
 
             // Transform camera-space ray into world-space ray.
-            ray.Origin()    = TransformPoint( m_cameraTransform.GetObjectToWorld(), ray.Origin() );
-            ray.Direction() = gm::Normalize( TransformVector( m_cameraTransform.GetObjectToWorld(), ray.Direction() ) );
+            ray.Origin() = gm::TransformPoint( m_cameraTransform.GetObjectToWorld(), ray.Origin() );
+            ray.Direction() =
+                gm::Normalize( gm::TransformVector( m_cameraTransform.GetObjectToWorld(), ray.Direction() ) );
 
             m_image( coord.Y(), coord.X() ) = _ShadePixel( ray );
         }
