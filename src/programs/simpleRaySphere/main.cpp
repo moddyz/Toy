@@ -4,7 +4,8 @@
 #include <toy/imaging/convert.h>
 #include <toy/imaging/extent.h>
 #include <toy/memory/matrix.h>
-#include <toy/model/lookAtCamera.h>
+#include <toy/model/lookAtTransform.h>
+#include <toy/model/perspectiveView.h>
 #include <toy/model/ray.h>
 #include <toy/utils/log.h>
 
@@ -23,11 +24,11 @@ class SimpleRaySphereWindow : public toy::Window
 public:
     explicit SimpleRaySphereWindow( const char* i_title, const gm::Vec2i& i_dimensions )
         : toy::Window( i_title, i_dimensions )
-        , m_camera( /* origin */ gm::Vec3f( 0, 0, 0 ),
-                    /* lookAt */ gm::Vec3f( 0, 0, 1 ),
-                    /* viewUp */ gm::Vec3f( 0, 1, 0 ),
-                    /* verticalFov */ 90.0f,
-                    /* aspectRatio */ ( float ) i_dimensions.X() / float( i_dimensions.Y() ) )
+        , m_cameraTransform( /* origin */ gm::Vec3f( 0, 0, 0 ),
+                             /* target */ gm::Vec3f( 0, 0, 1 ),
+                             /* up */ gm::Vec3f( 0, 1, 0 ) )
+        , m_cameraView( /* verticalFov */ 90.0f,
+                        /* aspectRatio */ ( float ) i_dimensions.X() / float( i_dimensions.Y() ) )
     {
     }
 
@@ -42,15 +43,12 @@ protected:
             float v = float( coord.Y() ) / m_image.GetRows();
 
             toy::Ray ray( gm::Vec3f( 0, 0, 0 ),
-                          m_camera.ViewportBottomLeft() + ( u * m_camera.ViewportHorizontal() ) +
-                              ( v * m_camera.ViewportVertical() ) );
-
-            // Normalize the direction of the ray.
-            ray.Direction() = gm::Normalize( ray.Direction() );
+                          m_cameraView.NearBottomLeft() + ( u * m_cameraView.NearHorizontal() ) +
+                              ( v * m_cameraView.NearVertical() ) );
 
             // Transform camera-space ray into world-space ray.
-            ray.Origin()    = TransformPoint( m_camera.GetCameraToWorld(), ray.Origin() );
-            ray.Direction() = TransformVector( m_camera.GetCameraToWorld(), ray.Direction() );
+            ray.Origin()    = TransformPoint( m_cameraTransform.GetObjectToWorld(), ray.Origin() );
+            ray.Direction() = gm::Normalize( TransformVector( m_cameraTransform.GetObjectToWorld(), ray.Direction() ) );
 
             m_image( coord.Y(), coord.X() ) = _ShadePixel( ray );
         }
@@ -71,23 +69,43 @@ protected:
 
         constexpr float moveSpeed = 0.1;
 
+        gm::Vec3f origin = m_cameraTransform.GetOrigin();
+        gm::Vec3f target = m_cameraTransform.GetTarget();
+        gm::Vec3f up     = m_cameraTransform.GetUp();
+
         switch ( i_key )
         {
         case GLFW_KEY_UP:
-            m_camera.SetOrigin( m_camera.GetOrigin() + gm::Vec3f( 0, 0, moveSpeed ) );
-            break;
-        case GLFW_KEY_DOWN:
-            m_camera.SetOrigin( m_camera.GetOrigin() + gm::Vec3f( 0, 0, -moveSpeed ) );
-            break;
-        case GLFW_KEY_LEFT:
-            m_camera.SetOrigin( m_camera.GetOrigin() + gm::Vec3f( -moveSpeed, 0, 0 ) );
-            break;
-        case GLFW_KEY_RIGHT:
-            m_camera.SetOrigin( m_camera.GetOrigin() + gm::Vec3f( moveSpeed, 0, 0 ) );
+        {
+            gm::Vec3f translation = m_cameraTransform.GetForward() * moveSpeed;
+            origin += translation;
+            target += translation;
             break;
         }
+        case GLFW_KEY_DOWN:
+        {
+            gm::Vec3f translation = m_cameraTransform.GetForward() * -moveSpeed;
+            origin += translation;
+            target += translation;
+            break;
+        }
+        case GLFW_KEY_LEFT:
+        {
+            gm::Vec3f translation = m_cameraTransform.GetRight() * -moveSpeed;
+            origin += translation;
+            target += translation;
+            break;
+        }
+        case GLFW_KEY_RIGHT:
+        {
+            gm::Vec3f translation = m_cameraTransform.GetRight() * moveSpeed;
+            origin += translation;
+            target += translation;
+            break;
+        }
+        }
 
-        TOY_LOG_DEBUG( "Camera Origin: %s\n", m_camera.GetOrigin().GetString().c_str() );
+        m_cameraTransform = toy::LookAtTransform( origin, target, up );
     }
 
 private:
@@ -112,7 +130,9 @@ private:
 
     toy::Matrix< gm::Vec3f, toy::Host > m_image;
     toy::Matrix< uint32_t, toy::Host >  m_texture;
-    toy::LookAtCamera                   m_camera;
+
+    toy::LookAtTransform m_cameraTransform;
+    toy::PerspectiveView m_cameraView;
 };
 
 int main( int i_argc, char** i_argv )

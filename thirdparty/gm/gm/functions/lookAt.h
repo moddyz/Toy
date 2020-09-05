@@ -29,7 +29,7 @@ GM_NS_OPEN
 /// \param i_look Point in space for the camera to look at.
 /// \param i_up The up vector of the camera, for orientation purposes.
 ///
-/// \return Transformation for positioning and orienting the camera.
+/// \return Transformation for positioning and orienting camera-space into world space.
 GM_HOST_DEVICE inline Mat4f LookAt( const Vec3f& i_position, const Vec3f& i_look, const Vec3f& i_up )
 {
     // Construct a 3D orthonormal basis of the camera.
@@ -64,10 +64,8 @@ GM_HOST_DEVICE inline Mat4f LookAt( const Vec3f& i_position, const Vec3f& i_look
     matrix( 2, 3 ) = i_position.Z();
     matrix( 3, 3 ) = 1;
 
-    // Compute inverse.
-    Mat4f inverse;
-    GM_VERIFY( Inverse( matrix, inverse ) );
-    return inverse;
+    // Return camera-to-world matrix.
+    return matrix;
 }
 
 GM_NS_CLOSE
