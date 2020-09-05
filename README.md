@@ -1,8 +1,8 @@
 # Toy
 
-CUDA-based ray tracer. 
+CPU / CUDA rendering components and example programs.
 
-This project is for experimenting with ray tracing algorithms on a GPU.
+This project is for experimenting with rendering algorithms.
 
 ## Table of Contents
 
