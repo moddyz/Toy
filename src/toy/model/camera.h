@@ -17,13 +17,16 @@ TOY_NS_OPEN
 class Camera
 {
 public:
-    inline explicit Camera( const gm::Mat4f& i_cameraToWorld )
+    /// Default constructor, initializing the cameraToWorld matrix to identity.
+    Camera() = default;
+
+    TOY_HOST_DEVICE inline explicit Camera( const gm::Mat4f& i_cameraToWorld )
         : m_cameraToWorld( i_cameraToWorld )
     {
     }
 
     /// \return The transformation matrix which translates and orients the camera in worldspace.
-    inline const gm::Mat4f& GetCameraToWorld() const
+    TOY_HOST_DEVICE inline const gm::Mat4f& GetCameraToWorld() const
     {
         return m_cameraToWorld;
     }
@@ -31,14 +34,14 @@ public:
     /// Set the camera-to-world matrix.
     ///
     /// \param i_cameraToWorld The camera-to-world matrix.
-    inline void SetCameraToWorld( const gm::Mat4f& i_cameraToWorld ) const
+    TOY_HOST_DEVICE inline void SetCameraToWorld( const gm::Mat4f& i_cameraToWorld )
     {
         m_cameraToWorld = i_cameraToWorld;
     }
 
 private:
-    //
-    gm::Mat4f m_cameraToWorld;
+    // Cached camera-to-world matrix.
+    gm::Mat4f m_cameraToWorld = gm::Mat4f::Identity();
 };
 
 TOY_NS_CLOSE

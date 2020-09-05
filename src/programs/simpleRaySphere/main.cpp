@@ -10,6 +10,8 @@
 
 #include <gm/functions/linearInterpolation.h>
 #include <gm/functions/raySphereIntersection.h>
+#include <gm/functions/transformPoint.h>
+#include <gm/functions/transformVector.h>
 #include <gm/types/vec2iRange.h>
 #include <gm/types/vec3f.h>
 
@@ -39,12 +41,16 @@ protected:
             float u = float( coord.X() ) / m_image.GetColumns();
             float v = float( coord.Y() ) / m_image.GetRows();
 
-            toy::Ray ray( m_camera.Origin(),
+            toy::Ray ray( gm::Vec3f( 0, 0, 0 ),
                           m_camera.ViewportBottomLeft() + ( u * m_camera.ViewportHorizontal() ) +
-                              ( v * m_camera.ViewportVertical() ) - m_camera.Origin() );
+                              ( v * m_camera.ViewportVertical() ) );
 
             // Normalize the direction of the ray.
             ray.Direction() = gm::Normalize( ray.Direction() );
+
+            // Transform camera-space ray into world-space ray.
+            ray.Origin()    = TransformPoint( m_camera.GetCameraToWorld(), ray.Origin() );
+            ray.Direction() = TransformVector( m_camera.GetCameraToWorld(), ray.Direction() );
 
             m_image( coord.Y(), coord.X() ) = _ShadePixel( ray );
         }
@@ -63,15 +69,25 @@ protected:
     {
         TOY_LOG_DEBUG( "OnKeyPress: %i, %i, %i\n", i_key, i_action, i_modifiers );
 
+        constexpr float moveSpeed = 0.1;
+
         switch ( i_key )
         {
         case GLFW_KEY_UP:
-            m_camera.Origin().Z() += 0.1;
+            m_camera.SetOrigin( m_camera.GetOrigin() + gm::Vec3f( 0, 0, moveSpeed ) );
             break;
         case GLFW_KEY_DOWN:
-            m_camera.Origin().Z() -= 0.1;
+            m_camera.SetOrigin( m_camera.GetOrigin() + gm::Vec3f( 0, 0, -moveSpeed ) );
+            break;
+        case GLFW_KEY_LEFT:
+            m_camera.SetOrigin( m_camera.GetOrigin() + gm::Vec3f( -moveSpeed, 0, 0 ) );
+            break;
+        case GLFW_KEY_RIGHT:
+            m_camera.SetOrigin( m_camera.GetOrigin() + gm::Vec3f( moveSpeed, 0, 0 ) );
             break;
         }
+
+        TOY_LOG_DEBUG( "Camera Origin: %s\n", m_camera.GetOrigin().GetString().c_str() );
     }
 
 private:

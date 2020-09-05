@@ -106,7 +106,7 @@ void Window::_KeyCallback( GLFWwindow* i_glfwWindow, int i_key, int i_scanCode, 
 {
     Window* window = static_cast< Window* >( glfwGetWindowUserPointer( i_glfwWindow ) );
     TOY_ASSERT( window );
-    if ( i_action == GLFW_PRESS )
+    if ( i_action == GLFW_PRESS || i_action == GLFW_REPEAT )
     {
         window->OnKeyPress( i_key, i_action, i_modifiers );
     }
