@@ -58,7 +58,7 @@ public:
 
     inline gm::Vec3f GetNewUp() const
     {
-        return gm::Vec3f( m_objectToWorld( 0, 2 ), m_objectToWorld( 1, 2 ), m_objectToWorld( 2, 2 ) );
+        return gm::Vec3f( m_objectToWorld( 0, 1 ), m_objectToWorld( 1, 1 ), m_objectToWorld( 2, 1 ) );
     }
 
 private:

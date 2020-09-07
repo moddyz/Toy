@@ -95,6 +95,13 @@ void Window::OnResize( const gm::Vec2i& i_dimensions )
     }
 }
 
+gm::Vec2f Window::_GetMousePosition() const
+{
+    double x, y;
+    glfwGetCursorPos( m_handle, &x, &y );
+    return gm::Vec2f( x, y );
+}
+
 /* static */
 void Window::_ErrorCallback( int i_error, const char* i_description )
 {
@@ -117,7 +124,9 @@ void Window::_MouseMoveCallback( GLFWwindow* i_glfwWindow, double i_xCoord, doub
 {
     Window* window = static_cast< Window* >( glfwGetWindowUserPointer( i_glfwWindow ) );
     TOY_ASSERT( window );
-    window->OnMouseMove( gm::Vec2i( ( int ) i_xCoord, ( int ) i_yCoord ) );
+    gm::Vec2f mousePosition( i_xCoord, i_yCoord );
+    window->OnMouseMove( mousePosition );
+    window->m_lastMousePosition = mousePosition;
 }
 
 /* static */
@@ -125,7 +134,36 @@ void Window::_MouseButtonCallback( GLFWwindow* i_glfwWindow, int i_button, int i
 {
     Window* window = static_cast< Window* >( glfwGetWindowUserPointer( i_glfwWindow ) );
     TOY_ASSERT( window );
+
+    // Update mouse mouse pressed state.
+    MouseButton mouseButton = MouseButton_Clean;
+    switch ( i_button )
+    {
+    case GLFW_MOUSE_BUTTON_LEFT:
+        mouseButton = MouseButton_Left;
+        break;
+    case GLFW_MOUSE_BUTTON_MIDDLE:
+        mouseButton = MouseButton_Middle;
+        break;
+    case GLFW_MOUSE_BUTTON_RIGHT:
+        mouseButton = MouseButton_Right;
+        break;
+    }
+
+     if ( i_action == GLFW_PRESS )
+     {
+         window->m_mouseButtonPressed |= mouseButton;
+     }
+     else
+     {
+         window->m_mouseButtonPressed &= ~mouseButton;
+     }
+
+    // Call derived function.
     window->OnMouseButton( i_button, i_action, i_modifiers );
+
+    // Update last mouse position state.
+    window->m_lastMousePosition = window->_GetMousePosition();
 }
 
 /* static */

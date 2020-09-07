@@ -5,7 +5,9 @@
 /// An application window for presentation purposes.
 
 #include <toy/memory/matrix.h>
+#include <toy/application/mouse.h>
 
+#include <gm/types/vec2f.h>
 #include <gm/types/vec2i.h>
 
 // Forward declarations.
@@ -57,7 +59,7 @@ protected:
     /// Respond to a mouse move event.
     ///
     /// \param i_position New mouse position.
-    virtual void OnMouseMove( const gm::Vec2i& i_position ){};
+    virtual void OnMouseMove( const gm::Vec2f& i_position ){};
 
     /// Respond to a mouse button event.
     ///
@@ -66,7 +68,24 @@ protected:
     /// \param i_modifiers If any keyboard modifiers are active (ctrl, alt, shift).
     virtual void OnMouseButton( int i_button, int i_action, int i_modifiers ){};
 
+    // ------------------------------------------------------------------------
+    /// \name User input
+    // ------------------------------------------------------------------------
+
+    inline MouseButton GetMouseButtonPressed() const
+    {
+        return m_mouseButtonPressed;
+    }
+
+    inline const gm::Vec2f& GetLastMousePosition() const
+    {
+        return m_lastMousePosition;
+    }
+
 private:
+    // Query the current mouse position.
+    gm::Vec2f _GetMousePosition() const;
+
     // GLFW callbacks.
     static void _ErrorCallback( int i_error, const char* i_description );
     static void _KeyCallback( GLFWwindow* i_glfwWindow, int i_key, int i_scanCode, int i_action, int i_modifiers );
@@ -79,6 +98,10 @@ private:
 
     // CUDA GL Imaging pipeline.
     CudaGLFrameBuffer* m_frameBuffer = nullptr;
+
+    // User input states.
+    gm::Vec2f   m_lastMousePosition;
+    MouseButton m_mouseButtonPressed;
 };
 
 TOY_NS_CLOSE

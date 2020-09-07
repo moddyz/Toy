@@ -68,7 +68,7 @@ protected:
     {
         TOY_LOG_DEBUG( "OnKeyPress: %i, %i, %i\n", i_key, i_action, i_modifiers );
 
-        constexpr float moveSpeed = 0.1;
+        constexpr float moveSpeed = 0.1f;
 
         gm::Vec3f origin = m_cameraTransform.GetOrigin();
         gm::Vec3f target = m_cameraTransform.GetTarget();
@@ -109,6 +109,23 @@ protected:
         m_cameraTransform = toy::LookAtTransform( origin, target, up );
     }
 
+    virtual void OnMouseMove( const gm::Vec2f& i_position ) override
+    {
+        // TOY_LOG_DEBUG( "OnMouseMove: (%f, %f)\n", i_position.X(), i_position.Y() );
+
+        if ( GetMouseButtonPressed() & toy::MouseButton_Middle )
+        {
+            constexpr float moveSpeed   = 0.001f;
+            gm::Vec2f       mouseDelta  = i_position - GetLastMousePosition();
+            gm::Vec3f       translation = m_cameraTransform.GetNewUp() * moveSpeed * -mouseDelta.Y() +
+                                    m_cameraTransform.GetRight() * moveSpeed * -mouseDelta.X();
+
+            m_cameraTransform = toy::LookAtTransform( m_cameraTransform.GetOrigin() + translation,
+                                                      m_cameraTransform.GetTarget() + translation,
+                                                      m_cameraTransform.GetUp() );
+        }
+    }
+
 private:
     static gm::Vec3f _ShadePixel( const toy::Ray& i_ray )
     {
@@ -129,9 +146,11 @@ private:
         return gm::LinearInterpolation( gm::Vec3f( 1.0, 1.0, 1.0 ), gm::Vec3f( 0.5, 0.7, 1.0 ), weight );
     }
 
+    // Frame buffer.
     toy::Matrix< gm::Vec3f, toy::Host > m_image;
     toy::Matrix< uint32_t, toy::Host >  m_texture;
 
+    // Camera.
     toy::LookAtTransform m_cameraTransform;
     toy::PerspectiveView m_cameraView;
 };
