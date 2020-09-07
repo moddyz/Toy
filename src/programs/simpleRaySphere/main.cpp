@@ -9,6 +9,8 @@
 #include <toy/model/ray.h>
 #include <toy/utils/log.h>
 
+#include <gm/functions/clamp.h>
+#include <gm/functions/distance.h>
 #include <gm/functions/linearInterpolation.h>
 #include <gm/functions/raySphereIntersection.h>
 #include <gm/functions/transformPoint.h>
@@ -111,17 +113,30 @@ protected:
 
     virtual void OnMouseMove( const gm::Vec2f& i_position ) override
     {
-        // TOY_LOG_DEBUG( "OnMouseMove: (%f, %f)\n", i_position.X(), i_position.Y() );
+        gm::Vec2f mouseDelta = i_position - GetLastMousePosition();
 
         if ( GetMouseButtonPressed() & toy::MouseButton_Middle )
         {
+            // Camera pan
+
             constexpr float moveSpeed   = 0.001f;
-            gm::Vec2f       mouseDelta  = i_position - GetLastMousePosition();
             gm::Vec3f       translation = m_cameraTransform.GetNewUp() * moveSpeed * -mouseDelta.Y() +
                                     m_cameraTransform.GetRight() * moveSpeed * -mouseDelta.X();
 
             m_cameraTransform = toy::LookAtTransform( m_cameraTransform.GetOrigin() + translation,
                                                       m_cameraTransform.GetTarget() + translation,
+                                                      m_cameraTransform.GetUp() );
+        }
+        else if ( GetMouseButtonPressed() & toy::MouseButton_Right )
+        {
+            // Camera zoom
+
+            float targetOriginDistance = gm::Distance( m_cameraTransform.GetOrigin(), m_cameraTransform.GetTarget() );
+            float zoomSpeed            = gm::Clamp( ( targetOriginDistance / 50.0 ), gm::FloatRange( 0.01f, 10.0f ) );
+            gm::Vec3f translation      = m_cameraTransform.GetForward() * zoomSpeed * -mouseDelta.Y();
+
+            m_cameraTransform = toy::LookAtTransform( m_cameraTransform.GetOrigin() + translation,
+                                                      m_cameraTransform.GetTarget(),
                                                       m_cameraTransform.GetUp() );
         }
     }
