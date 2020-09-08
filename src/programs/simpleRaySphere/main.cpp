@@ -13,7 +13,9 @@
 #include <gm/functions/clamp.h>
 #include <gm/functions/distance.h>
 #include <gm/functions/linearInterpolation.h>
+#include <gm/functions/matrixProduct.h>
 #include <gm/functions/raySphereIntersection.h>
+#include <gm/functions/setRotate.h>
 #include <gm/functions/transformPoint.h>
 #include <gm/functions/transformVector.h>
 #include <gm/types/vec2iRange.h>
@@ -116,7 +118,42 @@ protected:
     {
         gm::Vec2f mouseDelta = i_position - GetLastMousePosition();
 
-        if ( GetMouseButtonPressed() & toy::MouseButton_Middle )
+        if ( GetMouseButtonPressed() & toy::MouseButton_Left )
+        {
+            // Camera dolly.
+            // We intend to rotate the camera origin position it's target position.
+
+            // Compute the coordinates of the camera origin, with the target as the coordinate system origin.
+            gm::Vec3f targetCentricOrigin = m_cameraTransform.GetOrigin() - m_cameraTransform.GetTarget();
+
+            // "Pitch" uses the camera right vector as the axis of rotation.
+            // The degree of rotation is determined by vertical mouse delta.
+            float     pitchDegrees = mouseDelta.Y();
+            gm::Mat4f pitchTransform( gm::Mat4f::Identity() );
+            gm::SetRotate( pitchDegrees, m_cameraTransform.GetRight(), pitchTransform );
+
+            // "Yaw" uses the camera up vector as the axis of rotation.
+            // The degree of rotation is determined by horizontal mouse delta.
+            float     yawDegrees = mouseDelta.X();
+            gm::Mat4f yawTransform( gm::Mat4f::Identity() );
+            gm::SetRotate( yawDegrees, m_cameraTransform.GetNewUp(), yawTransform );
+
+            // Compose the two transforms.
+            gm::Mat4f rotationTransform = gm::MatrixProduct( pitchTransform, yawTransform );
+
+            // Transform
+            gm::Vec3f newTargetCentricOrigin = gm::TransformPoint( rotationTransform, targetCentricOrigin );
+            gm::Vec3f newOrigin              = newTargetCentricOrigin + m_cameraTransform.GetTarget();
+
+            m_cameraTransform =
+                toy::LookAtTransform( newOrigin, m_cameraTransform.GetTarget(), m_cameraTransform.GetUp() );
+
+            TOY_LOG_DEBUG( "Target Centric Origin: %s\n", targetCentricOrigin.GetString().c_str() );
+            TOY_LOG_DEBUG( "Camera Right: %s\n", m_cameraTransform.GetRight().GetString().c_str() );
+            TOY_LOG_DEBUG( "Degrees: %f\n", pitchDegrees );
+            TOY_LOG_DEBUG( "Rotation matrix: %s\n", pitchTransform.GetString().c_str() );
+        }
+        else if ( GetMouseButtonPressed() & toy::MouseButton_Middle )
         {
             // Camera pan
 
