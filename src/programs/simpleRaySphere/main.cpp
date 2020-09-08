@@ -9,6 +9,7 @@
 #include <toy/model/ray.h>
 #include <toy/utils/log.h>
 
+#include <gm/functions/abs.h>
 #include <gm/functions/clamp.h>
 #include <gm/functions/distance.h>
 #include <gm/functions/linearInterpolation.h>
@@ -132,8 +133,10 @@ protected:
             // Camera zoom
 
             float targetOriginDistance = gm::Distance( m_cameraTransform.GetOrigin(), m_cameraTransform.GetTarget() );
-            float zoomSpeed            = gm::Clamp( ( targetOriginDistance / 50.0 ), gm::FloatRange( 0.01f, 10.0f ) );
-            gm::Vec3f translation      = m_cameraTransform.GetForward() * zoomSpeed * -mouseDelta.Y();
+            float zoomSpeed            = gm::Clamp( ( targetOriginDistance / 50.0 ), gm::FloatRange( 0.01f, 5.0f ) );
+            float deltaFactor =
+                ( -mouseDelta.X() + mouseDelta.Y() ) * 50.0 / ( m_image.GetRows() + m_image.GetColumns() );
+            gm::Vec3f translation = m_cameraTransform.GetForward() * zoomSpeed * -deltaFactor;
 
             m_cameraTransform = toy::LookAtTransform( m_cameraTransform.GetOrigin() + translation,
                                                       m_cameraTransform.GetTarget(),
