@@ -121,7 +121,7 @@ protected:
         if ( GetMouseButtonPressed() & toy::MouseButton_Left )
         {
             // Camera dolly.
-            // We intend to rotate the camera origin position it's target position.
+            // We intend to rotate the camera origin around its target.
 
             // Compute the coordinates of the camera origin, with the target as the coordinate system origin.
             gm::Vec3f targetCentricOrigin = m_cameraTransform.GetOrigin() - m_cameraTransform.GetTarget();
@@ -141,23 +141,33 @@ protected:
             // Compose the two transforms.
             gm::Mat4f rotationTransform = gm::MatrixProduct( pitchTransform, yawTransform );
 
-            // Transform
+            // Perform transformation in target-space, then bring back into world-space.
             gm::Vec3f newTargetCentricOrigin = gm::TransformPoint( rotationTransform, targetCentricOrigin );
             gm::Vec3f newOrigin              = newTargetCentricOrigin + m_cameraTransform.GetTarget();
 
-            m_cameraTransform =
-                toy::LookAtTransform( newOrigin, m_cameraTransform.GetTarget(), m_cameraTransform.GetUp() );
+            // The orienting up vector should be (0, 1, 0) in most cases, unless the
+            // camera origin is near the region directly above the target.
+            gm::Vec3f newUp = gm::Vec3f( 0, 1, 0 );
+            if ( gm::DotProduct( gm::Normalize( m_cameraTransform.GetTarget() - newOrigin ), newUp ) > 0.99f )
+            {
+                newUp = m_cameraTransform.GetNewUp();
+            }
 
             TOY_LOG_DEBUG( "Target Centric Origin: %s\n", targetCentricOrigin.GetString().c_str() );
-            TOY_LOG_DEBUG( "Camera Right: %s\n", m_cameraTransform.GetRight().GetString().c_str() );
             TOY_LOG_DEBUG( "Degrees: %f\n", pitchDegrees );
             TOY_LOG_DEBUG( "Rotation matrix: %s\n", pitchTransform.GetString().c_str() );
+            TOY_LOG_DEBUG( "New up: %s\n", newUp.GetString().c_str() );
+
+            m_cameraTransform =
+                toy::LookAtTransform( newOrigin, m_cameraTransform.GetTarget(), m_cameraTransform.GetNewUp() );
+
+            TOY_LOG_DEBUG( "Camera Right: %s\n", m_cameraTransform.GetRight().GetString().c_str() );
         }
         else if ( GetMouseButtonPressed() & toy::MouseButton_Middle )
         {
             // Camera pan
 
-            constexpr float moveSpeed   = 0.001f;
+            constexpr float moveSpeed   = 0.01f;
             gm::Vec3f       translation = m_cameraTransform.GetNewUp() * moveSpeed * -mouseDelta.Y() +
                                     m_cameraTransform.GetRight() * moveSpeed * -mouseDelta.X();
 
