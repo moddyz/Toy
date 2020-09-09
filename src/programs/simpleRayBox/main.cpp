@@ -14,7 +14,7 @@
 #include <gm/functions/distance.h>
 #include <gm/functions/linearInterpolation.h>
 #include <gm/functions/matrixProduct.h>
-#include <gm/functions/raySphereIntersection.h>
+#include <gm/functions/rayAABBIntersection.h>
 #include <gm/functions/setRotate.h>
 #include <gm/functions/transformPoint.h>
 #include <gm/functions/transformVector.h>
@@ -24,13 +24,13 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-class SimpleRaySphereWindow : public toy::Window
+class SimpleRayBoxWindow : public toy::Window
 {
 public:
-    explicit SimpleRaySphereWindow( const char* i_title, const gm::Vec2i& i_dimensions )
+    explicit SimpleRayBoxWindow( const char* i_title, const gm::Vec2i& i_dimensions )
         : toy::Window( i_title, i_dimensions )
-        , m_cameraTransform( /* origin */ gm::Vec3f( 0, 0, 0 ),
-                             /* target */ gm::Vec3f( 0, 0, 1 ),
+        , m_cameraTransform( /* origin */ gm::Vec3f( 0, 0, -5 ),
+                             /* target */ gm::Vec3f( 0, 0, 0 ),
                              /* up */ gm::Vec3f( 0, 1, 0 ) )
         , m_cameraView( /* verticalFov */ 90.0f,
                         /* aspectRatio */ ( float ) i_dimensions.X() / float( i_dimensions.Y() ) )
@@ -128,7 +128,7 @@ protected:
 
             // "Pitch" uses the camera right vector as the axis of rotation.
             // The degree of rotation is determined by vertical mouse delta.
-            float     pitchDegrees = mouseDelta.Y();
+            float     pitchDegrees = -mouseDelta.Y();
             gm::Mat4f pitchTransform( gm::Mat4f::Identity() );
             gm::SetRotate( pitchDegrees, m_cameraTransform.GetRight(), pitchTransform );
 
@@ -184,13 +184,12 @@ protected:
 private:
     static gm::Vec3f _ShadePixel( const toy::Ray& i_ray )
     {
-        // Test for sphere intersection (hard-coded placement of the sphere)
+        // Test for box intersection (hard-coded placement of the box)
         gm::FloatRange intersections;
-        if ( gm::RaySphereIntersection( gm::Vec3f( 0, 0, 1.0 ),
-                                        0.5,
-                                        i_ray.Origin(),
-                                        i_ray.Direction(),
-                                        intersections ) > 0 )
+        if ( gm::RayAABBIntersection( i_ray.Origin(),
+                                      i_ray.Direction(),
+                                      gm::Vec3fRange( gm::Vec3f( -1, -1, -1 ), gm::Vec3f( 1, 1, 1 ) ),
+                                      intersections ) > 0 )
         {
             return gm::Vec3f( 1, 0, 0 );
         }
@@ -212,9 +211,9 @@ private:
 
 int main( int i_argc, char** i_argv )
 {
-    TOY_LOG_INFO( "[Starting simpleRaySphere...]\n" );
+    TOY_LOG_INFO( "[Starting simpleRayBox...]\n" );
 
-    SimpleRaySphereWindow window( "Toy: simpleRaySphere", gm::Vec2i( 640, 480 ) );
+    SimpleRayBoxWindow window( "Toy: simpleRayBox", gm::Vec2i( 640, 480 ) );
     window.Run();
 
     return 0;
