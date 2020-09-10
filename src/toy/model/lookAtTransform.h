@@ -1,11 +1,6 @@
 #pragma once
 
 /// \file model/lookAtTransform.h
-///
-/// A transformation with an origin (position), look at position, and up vector.
-///
-/// This transformation is useful for placing a camera (camera-space) in the scene (world-space).
-/// The inverse can place world-space scene primitives into camera-space.
 
 #include <toy/toy.h>
 
@@ -13,6 +8,12 @@
 
 TOY_NS_OPEN
 
+/// \class LookAtTransform
+///
+/// A transformation with an origin position, look at position, and up vector.
+///
+/// This transformation is useful for placing a camera (camera-space) in the scene (world-space).
+/// The inverse can place world-space scene primitives into camera-space.
 class LookAtTransform
 {
 public:
@@ -23,6 +24,10 @@ public:
     {
         m_objectToWorld = gm::LookAt( m_origin, m_target, m_up );
     }
+
+    //-------------------------------------------------------------------------
+    /// \name Inputs
+    //-------------------------------------------------------------------------
 
     inline const gm::Vec3f& GetOrigin() const
     {
@@ -39,7 +44,9 @@ public:
         return m_up;
     }
 
-    // Computed params
+    //-------------------------------------------------------------------------
+    /// \name Outputs
+    //-------------------------------------------------------------------------
 
     inline const gm::Mat4f& GetObjectToWorld() const
     {
