@@ -12,7 +12,7 @@ TOY_NS_OPEN
 
 /// \class OrbitManipulator
 ///
-/// Manipulates a LookAtTransform with a orbit-camera effect.
+/// Manipulator for rotating a camera origin around its target.
 class OrbitManipulator
 {
 public:

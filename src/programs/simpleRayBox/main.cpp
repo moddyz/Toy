@@ -6,13 +6,11 @@
 #include <toy/memory/matrix.h>
 #include <toy/model/lookAtTransform.h>
 #include <toy/model/orbitManipulator.h>
+#include <toy/model/dollyManipulator.h>
 #include <toy/model/perspectiveView.h>
 #include <toy/model/ray.h>
 #include <toy/utils/log.h>
 
-#include <gm/functions/abs.h>
-#include <gm/functions/clamp.h>
-#include <gm/functions/distance.h>
 #include <gm/functions/linearInterpolation.h>
 #include <gm/functions/rayAABBIntersection.h>
 #include <gm/functions/transformPoint.h>
@@ -136,17 +134,8 @@ protected:
         }
         else if ( GetMouseButtonPressed() & toy::MouseButton_Right )
         {
-            // Camera zoom
-
-            float targetOriginDistance = gm::Distance( m_cameraTransform.GetOrigin(), m_cameraTransform.GetTarget() );
-            float zoomSpeed            = gm::Clamp( ( targetOriginDistance / 50.0 ), gm::FloatRange( 0.01f, 5.0f ) );
-            float deltaFactor =
-                ( -mouseDelta.X() + mouseDelta.Y() ) * 50.0 / ( m_image.GetRows() + m_image.GetColumns() );
-            gm::Vec3f translation = m_cameraTransform.GetForward() * zoomSpeed * -deltaFactor;
-
-            m_cameraTransform = toy::LookAtTransform( m_cameraTransform.GetOrigin() + translation,
-                                                      m_cameraTransform.GetTarget(),
-                                                      m_cameraTransform.GetUp() );
+            toy::DollyManipulator dollyManip( m_cameraTransform, 0.01f );
+            dollyManip( mouseDelta.Y() );
         }
     }
 
