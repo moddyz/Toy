@@ -136,7 +136,7 @@ void Window::_MouseButtonCallback( GLFWwindow* i_glfwWindow, int i_button, int i
     TOY_ASSERT( window );
 
     // Update mouse mouse pressed state.
-    MouseButton mouseButton = MouseButton_Clean;
+    MouseButton mouseButton = MouseButton_None;
     switch ( i_button )
     {
     case GLFW_MOUSE_BUTTON_LEFT:

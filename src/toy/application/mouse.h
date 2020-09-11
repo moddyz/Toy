@@ -14,7 +14,7 @@ TOY_NS_OPEN
 /// This is used by the \ref Window class for providing mouse button pressed state.
 enum MouseButton : char
 {
-    MouseButton_Clean  = 0,      // binary 0000
+    MouseButton_None  = 0,      // binary 0000
     MouseButton_Left   = 1 << 0, // binary 0001
     MouseButton_Middle = 1 << 1, // binary 0010
     MouseButton_Right  = 1 << 2, // binary 0100
