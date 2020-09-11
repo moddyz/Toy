@@ -24,11 +24,8 @@ public:
 
     inline void operator()( float i_delta )
     {
-        TOY_LOG_DEBUG( "Delta: %f\n", i_delta );
-
         // Compute the translation vector.
         gm::Vec3f translation = m_transform.GetForward() * m_sensitivity * i_delta;
-        TOY_LOG_DEBUG( "Translation: %s\n", translation.GetString().c_str() );
 
         // Soften the translation vector _only_ if translation is towards the target.
         gm::Vec3f originToTarget = m_transform.GetTarget() - m_transform.GetOrigin();

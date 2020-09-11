@@ -4,11 +4,12 @@
 #include <toy/imaging/convert.h>
 #include <toy/imaging/extent.h>
 #include <toy/memory/matrix.h>
+#include <toy/model/dollyManipulator.h>
 #include <toy/model/lookAtTransform.h>
 #include <toy/model/orbitManipulator.h>
-#include <toy/model/dollyManipulator.h>
 #include <toy/model/perspectiveView.h>
 #include <toy/model/ray.h>
+#include <toy/model/truckManipulator.h>
 #include <toy/utils/log.h>
 
 #include <gm/functions/linearInterpolation.h>
@@ -122,19 +123,12 @@ protected:
         }
         else if ( GetMouseButtonPressed() & toy::MouseButton_Middle )
         {
-            // Camera pan
-
-            constexpr float moveSpeed   = 0.01f;
-            gm::Vec3f       translation = m_cameraTransform.GetNewUp() * moveSpeed * -mouseDelta.Y() +
-                                    m_cameraTransform.GetRight() * moveSpeed * -mouseDelta.X();
-
-            m_cameraTransform = toy::LookAtTransform( m_cameraTransform.GetOrigin() + translation,
-                                                      m_cameraTransform.GetTarget() + translation,
-                                                      m_cameraTransform.GetUp() );
+            toy::TruckManipulator truckManip( m_cameraTransform, /* sensitivity */ 0.01f );
+            truckManip( mouseDelta );
         }
         else if ( GetMouseButtonPressed() & toy::MouseButton_Right )
         {
-            toy::DollyManipulator dollyManip( m_cameraTransform, 0.01f );
+            toy::DollyManipulator dollyManip( m_cameraTransform, /* sensitivity */ 0.01f );
             dollyManip( mouseDelta.Y() );
         }
     }
