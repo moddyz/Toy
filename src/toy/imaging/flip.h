@@ -4,6 +4,7 @@
 ///
 /// Flip an image across its vertical axis.
 
+#include <toy/utils/bitMask.h>
 #include <toy/memory/matrix.h>
 
 #include <gm/types/vec3f.h>
@@ -13,11 +14,14 @@ TOY_NS_OPEN
 /// \enum FlipAxis
 ///
 /// Axis to flip the image across.
-enum FlipAxis
+enum FlipAxis : char
 {
-    FlipAxis_X = 0,
-    FlipAxis_Y = 1
+    FlipAxis_None = 0,      // binary 0000
+    FlipAxis_X    = 1 << 0, // binary 0001
+    FlipAxis_Y    = 1 << 1  // binary 0010
 };
+
+TOY_ENUM_BITMASK_OPERATORS( FlipAxis );
 
 /// Flip or \em reflect an image across one or two axis.
 ///

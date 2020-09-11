@@ -19,4 +19,5 @@ cpp_library(${ROOT_PREFIX}_${LIBRARY_SUFFIX}
         gm
         stb
         toy_memory
+        toy_utils
 )

@@ -5,6 +5,8 @@
 ///
 /// Mouse related utilities.
 
+#include <toy/utils/bitMask.h>
+
 TOY_NS_OPEN
 
 /// \enum MouseButton
@@ -20,20 +22,6 @@ enum MouseButton : char
     MouseButton_Right  = 1 << 2, // binary 0100
 };
 
-inline MouseButton& operator|=( MouseButton& o_button, MouseButton b )
-{
-    return o_button = static_cast< MouseButton >( o_button | b );
-}
-
-inline MouseButton& operator&=( MouseButton& o_button, MouseButton b )
-{
-    return o_button = static_cast< MouseButton >( o_button & b );
-}
-
-inline MouseButton& operator~( MouseButton& o_button )
-{
-    o_button = static_cast< MouseButton >( ~static_cast< char >( o_button ) );
-    return o_button;
-}
+TOY_ENUM_BITMASK_OPERATORS( MouseButton );
 
 TOY_NS_CLOSE
