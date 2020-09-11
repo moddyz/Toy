@@ -4,8 +4,8 @@
 #include <toy/imaging/convert.h>
 #include <toy/imaging/extent.h>
 #include <toy/memory/matrix.h>
-#include <toy/model/dollyManipulator.h>
 #include <toy/model/lookAtTransform.h>
+#include <toy/model/orbitManipulator.h>
 #include <toy/model/perspectiveView.h>
 #include <toy/model/ray.h>
 #include <toy/utils/log.h>
@@ -119,8 +119,8 @@ protected:
 
         if ( GetMouseButtonPressed() & toy::MouseButton_Left )
         {
-            toy::DollyManipulator dollyManip( m_cameraTransform );
-            dollyManip( mouseDelta );
+            toy::OrbitManipulator orbitManip( m_cameraTransform );
+            orbitManip( mouseDelta );
         }
         else if ( GetMouseButtonPressed() & toy::MouseButton_Middle )
         {

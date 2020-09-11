@@ -1,6 +1,6 @@
 #pragma once
 
-/// \file model/dollyManipulator.h
+/// \file model/orbitManipulator.h
 
 #include <toy/model/lookAtTransform.h>
 
@@ -10,11 +10,13 @@
 
 TOY_NS_OPEN
 
-/// \class DollyManipulator
-class DollyManipulator
+/// \class OrbitManipulator
+///
+/// Manipulates a LookAtTransform with a orbit-camera effect.
+class OrbitManipulator
 {
 public:
-    inline explicit DollyManipulator( LookAtTransform& o_transform, float i_sensitivity = 1.0f )
+    inline explicit OrbitManipulator( LookAtTransform& o_transform, float i_sensitivity = 1.0f )
         : m_transform( o_transform )
         , m_sensitivity( i_sensitivity )
     {
