@@ -4,8 +4,8 @@
 ///
 /// An application window for presentation purposes.
 
-#include <toy/memory/matrix.h>
 #include <toy/application/mouse.h>
+#include <toy/memory/matrix.h>
 
 #include <gm/types/vec2f.h>
 #include <gm/types/vec2i.h>
@@ -47,26 +47,46 @@ protected:
     /// Respond to a window resize event.
     ///
     /// \param i_dimensions The new dimensions for this window.
-    virtual void OnResize( const gm::Vec2i& i_dimensions );
+    inline virtual void OnResize( const gm::Vec2i& i_dimensions )
+    {
+        /* no-op */
+    }
 
     /// Respond to a key press event.
     ///
     /// \param i_key The ID of the key which was pressed.
     /// \param i_action ???
     /// \param i_modifiers If any keyboard modifiers are active (ctrl, alt, shift).
-    virtual void OnKeyPress( int i_key, int i_action, int i_modifiers ){};
+    inline virtual void OnKeyPress( int i_key, int i_action, int i_modifiers )
+    {
+        /* no-op */
+    }
 
     /// Respond to a mouse move event.
     ///
     /// \param i_position New mouse position.
-    virtual void OnMouseMove( const gm::Vec2f& i_position ){};
+    inline virtual void OnMouseMove( const gm::Vec2f& i_position )
+    {
+        /* no-op */
+    }
 
     /// Respond to a mouse button event.
     ///
     /// \param i_key The ID of the mouse button which was pressed.
     /// \param i_action ???
     /// \param i_modifiers If any keyboard modifiers are active (ctrl, alt, shift).
-    virtual void OnMouseButton( int i_button, int i_action, int i_modifiers ){};
+    inline virtual void OnMouseButton( int i_button, int i_action, int i_modifiers )
+    {
+        /* no-op */
+    }
+
+    /// Respond to a mouse scroll event.
+    ///
+    /// \param i_offset The scroll offset in pixel units.
+    inline virtual void OnMouseScroll( const gm::Vec2f& i_offset )
+    {
+        /* no-op */
+    }
 
     // ------------------------------------------------------------------------
     /// \name User input
@@ -83,6 +103,9 @@ protected:
     }
 
 private:
+    // Resize the frame buffer, and call client OnResize.
+    void _Resize( const gm::Vec2i& i_dimensions );
+
     // Query the current mouse position.
     gm::Vec2f _GetMousePosition() const;
 
@@ -90,6 +113,7 @@ private:
     static void _ErrorCallback( int i_error, const char* i_description );
     static void _KeyCallback( GLFWwindow* i_glfwWindow, int i_key, int i_scanCode, int i_action, int i_modifiers );
     static void _MouseMoveCallback( GLFWwindow* i_glfwWindow, double i_xCoord, double i_yCoord );
+    static void _MouseScrollCallback( GLFWwindow* i_glfwWindow, double i_xOffset, double i_yOffset );
     static void _MouseButtonCallback( GLFWwindow* i_glfwWindow, int i_button, int i_action, int i_modifiers );
     static void _FrameBufferSizeCallback( GLFWwindow* i_glfwWindow, int i_width, int i_height );
 

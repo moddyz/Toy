@@ -63,7 +63,6 @@ protected:
 
     virtual void OnResize( const gm::Vec2i& i_dimensions ) override
     {
-        toy::Window::OnResize( i_dimensions );
         m_image.Resize( i_dimensions.Y(), i_dimensions.X() );
     }
 
@@ -131,6 +130,12 @@ protected:
             toy::DollyManipulator dollyManip( m_cameraTransform, /* sensitivity */ 0.01f );
             dollyManip( mouseDelta.Y() );
         }
+    }
+
+    virtual void OnMouseScroll( const gm::Vec2f& i_offset ) override
+    {
+        toy::DollyManipulator dollyManip( m_cameraTransform );
+        dollyManip( i_offset.Y() );
     }
 
 private:

@@ -56,12 +56,13 @@ void Window::Run()
 {
     int width, height;
     glfwGetFramebufferSize( m_handle, &width, &height );
-    OnResize( gm::Vec2i( width, height ) );
+    _Resize( gm::Vec2i( width, height ) );
 
     glfwSetFramebufferSizeCallback( m_handle, _FrameBufferSizeCallback );
     glfwSetMouseButtonCallback( m_handle, _MouseButtonCallback );
     glfwSetKeyCallback( m_handle, _KeyCallback );
     glfwSetCursorPosCallback( m_handle, _MouseMoveCallback );
+    glfwSetScrollCallback( m_handle, _MouseScrollCallback );
 
     while ( !glfwWindowShouldClose( m_handle ) )
     {
@@ -80,7 +81,7 @@ void Window::Run()
     }
 }
 
-void Window::OnResize( const gm::Vec2i& i_dimensions )
+void Window::_Resize( const gm::Vec2i& i_dimensions )
 {
     TOY_ASSERT( i_dimensions.X() != 0 & i_dimensions.Y() != 0 );
 
@@ -93,6 +94,9 @@ void Window::OnResize( const gm::Vec2i& i_dimensions )
         delete m_frameBuffer;
         m_frameBuffer = new CudaGLFrameBuffer( i_dimensions.X(), i_dimensions.Y() );
     }
+
+    // Then call derived.
+    OnResize( i_dimensions );
 }
 
 gm::Vec2f Window::_GetMousePosition() const
@@ -150,14 +154,14 @@ void Window::_MouseButtonCallback( GLFWwindow* i_glfwWindow, int i_button, int i
         break;
     }
 
-     if ( i_action == GLFW_PRESS )
-     {
-         window->m_mouseButtonPressed |= mouseButton;
-     }
-     else
-     {
-         window->m_mouseButtonPressed &= ~mouseButton;
-     }
+    if ( i_action == GLFW_PRESS )
+    {
+        window->m_mouseButtonPressed |= mouseButton;
+    }
+    else
+    {
+        window->m_mouseButtonPressed &= ~mouseButton;
+    }
 
     // Call derived function.
     window->OnMouseButton( i_button, i_action, i_modifiers );
@@ -167,11 +171,22 @@ void Window::_MouseButtonCallback( GLFWwindow* i_glfwWindow, int i_button, int i
 }
 
 /* static */
+void Window::_MouseScrollCallback( GLFWwindow* i_glfwWindow, double i_xOffset, double i_yOffset )
+{
+    Window* window = static_cast< Window* >( glfwGetWindowUserPointer( i_glfwWindow ) );
+    TOY_ASSERT( window );
+
+    // Call derived function.
+    gm::Vec2f mouseScroll( i_xOffset, i_yOffset );
+    window->OnMouseScroll( mouseScroll );
+}
+
+/* static */
 void Window::_FrameBufferSizeCallback( GLFWwindow* i_glfwWindow, int width, int height )
 {
     Window* window = static_cast< Window* >( glfwGetWindowUserPointer( i_glfwWindow ) );
     TOY_ASSERT( window );
-    window->OnResize( gm::Vec2i( width, height ) );
+    window->_Resize( gm::Vec2i( width, height ) );
 }
 
 TOY_NS_CLOSE

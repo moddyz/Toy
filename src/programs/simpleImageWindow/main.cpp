@@ -35,7 +35,6 @@ protected:
 
     virtual void OnResize( const gm::Vec2i& i_dimensions ) override
     {
-        toy::Window::OnResize( i_dimensions );
         m_image.Resize( i_dimensions.Y(), i_dimensions.X() );
         m_texture.Resize( i_dimensions.Y(), i_dimensions.X() );
     }
