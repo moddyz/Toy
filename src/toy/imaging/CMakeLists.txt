@@ -1,5 +1,5 @@
 file(GLOB HEADERS *.h *.cuh)
-file(GLOB CPPFILES *.cpp)
+file(GLOB CPPFILES *.cpp *.cu)
 get_filename_component(LIBRARY_SUFFIX ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
 cpp_library(${ROOT_PREFIX}_${LIBRARY_SUFFIX}

@@ -3,6 +3,7 @@
 #include <toy/application/window.h>
 #include <toy/imaging/convert.h>
 #include <toy/imaging/extent.h>
+#include <toy/imaging/generateNDC.h>
 #include <toy/memory/matrix.h>
 #include <toy/model/dollyManipulator.h>
 #include <toy/model/lookAtTransform.h>
@@ -24,7 +25,7 @@
 
 TOY_NS_OPEN
 
-template< Residency ResidencyT >
+template < Residency ResidencyT >
 class SimpleRayPipelineWindow : public Window
 {
 public:
@@ -41,23 +42,26 @@ public:
 protected:
     virtual void Render( uint32_t* o_frameData ) override
     {
-        // Cast a ray per pixel to compute the color.
-        for ( gm::Vec2i coord : GetImageExtent( m_image ) )
+        Matrix< gm::Vec2f, ResidencyT > normalizedDeviceCoords;
+        GenerateNDC< ResidencyT >::Execute( GetImageExtent( m_image ), normalizedDeviceCoords );
+
+        for ( size_t yCoord = 0; yCoord < normalizedDeviceCoords.GetRows(); ++yCoord )
         {
-            // Compute normalised viewport coordinates (values between 0 and 1).
-            float u = float( coord.X() ) / m_image.GetColumns();
-            float v = float( coord.Y() ) / m_image.GetRows();
+            for ( size_t xCoord = 0; xCoord < normalizedDeviceCoords.GetColumns(); ++xCoord )
+            {
+                const gm::Vec2f& ndc = normalizedDeviceCoords( yCoord, xCoord );
 
-            Ray ray( gm::Vec3f( 0, 0, 0 ),
-                     m_cameraView.NearBottomLeft() + ( u * m_cameraView.NearHorizontal() ) +
-                         ( v * m_cameraView.NearVertical() ) );
+                Ray ray( gm::Vec3f( 0, 0, 0 ),
+                         m_cameraView.NearBottomLeft() + ( ndc.X() * m_cameraView.NearHorizontal() ) +
+                             ( ndc.Y() * m_cameraView.NearVertical() ) );
 
-            // Transform camera-space ray into world-space ray.
-            ray.Origin() = gm::TransformPoint( m_cameraTransform.GetObjectToWorld(), ray.Origin() );
-            ray.Direction() =
-                gm::Normalize( gm::TransformVector( m_cameraTransform.GetObjectToWorld(), ray.Direction() ) );
+                // Transform camera-space ray into world-space ray.
+                ray.Origin() = gm::TransformPoint( m_cameraTransform.GetObjectToWorld(), ray.Origin() );
+                ray.Direction() =
+                    gm::Normalize( gm::TransformVector( m_cameraTransform.GetObjectToWorld(), ray.Direction() ) );
 
-            m_image( coord.Y(), coord.X() ) = _ShadePixel( ray );
+                m_image( yCoord, xCoord ) = _ShadePixel( ray );
+            }
         }
 
         ConvertImageVec3fToUint32( m_image, m_texture );

@@ -192,7 +192,9 @@ public:
     }
 
 private:
-    friend class Matrix< ValueT, ResidencyT >;
+    // Hmm how does array become friends with _all_ the residencies.
+    friend class Matrix< ValueT, Host >;
+    friend class Matrix< ValueT, Cuda >;
 
     // Helper method to copy the attributes and data from a source array into this array.
     template < Residency SrcResidencyT >

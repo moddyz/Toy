@@ -17,5 +17,5 @@ then
     cmake --build . -- all test -j 8
 else
     cmake $CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=$1 ..
-    cmake --build . --target install -- -j 8
+    cmake --build . --target install -- VERBOSE=1 -j 8
 fi
