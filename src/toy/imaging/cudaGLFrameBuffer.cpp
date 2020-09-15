@@ -61,7 +61,7 @@ CudaGLFrameBuffer::~CudaGLFrameBuffer()
     glDeleteTextures( 1, &m_textureId );
 }
 
-uint32_t* CudaGLFrameBuffer::ComputeFrameBegin()
+uint32_t* CudaGLFrameBuffer::WriteFrameBegin()
 {
     CUDA_CHECK( cudaGraphicsMapResources( 1, &m_graphicsResource, 0 ) );
     uint32_t* devicePtr = nullptr;
@@ -71,7 +71,7 @@ uint32_t* CudaGLFrameBuffer::ComputeFrameBegin()
     return devicePtr;
 }
 
-void CudaGLFrameBuffer::ComputeFrameEnd( uint32_t* o_frameData )
+void CudaGLFrameBuffer::WriteFrameEnd()
 {
     cudaDeviceSynchronize();
     CUDA_CHECK( cudaGraphicsUnmapResources( 1, &m_graphicsResource, 0 ) );

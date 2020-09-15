@@ -68,12 +68,12 @@ public:
     /// TODO: Returning a raw pointer sucks.  We can do better.
     ///
     /// \return The CUDA device pointer to a frame buffer.
-    uint32_t* ComputeFrameBegin();
+    uint32_t* WriteFrameBegin();
 
     /// End the CUDA computation phase for writing into a frame.
     ///
     /// \param o_frameData The CUDA device pointer to a frame buffer.
-    void ComputeFrameEnd( uint32_t* o_frameData );
+    void WriteFrameEnd();
 
     /// Draw frame buffer via a OpenGL texture bound to a single quad.
     void DrawFrame();

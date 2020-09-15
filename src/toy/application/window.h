@@ -42,7 +42,7 @@ protected:
     /// It is a RGBA buffer with 8 bits or 1 byte allocated for each channel.
     ///
     /// \param o_frameData The frame buffer.
-    virtual void Render( uint32_t* o_frameData ) = 0;
+    virtual void WriteFrame( uint32_t* o_frameData ) = 0;
 
     /// Respond to a window resize event.
     ///

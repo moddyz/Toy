@@ -21,7 +21,7 @@ public:
     }
 
 protected:
-    virtual void Render( uint32_t* o_frameData ) override
+    virtual void WriteFrame( uint32_t* o_frameData ) override
     {
         for ( gm::Vec2i coord : toy::GetImageExtent( m_image ) )
         {

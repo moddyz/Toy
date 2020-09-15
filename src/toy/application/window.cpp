@@ -69,9 +69,9 @@ void Window::Run()
         TOY_ASSERT( m_frameBuffer != nullptr );
 
         // CUDA Computation step.
-        uint32_t* frameData = m_frameBuffer->ComputeFrameBegin();
-        Render( frameData );
-        m_frameBuffer->ComputeFrameEnd( frameData );
+        uint32_t* frameData = m_frameBuffer->WriteFrameBegin();
+        WriteFrame( frameData );
+        m_frameBuffer->WriteFrameEnd();
 
         // Display the computed frame.
         m_frameBuffer->DrawFrame();
