@@ -80,10 +80,10 @@ protected:
         /* no-op */
     }
 
-    /// Respond to a mouse scroll event.
+    /// Respond to a scroll event.
     ///
     /// \param i_offset The scroll offset in pixel units.
-    inline virtual void OnMouseScroll( const gm::Vec2f& i_offset )
+    inline virtual void OnScroll( const gm::Vec2f& i_offset )
     {
         /* no-op */
     }
@@ -113,8 +113,8 @@ private:
     static void _ErrorCallback( int i_error, const char* i_description );
     static void _KeyCallback( GLFWwindow* i_glfwWindow, int i_key, int i_scanCode, int i_action, int i_modifiers );
     static void _MouseMoveCallback( GLFWwindow* i_glfwWindow, double i_xCoord, double i_yCoord );
-    static void _MouseScrollCallback( GLFWwindow* i_glfwWindow, double i_xOffset, double i_yOffset );
     static void _MouseButtonCallback( GLFWwindow* i_glfwWindow, int i_button, int i_action, int i_modifiers );
+    static void _ScrollCallback( GLFWwindow* i_glfwWindow, double i_xOffset, double i_yOffset );
     static void _FrameBufferSizeCallback( GLFWwindow* i_glfwWindow, int i_width, int i_height );
 
     // Handle to the underlying GLFW window instance.

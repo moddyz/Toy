@@ -62,7 +62,7 @@ void Window::Run()
     glfwSetMouseButtonCallback( m_handle, _MouseButtonCallback );
     glfwSetKeyCallback( m_handle, _KeyCallback );
     glfwSetCursorPosCallback( m_handle, _MouseMoveCallback );
-    glfwSetScrollCallback( m_handle, _MouseScrollCallback );
+    glfwSetScrollCallback( m_handle, _ScrollCallback );
 
     while ( !glfwWindowShouldClose( m_handle ) )
     {
@@ -171,14 +171,14 @@ void Window::_MouseButtonCallback( GLFWwindow* i_glfwWindow, int i_button, int i
 }
 
 /* static */
-void Window::_MouseScrollCallback( GLFWwindow* i_glfwWindow, double i_xOffset, double i_yOffset )
+void Window::_ScrollCallback( GLFWwindow* i_glfwWindow, double i_xOffset, double i_yOffset )
 {
     Window* window = static_cast< Window* >( glfwGetWindowUserPointer( i_glfwWindow ) );
     TOY_ASSERT( window );
 
     // Call derived function.
     gm::Vec2f mouseScroll( i_xOffset, i_yOffset );
-    window->OnMouseScroll( mouseScroll );
+    window->OnScroll( mouseScroll );
 }
 
 /* static */
