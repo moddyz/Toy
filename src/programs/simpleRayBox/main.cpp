@@ -12,26 +12,28 @@
 #include <gm/types/vec2iRange.h>
 #include <gm/types/vec3f.h>
 
-class SimpleRayBoxWindow : public toy::ViewportWindow
+TOY_NS_OPEN
+
+class SimpleRayBoxWindow : public ViewportWindow
 {
 public:
     explicit SimpleRayBoxWindow( const char* i_title, const gm::Vec2i& i_dimensions )
-        : toy::ViewportWindow( i_title, i_dimensions )
+        : ViewportWindow( i_title, i_dimensions )
     {
     }
 
-    virtual void Render( toy::Matrix< gm::Vec3f, toy::Host >& o_image ) override
+    virtual void Render( Matrix< gm::Vec3f, Host >& o_image ) override
     {
         // Cast a ray per pixel to compute the color.
-        for ( gm::Vec2i coord : toy::GetImageExtent( o_image ) )
+        for ( gm::Vec2i coord : GetImageExtent( o_image ) )
         {
             // Compute normalised viewport coordinates (values between 0 and 1).
             float u = float( coord.X() ) / o_image.GetColumns();
             float v = float( coord.Y() ) / o_image.GetRows();
 
-            toy::Ray ray( gm::Vec3f( 0, 0, 0 ),
-                          GetCameraView().NearBottomLeft() + ( u * GetCameraView().NearHorizontal() ) +
-                              ( v * GetCameraView().NearVertical() ) );
+            Ray ray( gm::Vec3f( 0, 0, 0 ),
+                     GetCameraView().NearBottomLeft() + ( u * GetCameraView().NearHorizontal() ) +
+                         ( v * GetCameraView().NearVertical() ) );
 
             // Transform camera-space ray into world-space ray.
             ray.Origin() = gm::TransformPoint( GetCameraTransform().GetObjectToWorld(), ray.Origin() );
@@ -43,7 +45,7 @@ public:
     }
 
 private:
-    static gm::Vec3f _ShadePixel( const toy::Ray& i_ray )
+    static gm::Vec3f _ShadePixel( const Ray& i_ray )
     {
         // Test for box intersection (hard-coded placement of the box)
         gm::FloatRange intersections;
@@ -62,11 +64,13 @@ private:
     }
 };
 
+TOY_NS_CLOSE
+
 int main( int i_argc, char** i_argv )
 {
     TOY_LOG_INFO( "[Starting simpleRayBox...]\n" );
 
-    SimpleRayBoxWindow window( "Toy: simpleRayBox", gm::Vec2i( 640, 480 ) );
+    toy::SimpleRayBoxWindow window( "Toy: simpleRayBox", gm::Vec2i( 640, 480 ) );
     window.Run();
 
     return 0;
