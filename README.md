@@ -1,15 +1,20 @@
 # Toy
 
-CPU / CUDA rendering components and example programs.
+Building blocks for producing images.
 
-This project is for experimenting with rendering algorithms.
+The data structures and imaging algorithms are available as both CPU & CUDA implementations.
 
 ## Table of Contents
 
+- [Code structure](#code-structure)
 - [Documentation](#documentation)
 - [Building](#building)
   - [Requirements](#requirements)
 - [Build Status](#build-status)
+
+## Code structure
+
+The core [imaging](./src/toy/imaging) library provides common facilities used in both [rasterization](./src/toy/rasteriation) and [raytracing](./src/toy/raytracing) techniques.
 
 ## Documentation
 
