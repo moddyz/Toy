@@ -29,6 +29,7 @@ void ViewportWindow::WriteFrame( uint32_t* o_frameData )
 void ViewportWindow::OnResize( const gm::Vec2i& i_dimensions )
 {
     m_image.Resize( i_dimensions.Y(), i_dimensions.X() );
+    m_texture.Resize( i_dimensions.Y(), i_dimensions.X() );
 }
 
 void ViewportWindow::OnMouseMove( const gm::Vec2f& i_position )

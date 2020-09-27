@@ -27,11 +27,17 @@ public:
     /// Initialize the application window.
     ///
     /// \param i_title The title of the application window.
-    explicit Window( const char* i_title, const gm::Vec2i& i_dimensions );
+    /// \param i_size The title of the application window.
+    explicit Window( const char* i_title, const gm::Vec2i& i_size );
     virtual ~Window();
 
     /// Execute the main render loop.
     void Run();
+
+    /// Get the 2D size of the current window.
+    ///
+    /// \return 2D size.
+    gm::Vec2i GetSize() const;
 
 protected:
     /// Executes the render computation, and write into \p o_frameData.

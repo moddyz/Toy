@@ -82,7 +82,7 @@ private:
     // Cuda <-> GL frame buffer.
     CudaGLFrameBuffer* m_frameBuffer = nullptr;
 
-    //  buffer(s).
+    // Intermediate frame buffer(s).
     Matrix< gm::Vec3f, Host > m_image;
     Matrix< uint32_t, Host >  m_texture;
 };

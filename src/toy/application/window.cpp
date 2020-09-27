@@ -10,7 +10,7 @@
 
 TOY_NS_OPEN
 
-Window::Window( const char* i_title, const gm::Vec2i& i_dimensions )
+Window::Window( const char* i_title, const gm::Vec2i& i_size )
 {
     glfwSetErrorCallback( _ErrorCallback );
     if ( !glfwInit() )
@@ -22,7 +22,7 @@ Window::Window( const char* i_title, const gm::Vec2i& i_dimensions )
     glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 0 );
     glfwWindowHint( GLFW_VISIBLE, GLFW_TRUE );
 
-    m_handle = glfwCreateWindow( i_dimensions.X(), i_dimensions.Y(), i_title, nullptr, nullptr );
+    m_handle = glfwCreateWindow( i_size.X(), i_size.Y(), i_title, nullptr, nullptr );
     if ( !m_handle )
     {
         glfwTerminate();
@@ -54,9 +54,7 @@ Window::~Window()
 
 void Window::Run()
 {
-    int width, height;
-    glfwGetFramebufferSize( m_handle, &width, &height );
-    _Resize( gm::Vec2i( width, height ) );
+    _Resize( GetSize() );
 
     glfwSetFramebufferSizeCallback( m_handle, _FrameBufferSizeCallback );
     glfwSetMouseButtonCallback( m_handle, _MouseButtonCallback );
@@ -81,22 +79,29 @@ void Window::Run()
     }
 }
 
-void Window::_Resize( const gm::Vec2i& i_dimensions )
+gm::Vec2i Window::GetSize() const
 {
-    TOY_ASSERT( i_dimensions.X() != 0 & i_dimensions.Y() != 0 );
+    int width, height;
+    glfwGetFramebufferSize( m_handle, &width, &height );
+    return gm::Vec2i( width, height );
+}
+
+void Window::_Resize( const gm::Vec2i& i_size )
+{
+    TOY_ASSERT( i_size.X() != 0 & i_size.Y() != 0 );
 
     if ( m_frameBuffer == nullptr )
     {
-        m_frameBuffer = new CudaGLFrameBuffer( i_dimensions.X(), i_dimensions.Y() );
+        m_frameBuffer = new CudaGLFrameBuffer( i_size.X(), i_size.Y() );
     }
-    else if ( m_frameBuffer->GetWidth() != i_dimensions.X() || m_frameBuffer->GetHeight() != i_dimensions.Y() )
+    else if ( m_frameBuffer->GetWidth() != i_size.X() || m_frameBuffer->GetHeight() != i_size.Y() )
     {
         delete m_frameBuffer;
-        m_frameBuffer = new CudaGLFrameBuffer( i_dimensions.X(), i_dimensions.Y() );
+        m_frameBuffer = new CudaGLFrameBuffer( i_size.X(), i_size.Y() );
     }
 
     // Then call derived.
-    OnResize( i_dimensions );
+    OnResize( i_size );
 }
 
 gm::Vec2f Window::_GetMousePosition() const
