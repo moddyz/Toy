@@ -1,4 +1,4 @@
-#include <toy/sceneGraph/prim.h>
+#include <toy/scenegraph/prim.h>
 
 TOY_NS_OPEN
 
@@ -10,8 +10,8 @@ Prim::Prim( const std::string& i_name )
 std::string Prim::GetPath() const
 {
     // This is crazily in-efficient but simple.
-    std::string path = "/" + GetName();
-    PrimPtr parent = GetParent();
+    std::string path   = "/" + GetName();
+    PrimPtr     parent = GetParent();
     while ( parent != nullptr )
     {
         path = "/" + parent->GetName() + path;
@@ -20,4 +20,3 @@ std::string Prim::GetPath() const
 }
 
 TOY_NS_CLOSE
-

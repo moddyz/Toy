@@ -21,4 +21,3 @@
         o_enumValue = static_cast< ENUM_TYPE >( ~static_cast< char >( o_enumValue ) );                                 \
         return o_enumValue;                                                                                            \
     }
-

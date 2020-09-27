@@ -7,8 +7,8 @@
 
 #include <toy/toy.h>
 
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
 
 // Forward declaration.
 struct cudaGraphicsResource;
@@ -92,4 +92,3 @@ private:
 };
 
 TOY_NS_CLOSE
-

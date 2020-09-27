@@ -33,7 +33,7 @@ public:
         {
             float targetOriginDistance = gm::Distance( m_transform.GetOrigin(), m_transform.GetTarget() );
             float translationLength = gm::Clamp( gm::Length( translation ), gm::FloatRange( 0, targetOriginDistance ) );
-            float multiplier = 1.0f - ( translationLength / targetOriginDistance );
+            float multiplier        = 1.0f - ( translationLength / targetOriginDistance );
             translation *= multiplier;
         }
 

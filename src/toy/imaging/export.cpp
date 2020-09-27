@@ -37,4 +37,3 @@ bool ExportJpeg( const Matrix< gm::Vec3f, Host >& i_image, const std::string& i_
 }
 
 TOY_NS_CLOSE
-

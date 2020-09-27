@@ -1,4 +1,4 @@
-#include <toy/sceneGraph/scene.h>
+#include <toy/scenegraph/scene.h>
 
 TOY_NS_OPEN
 

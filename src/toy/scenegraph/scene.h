@@ -1,6 +1,6 @@
 #pragma once
 
-#include <toy/sceneGraph/prim.h>
+#include <toy/scenegraph/prim.h>
 
 TOY_NS_OPEN
 

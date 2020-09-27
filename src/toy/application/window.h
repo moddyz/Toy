@@ -129,4 +129,3 @@ private:
 };
 
 TOY_NS_CLOSE
-

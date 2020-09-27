@@ -70,4 +70,3 @@ struct GenerateNDC< Cuda >
 };
 
 TOY_NS_CLOSE
-

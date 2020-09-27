@@ -3,9 +3,9 @@
 /// \file application/viewportWindow.h
 
 #include <toy/application/window.h>
-#include <toy/memory/matrix.h>
 #include <toy/imaging/lookAtTransform.h>
 #include <toy/imaging/perspectiveView.h>
+#include <toy/memory/matrix.h>
 
 #include <gm/types/vec2f.h>
 #include <gm/types/vec2i.h>

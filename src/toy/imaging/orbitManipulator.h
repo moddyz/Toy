@@ -4,8 +4,8 @@
 
 #include <toy/imaging/lookAtTransform.h>
 
-#include <gm/functions/setRotate.h>
 #include <gm/functions/matrixProduct.h>
+#include <gm/functions/setRotate.h>
 #include <gm/functions/transformPoint.h>
 
 TOY_NS_OPEN

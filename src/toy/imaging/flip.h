@@ -4,8 +4,8 @@
 ///
 /// Flip an image across its vertical axis.
 
-#include <toy/utils/bitMask.h>
 #include <toy/memory/matrix.h>
+#include <toy/utils/bitMask.h>
 
 #include <gm/types/vec3f.h>
 

@@ -19,4 +19,3 @@ TOY_NS_OPEN
 void ConvertImageVec3fToUint32( const Matrix< gm::Vec3f, Host >& i_image, Matrix< uint32_t, Host >& o_image );
 
 TOY_NS_CLOSE
-

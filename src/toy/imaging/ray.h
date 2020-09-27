@@ -117,4 +117,3 @@ inline std::ostream& operator<<( std::ostream& o_outputStream, const Ray& i_comp
 }
 
 TOY_NS_CLOSE
-

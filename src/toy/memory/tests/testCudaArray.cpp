@@ -34,4 +34,3 @@ TEST_CASE( "CudaArray_Resize" )
     array.Resize( 5 );
     CHECK( array.GetSize() == 5 );
 }
-

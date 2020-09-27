@@ -4,9 +4,9 @@
 ///
 /// Memory de-allocation.
 
-#include <toy/utils/diagnostic.h>
-#include <toy/memory/residency.h>
 #include <toy/memory/cudaError.h>
+#include <toy/memory/residency.h>
+#include <toy/utils/diagnostic.h>
 
 #include <cstring>
 #include <cuda_runtime.h>
