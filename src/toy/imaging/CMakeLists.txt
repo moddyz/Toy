@@ -21,3 +21,5 @@ cpp_library(${ROOT_PREFIX}_${LIBRARY_SUFFIX}
         toy_memory
         toy_utils
 )
+
+add_subdirectories()
