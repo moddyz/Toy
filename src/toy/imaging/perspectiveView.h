@@ -1,8 +1,8 @@
 #pragma once
 
-/// \file model/perspectiveView.h
+/// \file imaging/perspectiveView.h
 ///
-/// A perspective viewing frustum model.
+/// A perspective viewing frustum imaging.
 
 #include <toy/toy.h>
 

@@ -9,7 +9,7 @@ TOY_NS_OPEN
 
 /// \class RayTracingEngine
 ///
-/// Integration of models and operators to render an image, using the \em ray-tracing technique.
+/// Integration of imagings and operators to render an image, using the \em ray-tracing technique.
 template < Residency ResidencyT >
 class RayTracingEngine : public RenderEngine< ResidencyT >
 {

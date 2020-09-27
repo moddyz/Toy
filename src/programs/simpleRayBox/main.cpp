@@ -2,7 +2,7 @@
 
 #include <toy/application/viewportWindow.h>
 #include <toy/imaging/extent.h>
-#include <toy/model/ray.h>
+#include <toy/imaging/ray.h>
 #include <toy/utils/log.h>
 
 #include <gm/functions/linearInterpolation.h>

@@ -1,8 +1,8 @@
 #pragma once
 
-/// \file model/orbitManipulator.h
+/// \file imaging/orbitManipulator.h
 
-#include <toy/model/lookAtTransform.h>
+#include <toy/imaging/lookAtTransform.h>
 
 #include <gm/functions/setRotate.h>
 #include <gm/functions/matrixProduct.h>

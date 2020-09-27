@@ -1,8 +1,8 @@
 #pragma once
 
-/// \file model/dollyManipulator.h
+/// \file imaging/dollyManipulator.h
 
-#include <toy/model/lookAtTransform.h>
+#include <toy/imaging/lookAtTransform.h>
 
 #include <gm/functions/clamp.h>
 #include <gm/functions/distance.h>

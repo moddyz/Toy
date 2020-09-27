@@ -1,6 +1,6 @@
 #pragma once
 
-/// \file model/lookAtTransform.h
+/// \file imaging/lookAtTransform.h
 
 #include <toy/toy.h>
 

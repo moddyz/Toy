@@ -8,7 +8,7 @@ TOY_NS_OPEN
 
 /// \class RenderEngine
 ///
-/// Base class for an integration of various models and operators to render an image.
+/// Base class for an integration of various imagings and operators to render an image.
 template < Residency ResidencyT >
 class RenderEngine
 {

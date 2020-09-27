@@ -4,8 +4,8 @@
 
 #include <toy/application/window.h>
 #include <toy/memory/matrix.h>
-#include <toy/model/lookAtTransform.h>
-#include <toy/model/perspectiveView.h>
+#include <toy/imaging/lookAtTransform.h>
+#include <toy/imaging/perspectiveView.h>
 
 #include <gm/types/vec2f.h>
 #include <gm/types/vec2i.h>

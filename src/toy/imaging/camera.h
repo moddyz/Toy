@@ -1,8 +1,8 @@
 #pragma once
 
-/// \file model/camera.h
+/// \file imaging/camera.h
 ///
-/// Base camera model.
+/// Base camera imaging.
 
 #include <toy/toy.h>
 #include <toy/utils/hostDevice.h>
@@ -13,7 +13,7 @@ TOY_NS_OPEN
 
 /// \class Camera
 ///
-/// The base camera model, providing common functionality.
+/// The base camera imaging, providing common functionality.
 class Camera
 {
 public:
