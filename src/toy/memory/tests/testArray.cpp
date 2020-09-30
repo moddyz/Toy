@@ -59,6 +59,19 @@ TEMPLATE_LIST_TEST_CASE( "Array_CopyConstructor", "[template][list]", TestIndexA
     }
 }
 
+TEMPLATE_LIST_TEST_CASE( "Array_InitializerListCopyAssignment", "[template][list]", TestUnifiedTypes )
+{
+    TestType array = { 0.5f, 0.7f, -0.1f, 0.4 };
+    CHECK( array.GetSize() == 4 );
+    CHECK( array.GetBuffer() != nullptr );
+
+    toy::Array< ValueT, toy::Host > hostArray = array;
+    CHECK( hostArray[ 0 ] == 0.5f );
+    CHECK( hostArray[ 1 ] == 0.7f );
+    CHECK( hostArray[ 2 ] == -0.1f );
+    CHECK( hostArray[ 3 ] == 0.4f );
+}
+
 TEMPLATE_LIST_TEST_CASE( "Array_GetSize", "[template][list]", TestUnifiedTypes )
 {
     TestType array;

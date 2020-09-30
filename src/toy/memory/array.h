@@ -63,28 +63,9 @@ public:
     /// Initializer list constructor.
     ///
     /// \param i_initializerList The initializer list to set the array to.
-    explicit Array( std::initializer_list< ValueT > i_initializerList )
+    Array( std::initializer_list< ValueT > i_initializerList )
     {
-        if constexpr ( ResidencyT == Cuda )
-        {
-            Array< ValueT, Host > hostArray( i_initializerList.size() );
-            size_t index = 0;
-            for ( auto it = i_initializerList.begin(); it != i_initializerList.end(); ++it, ++index )
-            {
-                hostArray[ index ] = *it;
-            }
-
-            TOY_VERIFY( _Copy( hostArray ) );
-        }
-        else
-        {
-            TOY_VERIFY( Resize( i_initializerList.size() ) );
-            size_t index = 0;
-            for ( auto it = i_initializerList.begin(); it != i_initializerList.end(); ++it, ++index )
-            {
-                m_buffer[ index ] = *it;
-            }
-        }
+        TOY_VERIFY( _CopyInitializerList( i_initializerList ) );
     }
 
     /// Deconstructor.
@@ -123,6 +104,13 @@ public:
     Array< ValueT, ResidencyT >& operator=( const Array< ValueT, SrcResidencyT >& i_array )
     {
         TOY_VERIFY( _Copy( i_array ) );
+        return *this;
+    }
+
+    /// Initializer list copy assignment operator.
+    Array< ValueT, ResidencyT >& operator=( const std::initializer_list< ValueT >& i_initializerList )
+    {
+        TOY_VERIFY( _CopyInitializerList( i_initializerList ) );
         return *this;
     }
 
@@ -241,6 +229,44 @@ private:
         }
         else
         {
+            return true;
+        }
+    }
+
+    // Helper method to copy the values from the initializer list into this array.
+    inline bool _CopyInitializerList( std::initializer_list< ValueT > i_initializerList )
+    {
+        if constexpr ( ResidencyT == Cuda )
+        {
+            // If _this_ array is Cuda-based, we need an extra staging host array.
+
+            // Check for host array allocation failure (rare).
+            Array< ValueT, Host > hostArray( i_initializerList.size() );
+            TOY_VERIFY( hostArray.GetBuffer() != nullptr );
+
+            // Copy values from initializer list into staging host array.
+            size_t index = 0;
+            for ( auto it = i_initializerList.begin(); it != i_initializerList.end(); ++it, ++index )
+            {
+                hostArray[ index ] = *it;
+            }
+
+            // Upload to Cuda.
+            return _Copy( hostArray );
+        }
+        else
+        {
+            if ( !Resize( i_initializerList.size() ) )
+            {
+                return false;
+            }
+
+            size_t index = 0;
+            for ( auto it = i_initializerList.begin(); it != i_initializerList.end(); ++it, ++index )
+            {
+                m_buffer[ index ] = *it;
+            }
+
             return true;
         }
     }
