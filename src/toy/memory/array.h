@@ -60,6 +60,33 @@ public:
         TOY_VERIFY( Resize( i_size, i_value ) );
     }
 
+    /// Initializer list constructor.
+    ///
+    /// \param i_initializerList The initializer list to set the array to.
+    explicit Array( std::initializer_list< ValueT > i_initializerList )
+    {
+        if constexpr ( ResidencyT == Cuda )
+        {
+            Array< ValueT, Host > hostArray( i_initializerList.size() );
+            size_t index = 0;
+            for ( auto it = i_initializerList.begin(); it != i_initializerList.end(); ++it, ++index )
+            {
+                hostArray[ index ] = *it;
+            }
+
+            TOY_VERIFY( _Copy( hostArray ) );
+        }
+        else
+        {
+            TOY_VERIFY( Resize( i_initializerList.size() ) );
+            size_t index = 0;
+            for ( auto it = i_initializerList.begin(); it != i_initializerList.end(); ++it, ++index )
+            {
+                m_buffer[ index ] = *it;
+            }
+        }
+    }
+
     /// Deconstructor.
     ///
     /// The underlying buffer is deallocated if the array size is non-zero.
