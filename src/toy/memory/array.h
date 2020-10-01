@@ -9,6 +9,7 @@
 #include <toy/memory/deallocate.h>
 #include <toy/memory/fill.h>
 #include <toy/memory/index.h>
+#include <toy/memory/memoryCompare.h>
 #include <toy/memory/residency.h>
 #include <toy/utils/diagnostic.h>
 
@@ -32,6 +33,16 @@ template < typename ValueT, Residency ResidencyT >
 class Array final
 {
 public:
+    /// \typedef ValueType
+    ///
+    /// Convenience type definition for this array's value type.
+    using ValueType     = ValueT;
+
+    /// \typedef ResidencyType
+    ///
+    /// Convenience type definition for this array's residency type.
+    const static Residency ResidencyType = ResidencyT;
+
     //-------------------------------------------------------------------------
     /// \name Construction
     //-------------------------------------------------------------------------
@@ -115,7 +126,34 @@ public:
     }
 
     //-------------------------------------------------------------------------
-    /// \name Operations
+    /// \name Comparison operators
+    //-------------------------------------------------------------------------
+
+    /// Check if two arrays are equivalent.
+    ///
+    /// An array is equivalent if it has the same size and stores the exact same
+    /// element values.
+    ///
+    /// \param i_array The other array.
+    ///
+    /// \retval true If \p i_array is equivalent to this array.
+    inline bool operator==( const Array< ValueT, ResidencyT >& i_array ) const
+    {
+        if ( GetSize() != i_array.GetSize() )
+        {
+            return false;
+        }
+
+        return MemoryCompare< ResidencyT >::Execute( GetSize(), GetBuffer(), i_array.GetBuffer() );
+    }
+
+    inline bool operator!=( const Array< ValueT, ResidencyT >& i_array ) const
+    {
+        return !( operator==( i_array ) );
+    }
+
+    //-------------------------------------------------------------------------
+    /// \name Carndinality
     //-------------------------------------------------------------------------
 
     /// Get the size or number of elements in the array.

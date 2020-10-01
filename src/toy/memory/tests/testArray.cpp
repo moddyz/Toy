@@ -72,6 +72,17 @@ TEMPLATE_LIST_TEST_CASE( "Array_InitializerListCopyAssignment", "[template][list
     CHECK( hostArray[ 3 ] == 0.4f );
 }
 
+TEMPLATE_LIST_TEST_CASE( "Array_EqualityComparison", "[template][list]", TestUnifiedTypes )
+{
+    TestType arrayA = { 0.5f, 0.7f, -0.1f, 0.4 };
+    TestType arrayB = { 0.5f, 0.7f, -0.1f, 0.4 };
+    TestType arrayC = { 0.5f, 0.7f, -10.0f, 0.4 };
+
+    CHECK( arrayA == arrayB );
+    CHECK( arrayA != arrayC );
+    CHECK( arrayB != arrayC );
+}
+
 TEMPLATE_LIST_TEST_CASE( "Array_GetSize", "[template][list]", TestUnifiedTypes )
 {
     TestType array;
