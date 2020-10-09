@@ -13,16 +13,16 @@
 
 TOY_NS_OPEN
 
-/// \struct Fill
+/// \struct MemoryFill
 ///
 /// Template prototype for a fill operation.
 template < Residency ResidencyT >
-struct Fill
+struct MemoryFill
 {
 };
 
 template <>
-struct Fill< Host >
+struct MemoryFill< Host >
 {
     template < typename ValueT >
     static inline bool Execute( size_t i_numElements, const ValueT& i_value, ValueT* o_dstBuffer )
@@ -39,26 +39,26 @@ struct Fill< Host >
 };
 
 template <>
-struct Fill< Cuda >
+struct MemoryFill< Cuda >
 {
     template < typename ValueT >
     static inline bool Execute( size_t i_numElements, const ValueT& i_value, ValueT* o_dstBuffer )
     {
-        // Allocate and fill on the host.
+        // MemoryAllocate and fill on the host.
         size_t numBytes  = i_numElements * sizeof( ValueT );
-        void*  srcBuffer = Allocate< Host >::Execute( numBytes );
+        void*  srcBuffer = MemoryAllocate< Host >::Execute( numBytes );
         if ( srcBuffer == nullptr )
         {
             return false;
         }
 
-        TOY_VERIFY( Fill< Host >::Execute( i_numElements, i_value, static_cast< ValueT* >( srcBuffer ) ) );
+        TOY_VERIFY( MemoryFill< Host >::Execute( i_numElements, i_value, static_cast< ValueT* >( srcBuffer ) ) );
 
         // Then copy to GPU.
-        bool result = Copy< Host, Cuda >::Execute( numBytes, srcBuffer, o_dstBuffer );
+        bool result = MemoryCopy< Host, Cuda >::Execute( numBytes, srcBuffer, o_dstBuffer );
 
         // Delete temporary buffer.
-        TOY_VERIFY( Deallocate< Host >::Execute( srcBuffer ) );
+        TOY_VERIFY( MemoryDeallocate< Host >::Execute( srcBuffer ) );
 
         return result;
     }

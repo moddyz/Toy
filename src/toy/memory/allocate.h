@@ -13,16 +13,16 @@
 
 TOY_NS_OPEN
 
-/// \struct Allocate
+/// \struct MemoryAllocate
 ///
 /// Template prototype for a memory allocation operation.
 template < Residency ResidencyT >
-struct Allocate
+struct MemoryAllocate
 {
 };
 
 template <>
-struct Allocate< Host >
+struct MemoryAllocate< Host >
 {
     static inline void* Execute( size_t i_numBytes )
     {
@@ -32,7 +32,7 @@ struct Allocate< Host >
 };
 
 template <>
-struct Allocate< Cuda >
+struct MemoryAllocate< Cuda >
 {
     static inline void* Execute( size_t i_numBytes )
     {

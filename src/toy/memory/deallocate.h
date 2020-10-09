@@ -13,16 +13,16 @@
 
 TOY_NS_OPEN
 
-/// \struct Deallocate
+/// \struct MemoryDeallocate
 ///
 /// Template prototype for a memory allocation operation.
 template < Residency ResidencyT >
-struct Deallocate
+struct MemoryDeallocate
 {
 };
 
 template <>
-struct Deallocate< Host >
+struct MemoryDeallocate< Host >
 {
     static inline bool Execute( void* o_buffer )
     {
@@ -33,7 +33,7 @@ struct Deallocate< Host >
 };
 
 template <>
-struct Deallocate< Cuda >
+struct MemoryDeallocate< Cuda >
 {
     static inline bool Execute( void* o_buffer )
     {

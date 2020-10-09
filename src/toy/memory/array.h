@@ -5,11 +5,11 @@
 /// Core array class.
 
 #include <toy/memory/allocate.h>
+#include <toy/memory/compare.h>
 #include <toy/memory/copy.h>
 #include <toy/memory/deallocate.h>
 #include <toy/memory/fill.h>
 #include <toy/memory/index.h>
-#include <toy/memory/memoryCompare.h>
 #include <toy/memory/residency.h>
 #include <toy/utils/diagnostic.h>
 
@@ -36,7 +36,7 @@ public:
     /// \typedef ValueType
     ///
     /// Convenience type definition for this array's value type.
-    using ValueType     = ValueT;
+    using ValueType = ValueT;
 
     /// \typedef ResidencyType
     ///
@@ -86,7 +86,7 @@ public:
     {
         if ( m_buffer != nullptr )
         {
-            TOY_VERIFY( Deallocate< ResidencyT >::Execute( m_buffer ) );
+            TOY_VERIFY( MemoryDeallocate< ResidencyT >::Execute( m_buffer ) );
         }
     }
 
@@ -220,13 +220,13 @@ public:
     inline const ValueT& operator[]( size_t i_index ) const
     {
         TOY_VERIFY( m_buffer != nullptr );
-        return Index< ResidencyT >::Execute( m_buffer, i_index );
+        return MemoryIndex< ResidencyT >::Execute( m_buffer, i_index );
     }
 
     inline ValueT& operator[]( size_t i_index )
     {
         TOY_VERIFY( m_buffer != nullptr );
-        return Index< ResidencyT >::Execute( m_buffer, i_index );
+        return MemoryIndex< ResidencyT >::Execute( m_buffer, i_index );
     }
 
     //-------------------------------------------------------------------------
@@ -260,7 +260,7 @@ private:
                 return false;
             }
 
-            return Copy< SrcResidencyT, ResidencyT >::Execute(
+            return MemoryCopy< SrcResidencyT, ResidencyT >::Execute(
                 /* numBytes */ m_size * sizeof( ValueT ),
                 /* src */ i_array.GetBuffer(),
                 /* dst */ m_buffer );
@@ -321,14 +321,14 @@ private:
         if ( i_newSize == 0 )
         {
             TOY_ASSERT( m_buffer != nullptr );
-            TOY_VERIFY( Deallocate< ResidencyT >::Execute( m_buffer ) );
+            TOY_VERIFY( MemoryDeallocate< ResidencyT >::Execute( m_buffer ) );
             m_buffer = nullptr;
             m_size   = 0;
             return true;
         }
 
         // Try an allocate a new buffer.
-        void* newBuffer = Allocate< ResidencyT >::Execute( i_newSize * sizeof( ValueT ) );
+        void* newBuffer = MemoryAllocate< ResidencyT >::Execute( i_newSize * sizeof( ValueT ) );
         if ( newBuffer == nullptr )
         {
             return false;
@@ -339,12 +339,12 @@ private:
         {
             // Migrate existing buffer.
             size_t elementsToCopy = std::min( m_size, i_newSize );
-            bool   result         = Copy< ResidencyT, ResidencyT >::Execute(
+            bool   result         = MemoryCopy< ResidencyT, ResidencyT >::Execute(
                 /* numBytes */ elementsToCopy * sizeof( ValueT ),
                 /* src */ m_buffer,
                 /* dst */ newBuffer );
             TOY_VERIFY( result );
-            TOY_VERIFY( Deallocate< ResidencyT >::Execute( m_buffer ) );
+            TOY_VERIFY( MemoryDeallocate< ResidencyT >::Execute( m_buffer ) );
         }
 
         // Assign new buffer ptr & size.
@@ -362,7 +362,7 @@ private:
         TOY_ASSERT( i_begin < i_end );
         TOY_ASSERT( i_end < m_size );
         size_t numElements = i_end - i_begin;
-        Fill< ResidencyT >::Execute( numElements, i_value, m_buffer + i_begin );
+        MemoryFill< ResidencyT >::Execute( numElements, i_value, m_buffer + i_begin );
         return true;
     }
 

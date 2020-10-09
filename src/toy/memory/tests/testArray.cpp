@@ -34,7 +34,7 @@ TEMPLATE_LIST_TEST_CASE( "Array_SizeValueConstructor", "[template][list]", TestI
 
 TEMPLATE_LIST_TEST_CASE( "Array_InitializerListConstructor", "[template][list]", TestUnifiedTypes )
 {
-    TestType array{ 0.5f, 0.7f, -0.1f, 0.4 };
+    TestType array{0.5f, 0.7f, -0.1f, 0.4};
     CHECK( array.GetSize() == 4 );
     CHECK( array.GetBuffer() != nullptr );
 
@@ -61,7 +61,7 @@ TEMPLATE_LIST_TEST_CASE( "Array_CopyConstructor", "[template][list]", TestIndexA
 
 TEMPLATE_LIST_TEST_CASE( "Array_InitializerListCopyAssignment", "[template][list]", TestUnifiedTypes )
 {
-    TestType array = { 0.5f, 0.7f, -0.1f, 0.4 };
+    TestType array = {0.5f, 0.7f, -0.1f, 0.4};
     CHECK( array.GetSize() == 4 );
     CHECK( array.GetBuffer() != nullptr );
 
@@ -74,9 +74,9 @@ TEMPLATE_LIST_TEST_CASE( "Array_InitializerListCopyAssignment", "[template][list
 
 TEMPLATE_LIST_TEST_CASE( "Array_EqualityComparison", "[template][list]", TestUnifiedTypes )
 {
-    TestType arrayA = { 0.5f, 0.7f, -0.1f, 0.4 };
-    TestType arrayB = { 0.5f, 0.7f, -0.1f, 0.4 };
-    TestType arrayC = { 0.5f, 0.7f, -10.0f, 0.4 };
+    TestType arrayA = {0.5f, 0.7f, -0.1f, 0.4};
+    TestType arrayB = {0.5f, 0.7f, -0.1f, 0.4};
+    TestType arrayC = {0.5f, 0.7f, -10.0f, 0.4};
 
     CHECK( arrayA == arrayB );
     CHECK( arrayA != arrayC );

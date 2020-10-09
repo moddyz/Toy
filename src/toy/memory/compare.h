@@ -44,23 +44,23 @@ struct MemoryCompare< Cuda >
     template < typename ValueT >
     static inline bool Execute( size_t i_numElements, const ValueT* i_arrayA, const ValueT* i_arrayB )
     {
-        // Allocate host buffers.
+        // MemoryAllocate host buffers.
         size_t  numBytes   = i_numElements * sizeof( ValueT );
-        ValueT* hostArrayA = ( ValueT* ) Allocate< Host >::Execute( numBytes );
+        ValueT* hostArrayA = ( ValueT* ) MemoryAllocate< Host >::Execute( numBytes );
         if ( hostArrayA == nullptr )
         {
             return false;
         }
-        ValueT* hostArrayB = ( ValueT* ) Allocate< Host >::Execute( numBytes );
+        ValueT* hostArrayB = ( ValueT* ) MemoryAllocate< Host >::Execute( numBytes );
         if ( hostArrayB == nullptr )
         {
             return false;
         }
 
         // Copy to host buffers.
-        bool result = Copy< Cuda, Host >::Execute( numBytes, i_arrayA, hostArrayA );
+        bool result = MemoryCopy< Cuda, Host >::Execute( numBytes, i_arrayA, hostArrayA );
         TOY_VERIFY( result );
-        result = Copy< Cuda, Host >::Execute( numBytes, i_arrayB, hostArrayB );
+        result = MemoryCopy< Cuda, Host >::Execute( numBytes, i_arrayB, hostArrayB );
         TOY_VERIFY( result );
 
         // Do comparison on Host.

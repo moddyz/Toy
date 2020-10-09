@@ -2,7 +2,7 @@
 
 /// \file memory/index.h
 ///
-/// Memory index operator.
+/// Memory indexed access operator.
 
 #include <toy/memory/residency.h>
 #include <toy/utils/diagnostic.h>
@@ -12,16 +12,16 @@
 
 TOY_NS_OPEN
 
-/// \struct Index
+/// \struct MemoryIndex
 ///
 /// Template prototype for a buffer index operation.
 template < Residency ResidencyT >
-struct Index
+struct MemoryIndex
 {
 };
 
 template <>
-struct Index< Host >
+struct MemoryIndex< Host >
 {
     template < typename ValueT >
     static inline ValueT& Execute( ValueT* i_buffer, size_t i_index )
@@ -31,7 +31,7 @@ struct Index< Host >
 };
 
 template <>
-struct Index< Cuda >
+struct MemoryIndex< Cuda >
 {
     template < typename ValueT >
     static inline ValueT& Execute( ValueT* i_buffer, size_t i_index )

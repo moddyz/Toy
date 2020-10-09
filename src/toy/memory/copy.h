@@ -13,17 +13,17 @@
 
 TOY_NS_OPEN
 
-/// \struct Copy
+/// \struct MemoryCopy
 ///
 /// Template prototype for a copy operation.
 template < Residency SrcResidencyT, Residency DstResidencyT >
-struct Copy
+struct MemoryCopy
 {
 };
 
 /// Specialization for host -> host copy.
 template <>
-struct Copy< Host, Host >
+struct MemoryCopy< Host, Host >
 {
     static inline bool Execute( size_t i_numBytes, const void* i_srcBuffer, void* o_dstBuffer )
     {
@@ -34,7 +34,7 @@ struct Copy< Host, Host >
 
 /// Specialization for synchronous cuda -> cuda copy.
 template <>
-struct Copy< Cuda, Cuda >
+struct MemoryCopy< Cuda, Cuda >
 {
     static inline bool Execute( size_t i_numBytes, const void* i_srcBuffer, void* o_dstBuffer )
     {
@@ -45,7 +45,7 @@ struct Copy< Cuda, Cuda >
 
 /// Specialization for synchronous host -> cuda copy.
 template <>
-struct Copy< Host, Cuda >
+struct MemoryCopy< Host, Cuda >
 {
     static inline bool Execute( size_t i_numBytes, const void* i_srcBuffer, void* o_dstBuffer )
     {
@@ -56,7 +56,7 @@ struct Copy< Host, Cuda >
 
 /// Specialization for synchronous cuda -> host copy.
 template <>
-struct Copy< Cuda, Host >
+struct MemoryCopy< Cuda, Host >
 {
     static inline bool Execute( size_t i_numBytes, const void* i_srcBuffer, void* o_dstBuffer )
     {
