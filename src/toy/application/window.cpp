@@ -1,5 +1,5 @@
+#include <toy/application/cudaGLFrameBuffer.h>
 #include <toy/application/window.h>
-#include <toy/imaging/cudaGLFrameBuffer.h>
 #include <toy/utils/diagnostic.h>
 #include <toy/utils/log.h>
 

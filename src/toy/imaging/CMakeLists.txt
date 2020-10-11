@@ -12,9 +12,6 @@ cpp_library(${ROOT_PREFIX}_${LIBRARY_SUFFIX}
     CPPFILES
         ${CPPFILES}
     LIBRARIES
-        ${GLFW_LIBRARIES}
-        ${GLEW_LIBRARIES}
-        ${OPENGL_LIBRARIES}
         CUDA::cudart
         gm
         stb
