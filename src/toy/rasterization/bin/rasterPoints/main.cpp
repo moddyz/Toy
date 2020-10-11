@@ -1,9 +1,11 @@
 #include <toy/application/viewportWindow.h>
+#include <toy/imaging/transformPoints.h>
 #include <toy/utils/log.h>
 
-#include <gm/types/vec2f.h>
-#include <gm/types/floatRange.h>
 #include <gm/functions/clamp.h>
+#include <gm/functions/inverse.h>
+#include <gm/types/floatRange.h>
+#include <gm/types/vec2f.h>
 
 #include <vector>
 
@@ -15,36 +17,28 @@ public:
     explicit RasterPointsWindow( const char* i_title, const gm::Vec2i& i_windowSize )
         : ViewportWindow( i_title, i_windowSize )
     {
-        m_points = {
-            gm::Vec2f( -5, -5 ),
-            gm::Vec2f( 5, 5 ),
-            gm::Vec2f( 100, 100 ),
-            gm::Vec2f( 200, 200 )
-        };
     }
 
     virtual void Render( Matrix< gm::Vec3f, Host >& o_image ) override
     {
-        // Points are already in raster-space.
-        for ( gm::Vec2f point : m_points )
-        {
-            _DrawPointRasterAliased( point, o_image );
-        }
+        // m_points are in world-space. We need to bring them into camera-space.
+
+        // Compute the world to camera matrix.
+        const LookAtTransform& lookAtXform   = GetCameraTransform();
+        const gm::Mat4f&       cameraToWorld = lookAtXform.GetObjectToWorld();
+        gm::Mat4f              worldToCamera;
+        TOY_VERIFY( gm::Inverse( cameraToWorld, worldToCamera ) );
+
+        // Perform transformation.
+        Array< gm::Vec3f, Host > cameraSpacePoints( m_points.GetSize() );
+        TransformPoints< Host >::Execute( worldToCamera, m_points, cameraSpacePoints );
     }
 
 private:
-    void _DrawPointRasterAliased( const gm::Vec2f& i_point, Matrix< gm::Vec3f, Host >& o_image )
-    {
-        // Clamp point into raster-space boundaries.
-        gm::Vec2f point = gm::Vec2f(
-            gm::Clamp( i_point.X(), gm::FloatRange( 0, o_image.GetColumns() - 1 ) ),
-            gm::Clamp( i_point.Y(), gm::FloatRange( 0, o_image.GetRows() - 1 ) )
-        );
-
-        o_image( std::round( point.Y() ), std::round( point.X() ) ) = gm::Vec3f( 1, 1, 1 );
-    }
-
-    std::vector< gm::Vec2f > m_points;
+    Array< gm::Vec3f, Host > m_points{gm::Vec3f( -5, -5, 5 ),
+                                      gm::Vec3f( 5, 5, 10 ),
+                                      gm::Vec3f( 100, 100, 100 ),
+                                      gm::Vec3f( 200, 200, 200 )};
 };
 
 TOY_NS_CLOSE
