@@ -7,11 +7,11 @@
 
 TOY_NS_OPEN
 
-/// \class TriangleMesh
+/// \class TriMesh
 ///
-/// A mesh described \em completely by triangular faces.
+/// A mesh described fully by triangle faces.
 template < Residency ResidencyT >
-class TriangleMesh final
+class TriMesh final
 {
 public:
     Array< gm::Vec3f, ResidencyT > m_positions;
