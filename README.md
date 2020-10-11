@@ -13,7 +13,7 @@ Building blocks for producing images.
 ### Dependencies
 
 The following dependencies are mandatory:
-- C++ compiler (>=C++17)
+- C++ compiler (>=C++11)
 - [CMake](https://cmake.org/documentation/) (>=3.12)
 - [GLFW](https://www.glfw.org/) 
 - [GLEW](http://glew.sourceforge.net/) 
