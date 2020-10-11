@@ -6,6 +6,11 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
+// GLFW >3.2 defines this.
+#ifndef GLFW_TRUE
+#define GLFW_TRUE 1
+#endif
+
 #include <GL/glew.h>
 
 TOY_NS_OPEN
