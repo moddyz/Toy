@@ -274,7 +274,7 @@ private:
     // Helper method to copy the values from the initializer list into this array.
     inline bool _CopyInitializerList( std::initializer_list< ValueT > i_initializerList )
     {
-        if constexpr ( ResidencyT == Cuda )
+        if ( ResidencyT == Cuda )
         {
             // If _this_ array is Cuda-based, we need an extra staging host array.
 

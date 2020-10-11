@@ -1,16 +1,46 @@
+![Build and test](https://github.com/moddyz/Toy/workflows/Build%20and%20test/badge.svg)
+
 # Toy
 
 Building blocks for producing images.
 
-The data structures and imaging algorithms are available as both CPU & CUDA implementations.
-
 ## Table of Contents
 
-- [Code structure](#code-structure)
-- [Documentation](#documentation)
+- [Dependencies](#dependencies)
 - [Building](#building)
-  - [Requirements](#requirements)
-- [Build Status](#build-status)
+- [Code structure](#code-structure)
+
+### Dependencies
+
+The following dependencies are mandatory:
+- C++ compiler (>=C++17)
+- [CMake](https://cmake.org/documentation/) (>=3.12)
+- [GLFW](https://www.glfw.org/) 
+- [GLEW](http://glew.sourceforge.net/) 
+- [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit) (>=10)
+
+The following dependencies are optional:
+- [Doxygen](https://www.doxygen.nl/index.html) and [graphiviz](https://graphviz.org/) for documentation.
+
+## Building
+
+Example snippet for building & installing this project:
+```
+mkdir build && cd build
+cmake \
+  -DCMAKE_CUDA_COMPILER="/usr/local/cuda/bin/nvcc" \
+  -DBUILD_TESTING=ON \
+  -DCMAKE_INSTALL_PREFIX="/apps/Toy/" \
+  .. 
+cmake --build  . -- VERBOSE=1 -j8 all test install
+```
+CMake options for configuring this project:
+
+| CMake Variable name     | Description                                                            | Default |
+| ----------------------- | ---------------------------------------------------------------------- | ------- |
+| `CMAKE_CUDA_COMPILER`   | Path to the nvcc executable.                                           | `OFF`   |
+| `BUILD_TESTING`         | Enable automated testing.                                              | `OFF`   |
+| `BUILD_DOCUMENTATION`   | Build documentation.                                                   | `OFF`   |
 
 ## Code structure
 
@@ -23,23 +53,3 @@ The base [imaging](./src/toy/imaging) library provides common facilities used in
 ## Documentation
 
 Documentation based on the latest state of master, [hosted by GitHub Pages](https://moddyz.github.io/Toy/).
-
-## Building
-
-A convenience build script is provided, for building all targets, and optionally installing to a location:
-```
-./build.sh <OPTIONAL_INSTALL_LOCATION>
-```
-
-### Requirements
-
-- `>= CMake-3.17`
-- `>= C++17`
-- `doxygen` and `graphviz` (optional for documentation)
-
-## Build Status
-
-|       | master | 
-| ----- | ------ | 
-| macOS-10.14 | [![Build Status](https://travis-ci.com/moddyz/Toy.svg?branch=master)](https://travis-ci.com/moddyz/Toy) |
-
