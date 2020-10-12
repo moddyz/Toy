@@ -14,6 +14,7 @@
 #include <toy/utils/diagnostic.h>
 
 #include <algorithm>
+#include <sstream>
 
 TOY_NS_OPEN
 
@@ -244,6 +245,18 @@ public:
         return m_buffer;
     }
 
+    //-------------------------------------------------------------------------
+    /// \name Debugging
+    //-------------------------------------------------------------------------
+
+    inline std::string GetStr() const
+    {
+        std::stringstream ss;
+        ss << "toy::Array< " << typeid( ValueT ).name() << ", " << ResidencyT << " >";
+        ss << "[size=" << GetSize() << "]\n";
+        return ss.str();
+    }
+
 private:
     // Hmm how does array become friends with _all_ the residencies.
     friend class Matrix< ValueT, Host >;
@@ -351,8 +364,6 @@ private:
         m_buffer = static_cast< ValueT* >( newBuffer );
         m_size   = i_newSize;
 
-        //
-
         return true;
     }
 
@@ -369,5 +380,19 @@ private:
     size_t  m_size   = 0;
     ValueT* m_buffer = nullptr;
 };
+
+/// Operator overload for << to enable writing the string representation of \p i_array into an output
+/// stream \p o_outputStream.
+///
+/// \param o_outputStream the output stream to write into.
+/// \param i_array the source vector value type.
+///
+/// \return the output stream.
+template < typename ValueT, Residency ResidencyT >
+inline std::ostream& operator<<( std::ostream& o_outputStream, const Array< ValueT, ResidencyT >& i_array )
+{
+    o_outputStream << i_array.GetStr();
+    return o_outputStream;
+}
 
 TOY_NS_CLOSE
