@@ -42,7 +42,7 @@ struct TransformPoints< Host >
 
 // Function prototype for the associated cuda kernel.
 __global__ void TransformPoints_Kernel( size_t           i_numPoints,
-                                        const gm::Mat4f& i_transform,
+                                        const gm::Mat4f  i_transform,
                                         const gm::Vec3f* i_points,
                                         gm::Vec3f*       o_points );
 
@@ -57,10 +57,11 @@ struct TransformPoints< Cuda >
         dim3 grid( ( i_points.GetSize() + block.x - 1 ) / block.x, 1, 1 );
 
         // Arguments
-        size_t                 numPoints    = i_points.GetSize();
-        gm::Vec3f*             inputPoints  = i_points.GetBuffer();
-        gm::Vec3f*             outputPoints = o_points.GetBuffer();
-        std::array< void*, 4 > args         = {&numPoints,
+        size_t     numPoints    = i_points.GetSize();
+        gm::Vec3f* inputPoints  = i_points.GetBuffer();
+        gm::Vec3f* outputPoints = o_points.GetBuffer();
+
+        std::array< void*, 4 > args = {&numPoints,
                                        const_cast< gm::Mat4f* >( &i_transform ),
                                        &inputPoints,
                                        &outputPoints};

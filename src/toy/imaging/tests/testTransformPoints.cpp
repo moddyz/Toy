@@ -6,7 +6,7 @@
 #include <toy/memory/array.h>
 
 using PointsT     = gm::Vec3f;
-using PointsTypes = std::tuple< toy::Array< PointsT, toy::Host > >;
+using PointsTypes = std::tuple< toy::Array< PointsT, toy::Host >, toy::Array< PointsT, toy::Cuda > >;
 
 TEMPLATE_LIST_TEST_CASE( "TransformPoints", "[template][list]", PointsTypes )
 {
