@@ -12,6 +12,7 @@
 #include <toy/memory/index.h>
 #include <toy/memory/residency.h>
 #include <toy/utils/diagnostic.h>
+#include <toy/utils/typeName.h>
 
 #include <algorithm>
 #include <sstream>
@@ -252,7 +253,7 @@ public:
     inline std::string GetStr() const
     {
         std::stringstream ss;
-        ss << "toy::Array< " << typeid( ValueT ).name() << ", " << ResidencyT << " >";
+        ss << "toy::Array< " << DemangledTypeName< ValueT >() << ", " << ResidencyT << " >";
         ss << "[size=" << GetSize() << "]\n";
         return ss.str();
     }
