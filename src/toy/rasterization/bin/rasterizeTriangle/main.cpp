@@ -23,9 +23,9 @@ OrthographicProjection( float i_left, float i_right, float i_bottom, float i_top
 
     // View scaling.
     gm::Mat4f scalingXform = gm::Mat4f::Identity();
-    centeringXform( 0, 0 ) = 2.0f / ( i_right + i_left );
-    centeringXform( 1, 1 ) = 2.0f / ( i_top + i_bottom );
-    centeringXform( 2, 2 ) = 2.0f / ( i_far + i_near );
+    scalingXform( 0, 0 ) = 2.0f / ( i_right + i_left );
+    scalingXform( 1, 1 ) = 2.0f / ( i_top + i_bottom );
+    scalingXform( 2, 2 ) = 2.0f / ( i_far + i_near );
 
     return gm::MatrixProduct( scalingXform, centeringXform );
 }
