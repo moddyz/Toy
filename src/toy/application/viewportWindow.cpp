@@ -11,7 +11,7 @@ TOY_NS_OPEN
 
 ViewportWindow::ViewportWindow( const char* i_title, const gm::Vec2i& i_dimensions )
     : toy::Window( i_title, i_dimensions )
-    , m_cameraTransform( /* origin */ gm::Vec3f( 0, 0, -5 ),
+    , m_cameraTransform( /* origin */ gm::Vec3f( 0, 0, -1 ),
                          /* target */ gm::Vec3f( 0, 0, 0 ),
                          /* up */ gm::Vec3f( 0, 1, 0 ) )
     , m_cameraView( /* verticalFov */ 90.0f,
