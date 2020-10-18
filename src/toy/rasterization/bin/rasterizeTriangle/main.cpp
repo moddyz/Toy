@@ -1,35 +1,18 @@
 #include <toy/application/viewportWindow.h>
-#include <toy/imaging/transformPoints.h>
 #include <toy/imaging/extent.h>
+#include <toy/imaging/transformPoints.h>
 #include <toy/utils/log.h>
 
 #include <gm/functions/clamp.h>
 #include <gm/functions/inverse.h>
 #include <gm/functions/matrixProduct.h>
+#include <gm/functions/orthographicProjection.h>
 #include <gm/types/floatRange.h>
 #include <gm/types/vec2f.h>
 
 #include <vector>
 
 TOY_NS_OPEN
-
-static gm::Mat4f
-OrthographicProjection( float i_left, float i_right, float i_bottom, float i_top, float i_near, float i_far )
-{
-    // Center volume about origin.
-    gm::Mat4f centeringXform = gm::Mat4f::Identity();
-    centeringXform( 0, 3 )   = ( i_right + i_left ) * 0.5;
-    centeringXform( 1, 3 )   = ( i_top + i_bottom ) * 0.5;
-    centeringXform( 2, 3 )   = ( i_far + i_near ) * 0.5;
-
-    // View scaling.
-    gm::Mat4f scaleXform = gm::Mat4f::Identity();
-    scaleXform( 0, 0 )   = 2.0f / ( i_right - i_left );
-    scaleXform( 1, 1 )   = 2.0f / ( i_top - i_bottom );
-    scaleXform( 2, 2 )   = 2.0f / ( i_far - i_near );
-
-    return gm::MatrixProduct( scaleXform, centeringXform );
-}
 
 static gm::Mat4f ClipToRaster( const gm::Vec2i& i_viewportSize )
 {
@@ -88,7 +71,8 @@ public:
         TOY_LOG_INFO( "worldToCamera: %s\n", worldToCamera.GetString().c_str() );
 
         // Compute view matrix.
-        gm::Mat4f cameraToClip = OrthographicProjection( -2, 2, -2, 2, -2, 2 );
+        gm::Mat4f cameraToClip =
+            gm::OrthographicProjection( gm::Vec3fRange( gm::Vec3f( -2, -2, -2 ), gm::Vec3f( 2, 2, 2 ) ) );
         TOY_LOG_INFO( "cameraToClip: %s\n", cameraToClip.GetString().c_str() );
 
         // Clip space -> screen space.
@@ -111,7 +95,7 @@ public:
 
         for ( gm::Vec2i coord : GetImageExtent( o_image ) )
         {
-            if ( PointInsideTriangle( gm::Vec3f( coord.X(), coord.Y(), 0 ), &( screenPoints[0] ) ) )
+            if ( PointInsideTriangle( gm::Vec3f( coord.X(), coord.Y(), 0 ), &( screenPoints[ 0 ] ) ) )
             {
                 o_image( coord.Y(), coord.X() ) = gm::Vec3f( 1.0, 1.0, 1.0 );
             }

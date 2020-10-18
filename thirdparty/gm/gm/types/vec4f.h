@@ -218,10 +218,11 @@ public:
     {
         GM_ASSERT( !HasNaNs() );
         GM_ASSERT( i_scalar != 0.0f );
-        return Vec4f( m_elements[ 0 ] / i_scalar,
-                      m_elements[ 1 ] / i_scalar,
-                      m_elements[ 2 ] / i_scalar,
-                      m_elements[ 3 ] / i_scalar );
+        float reciprocal = 1.0f / i_scalar;
+        return Vec4f( m_elements[ 0 ] * reciprocal,
+                      m_elements[ 1 ] * reciprocal,
+                      m_elements[ 2 ] * reciprocal,
+                      m_elements[ 3 ] * reciprocal );
     }
 
     /// Scalar division assignment.
@@ -229,10 +230,11 @@ public:
     {
         GM_ASSERT( !HasNaNs() );
         GM_ASSERT( i_scalar != 0.0f );
-        m_elements[ 0 ] /= i_scalar;
-        m_elements[ 1 ] /= i_scalar;
-        m_elements[ 2 ] /= i_scalar;
-        m_elements[ 3 ] /= i_scalar;
+        float reciprocal = 1.0f / i_scalar;
+        m_elements[ 0 ] *= reciprocal;
+        m_elements[ 1 ] *= reciprocal;
+        m_elements[ 2 ] *= reciprocal;
+        m_elements[ 3 ] *= reciprocal;
         return *this;
     }
 
