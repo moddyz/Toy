@@ -49,7 +49,3 @@ CMake options for configuring this project:
 The base [imaging](./src/toy/imaging) library provides common facilities used in both [rasterization](./src/toy/rasteriation) and [raytracing](./src/toy/raytracing) techniques.
 
 [application](./src/toy/application) provides classes and utilities for windowing, viewport, and user interactions.
-
-## Documentation
-
-Documentation based on the latest state of master, [hosted by GitHub Pages](https://moddyz.github.io/Toy/).
