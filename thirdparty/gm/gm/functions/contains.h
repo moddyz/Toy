@@ -7,7 +7,7 @@
 /// \file functions/contains.h
 /// \ingroup gm_functions_basic
 ///
-/// Check if a container, such as a range or array, contains a specified element or range of elements.
+/// Check if a container, such as a range contains a specified element or range of elements.
 
 #include <gm/gm.h>
 

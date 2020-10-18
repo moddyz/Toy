@@ -282,22 +282,23 @@ public:
     {
         GM_ASSERT( !HasNaNs() );
         GM_ASSERT( i_scalar != 0.0f );
-        return Mat4f( m_elements[ 0 ] / i_scalar,
-                      m_elements[ 1 ] / i_scalar,
-                      m_elements[ 2 ] / i_scalar,
-                      m_elements[ 3 ] / i_scalar,
-                      m_elements[ 4 ] / i_scalar,
-                      m_elements[ 5 ] / i_scalar,
-                      m_elements[ 6 ] / i_scalar,
-                      m_elements[ 7 ] / i_scalar,
-                      m_elements[ 8 ] / i_scalar,
-                      m_elements[ 9 ] / i_scalar,
-                      m_elements[ 10 ] / i_scalar,
-                      m_elements[ 11 ] / i_scalar,
-                      m_elements[ 12 ] / i_scalar,
-                      m_elements[ 13 ] / i_scalar,
-                      m_elements[ 14 ] / i_scalar,
-                      m_elements[ 15 ] / i_scalar );
+        float reciprocal = 1.0f / i_scalar;
+        return Mat4f( m_elements[ 0 ] * reciprocal,
+                      m_elements[ 1 ] * reciprocal,
+                      m_elements[ 2 ] * reciprocal,
+                      m_elements[ 3 ] * reciprocal,
+                      m_elements[ 4 ] * reciprocal,
+                      m_elements[ 5 ] * reciprocal,
+                      m_elements[ 6 ] * reciprocal,
+                      m_elements[ 7 ] * reciprocal,
+                      m_elements[ 8 ] * reciprocal,
+                      m_elements[ 9 ] * reciprocal,
+                      m_elements[ 10 ] * reciprocal,
+                      m_elements[ 11 ] * reciprocal,
+                      m_elements[ 12 ] * reciprocal,
+                      m_elements[ 13 ] * reciprocal,
+                      m_elements[ 14 ] * reciprocal,
+                      m_elements[ 15 ] * reciprocal );
     }
 
     /// Scalar division assignment.
@@ -305,22 +306,23 @@ public:
     {
         GM_ASSERT( !HasNaNs() );
         GM_ASSERT( i_scalar != 0.0f );
-        m_elements[ 0 ] /= i_scalar;
-        m_elements[ 1 ] /= i_scalar;
-        m_elements[ 2 ] /= i_scalar;
-        m_elements[ 3 ] /= i_scalar;
-        m_elements[ 4 ] /= i_scalar;
-        m_elements[ 5 ] /= i_scalar;
-        m_elements[ 6 ] /= i_scalar;
-        m_elements[ 7 ] /= i_scalar;
-        m_elements[ 8 ] /= i_scalar;
-        m_elements[ 9 ] /= i_scalar;
-        m_elements[ 10 ] /= i_scalar;
-        m_elements[ 11 ] /= i_scalar;
-        m_elements[ 12 ] /= i_scalar;
-        m_elements[ 13 ] /= i_scalar;
-        m_elements[ 14 ] /= i_scalar;
-        m_elements[ 15 ] /= i_scalar;
+        float reciprocal = 1.0f / i_scalar;
+        m_elements[ 0 ] *= reciprocal;
+        m_elements[ 1 ] *= reciprocal;
+        m_elements[ 2 ] *= reciprocal;
+        m_elements[ 3 ] *= reciprocal;
+        m_elements[ 4 ] *= reciprocal;
+        m_elements[ 5 ] *= reciprocal;
+        m_elements[ 6 ] *= reciprocal;
+        m_elements[ 7 ] *= reciprocal;
+        m_elements[ 8 ] *= reciprocal;
+        m_elements[ 9 ] *= reciprocal;
+        m_elements[ 10 ] *= reciprocal;
+        m_elements[ 11 ] *= reciprocal;
+        m_elements[ 12 ] *= reciprocal;
+        m_elements[ 13 ] *= reciprocal;
+        m_elements[ 14 ] *= reciprocal;
+        m_elements[ 15 ] *= reciprocal;
         return *this;
     }
 

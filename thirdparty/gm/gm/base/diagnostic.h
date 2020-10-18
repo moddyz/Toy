@@ -67,15 +67,15 @@
 GM_NS_OPEN
 
 /// Not intended to be used directly, \ref GM_ASSERT instead.
-GM_HOST_DEVICE inline void _Assert( const char* i_expression, const char* i_file, size_t i_line )
+GM_HOST_DEVICE inline void _Assert( const char* i_expression, const char* i_file, int i_line )
 {
-    GM_LOG_ERROR( "Assertion failed for expression: %s, at %s:%lu\n", i_expression, i_file, i_line );
+    GM_LOG_ERROR( "Assertion failed for expression: %s, at %s:%i\n", i_expression, i_file, i_line );
 }
 
 /// Not intended to be used directly, \ref GM_VERIFY instead.
-GM_HOST_DEVICE inline void _Verify( const char* i_expression, const char* i_file, size_t i_line )
+GM_HOST_DEVICE inline void _Verify( const char* i_expression, const char* i_file, int i_line )
 {
-    GM_LOG_ERROR( "Verification failed for expression: %s, at %s:%lu\n", i_expression, i_file, i_line );
+    GM_LOG_ERROR( "Verification failed for expression: %s, at %s:%i\n", i_expression, i_file, i_line );
 }
 
 GM_NS_CLOSE
