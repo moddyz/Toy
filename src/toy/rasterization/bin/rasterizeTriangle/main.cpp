@@ -7,12 +7,64 @@
 #include <gm/functions/inverse.h>
 #include <gm/functions/matrixProduct.h>
 #include <gm/functions/orthographicProjection.h>
+#include <gm/functions/radians.h>
 #include <gm/types/floatRange.h>
 #include <gm/types/vec2f.h>
 
 #include <vector>
 
 TOY_NS_OPEN
+
+static gm::Mat4f PerspectiveProjectionFromFrustum( const gm::Vec3fRange& i_view )
+{
+    // Translate frustum apex to origin.
+    gm::Mat4f translateXform = gm::Mat4f::Identity();
+    translateXform( 0, 3 )   = -( i_view.Max().X() + i_view.Min().X() ) * 0.5f;
+    translateXform( 1, 3 )   = -( i_view.Max().Y() + i_view.Min().Y() ) * 0.5f;
+    TOY_LOG_INFO( "translateXform: %s\n", translateXform.GetString().c_str() );
+
+    // Scale depth values in a non-linear range.
+    float     c1              = 2.0 * i_view.Max().Z() * i_view.Min().Z() / ( i_view.Min().Z() - i_view.Max().Z() );
+    float     c2              = ( i_view.Max().Z() + i_view.Min().Z() ) / ( i_view.Max().Z() - i_view.Min().Z() );
+    gm::Mat4f depthScaleXform = gm::Mat4f::Identity();
+    depthScaleXform( 2, 2 )   = -c2;
+    depthScaleXform( 2, 3 )   = c1;
+    depthScaleXform( 3, 2 )   = 1.0f;
+    depthScaleXform( 3, 3 )   = 0.0f;
+    TOY_LOG_INFO( "depthScaleXform: %s\n", depthScaleXform.GetString().c_str() );
+
+    // Perspective calculation.
+    gm::Mat4f projectionXform = gm::Mat4f::Identity();
+    projectionXform( 0, 0 )   = i_view.Min().Z();
+    projectionXform( 1, 1 )   = i_view.Min().Z();
+    TOY_LOG_INFO( "projectionXform: %s\n", projectionXform.GetString().c_str() );
+
+    // Scale viewing window to a 2x2 square (centered at origin).
+    gm::Mat4f scaleXform = gm::Mat4f::Identity();
+    scaleXform( 0, 0 )   = 2.0f / ( i_view.Max().X() - i_view.Min().X() );
+    scaleXform( 1, 1 )   = 2.0f / ( i_view.Max().Y() - i_view.Min().Y() );
+    TOY_LOG_INFO( "scaleXform: %s\n", scaleXform.GetString().c_str() );
+
+    return gm::MatrixProduct(
+        scaleXform,
+        gm::MatrixProduct( projectionXform, gm::MatrixProduct( depthScaleXform, translateXform ) ) );
+}
+
+static gm::Mat4f PerspectiveProjection( float i_fieldOfView, float i_aspectRatio, float i_near, float i_far )
+{
+    // Move the frustum apex to origin.
+    float fovRadians = gm::Radians( i_fieldOfView );
+
+    float top    = i_near * tan( fovRadians / 2.0f );
+    float bottom = -top;
+    float right  = top * i_aspectRatio;
+    float left   = -right;
+    TOY_LOG_INFO( "top: %f, bottom: %f\n", top, bottom );
+    TOY_LOG_INFO( "left: %f, right: %f\n", left, right );
+
+    return PerspectiveProjectionFromFrustum(
+        gm::Vec3fRange( gm::Vec3f( left, bottom, i_near ), gm::Vec3f( right, top, i_far ) ) );
+}
 
 static gm::Mat4f ClipToRaster( const gm::Vec2i& i_viewportSize )
 {
@@ -72,7 +124,7 @@ public:
 
         // Compute view matrix.
         gm::Mat4f cameraToClip =
-            gm::OrthographicProjection( gm::Vec3fRange( gm::Vec3f( -2, -2, -2 ), gm::Vec3f( 2, 2, 2 ) ) );
+            PerspectiveProjection( 60.0f, ( float ) GetSize().X() / ( float ) GetSize().Y(), 0.1, 1000 );
         TOY_LOG_INFO( "cameraToClip: %s\n", cameraToClip.GetString().c_str() );
 
         // Clip space -> screen space.
