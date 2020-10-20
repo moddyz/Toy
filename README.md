@@ -1,4 +1,4 @@
-![Build and test](https://github.com/moddyz/Toy/workflows/Build%20and%20test/badge.svg)
+<a href="https://github.com/moddyz/Toy/actions?query=workflow%3A%22Build+and+test%22"><img src="https://github.com/moddyz/Toy/workflows/Build%20and%20test/badge.svg"/></a>
 
 # Toy
 
