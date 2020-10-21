@@ -2,10 +2,12 @@
 
 /// \file application/viewportWindow.h
 
-#include <toy/application/window.h>
-#include <toy/imaging/lookAtTransform.h>
-#include <toy/imaging/perspectiveView.h>
 #include <toy/memory/matrix.h>
+
+#include <toy/viewport/lookAtTransform.h>
+#include <toy/viewport/perspectiveView.h>
+
+#include <toy/application/window.h>
 
 #include <gm/types/vec2f.h>
 #include <gm/types/vec2i.h>

@@ -4,8 +4,9 @@
 ///
 /// An application window for presentation purposes.
 
-#include <toy/application/mouse.h>
 #include <toy/memory/matrix.h>
+
+#include <toy/application/mouse.h>
 
 #include <gm/types/vec2f.h>
 #include <gm/types/vec2i.h>

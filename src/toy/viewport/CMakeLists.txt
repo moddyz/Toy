@@ -1,4 +1,4 @@
-file(GLOB HEADERS *.h *.cuh)
+file(GLOB HEADERS *.h)
 file(GLOB CPPFILES *.cpp)
 get_filename_component(LIBRARY_SUFFIX ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
@@ -12,13 +12,12 @@ cpp_library(${ROOT_PREFIX}_${LIBRARY_SUFFIX}
     CPPFILES
         ${CPPFILES}
     LIBRARIES
-        ${GLFW_LIBRARIES}
         ${GLEW_LIBRARIES}
         ${OPENGL_LIBRARIES}
         CUDA::cudart
         gm
-        stb
         toy_memory
-        toy_imaging
-        toy_viewport
+        toy_utils
 )
+
+add_subdirectories()

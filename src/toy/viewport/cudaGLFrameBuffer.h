@@ -1,6 +1,6 @@
 #pragma once
 
-/// \file imaging/cudaGLFrameBuffer.h
+/// \file viewport/cudaGLFrameBuffer.h
 ///
 /// A method for enabling CUDA computations to be performed against a OpenGL-allocated
 /// pixel buffer, and being able to display the pixel buffer as an image via a texture.

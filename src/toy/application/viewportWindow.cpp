@@ -1,8 +1,10 @@
 #include <toy/application/viewportWindow.h>
+
+#include <toy/viewport/dollyManipulator.h>
+#include <toy/viewport/orbitManipulator.h>
+#include <toy/viewport/truckManipulator.h>
+
 #include <toy/imaging/convert.h>
-#include <toy/imaging/dollyManipulator.h>
-#include <toy/imaging/orbitManipulator.h>
-#include <toy/imaging/truckManipulator.h>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>

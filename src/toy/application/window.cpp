@@ -1,7 +1,9 @@
-#include <toy/application/cudaGLFrameBuffer.h>
-#include <toy/application/window.h>
 #include <toy/utils/diagnostic.h>
 #include <toy/utils/log.h>
+
+#include <toy/viewport/cudaGLFrameBuffer.h>
+
+#include <toy/application/window.h>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
