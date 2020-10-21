@@ -5,7 +5,7 @@
 /// Matrix class.
 
 #include <toy/memory/array.h>
-#include <toy/utils/diagnostic.h>
+#include <toy/base/diagnostic.h>
 
 #include <algorithm>
 

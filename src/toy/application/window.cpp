@@ -1,5 +1,5 @@
-#include <toy/utils/diagnostic.h>
-#include <toy/utils/log.h>
+#include <toy/base/diagnostic.h>
+#include <toy/base/log.h>
 
 #include <toy/viewport/cudaGLFrameBuffer.h>
 

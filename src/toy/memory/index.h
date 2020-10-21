@@ -5,8 +5,8 @@
 /// Memory indexed access operator.
 
 #include <toy/memory/residency.h>
-#include <toy/utils/diagnostic.h>
-#include <toy/utils/falseType.h>
+#include <toy/base/diagnostic.h>
+#include <toy/base/falseType.h>
 
 #include <cuda_runtime.h>
 

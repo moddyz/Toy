@@ -6,7 +6,7 @@
 
 #include <toy/memory/cudaError.h>
 #include <toy/memory/residency.h>
-#include <toy/utils/diagnostic.h>
+#include <toy/base/diagnostic.h>
 
 #include <cstring>
 #include <cuda_runtime.h>

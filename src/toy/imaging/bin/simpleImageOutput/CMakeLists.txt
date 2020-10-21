@@ -5,7 +5,7 @@ cpp_executable(
         main.cpp
     LIBRARIES
         CUDA::cudart
-        toy_utils
+        toy_base
         toy_memory
         toy_imaging
         gm

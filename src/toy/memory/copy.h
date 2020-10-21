@@ -9,7 +9,7 @@
 /// taking advantage of asynchronous CUDA copies.
 
 #include <toy/memory/residency.h>
-#include <toy/utils/diagnostic.h>
+#include <toy/base/diagnostic.h>
 
 TOY_NS_OPEN
 

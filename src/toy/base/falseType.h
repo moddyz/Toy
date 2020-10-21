@@ -1,6 +1,6 @@
 #pragma once
 
-/// \file utils/falseType.h
+/// \file base/falseType.h
 ///
 /// For allowing static assertions with meaningful error messages to be
 /// raised for certain template specializations.

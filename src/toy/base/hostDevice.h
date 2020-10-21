@@ -1,6 +1,6 @@
 #pragma once
 
-/// \file utils/hostDevice.h
+/// \file base/hostDevice.h
 
 /// \def TOY_HOST_DEVICE
 ///

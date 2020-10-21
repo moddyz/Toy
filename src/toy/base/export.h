@@ -1,12 +1,12 @@
 #pragma once
 
-/// \file utils/export.h
+/// \file base/export.h
 ///
 /// Cross-platform symbol export definitions.
 ///
 /// Windows platform requires flag for marking as symbol for external linkage.
 
-#include <toy/utils/os.h>
+#include <toy/base/os.h>
 
 #if defined( TOY_WINDOWS )
 #define TOY_EXPORT __declspec( dllexport )

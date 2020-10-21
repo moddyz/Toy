@@ -11,8 +11,8 @@
 #include <toy/memory/fill.h>
 #include <toy/memory/index.h>
 #include <toy/memory/residency.h>
-#include <toy/utils/diagnostic.h>
-#include <toy/utils/typeName.h>
+#include <toy/base/diagnostic.h>
+#include <toy/base/typeName.h>
 
 #include <algorithm>
 #include <sstream>

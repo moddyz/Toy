@@ -1,6 +1,6 @@
 #pragma once
 
-/// \file utils/os.h
+/// \file base/os.h
 ///
 /// Operating system variant definitions.
 

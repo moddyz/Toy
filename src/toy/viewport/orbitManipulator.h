@@ -2,7 +2,7 @@
 
 /// \file imaging/orbitManipulator.h
 
-#include <toy/imaging/lookAtTransform.h>
+#include <toy/viewport/lookAtTransform.h>
 
 #include <gm/functions/matrixProduct.h>
 #include <gm/functions/setRotate.h>

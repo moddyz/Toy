@@ -4,6 +4,6 @@ cpp_test(test_${ROOT_PREFIX}_${LIBRARY_SUFFIX}
         ${CPPFILES}
     LIBRARIES
         ${ROOT_PREFIX}_${LIBRARY_SUFFIX}
-        ${ROOT_PREFIX}_utils
+        ${ROOT_PREFIX}_base
         CUDA::cudart
 )

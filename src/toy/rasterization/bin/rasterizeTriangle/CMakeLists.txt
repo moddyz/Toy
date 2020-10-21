@@ -6,7 +6,7 @@ cpp_executable(
     LIBRARIES
         ${GLFW_LIBRARIES}
         CUDA::cudart
-        toy_utils
+        toy_base
         toy_memory
         toy_imaging
         toy_application

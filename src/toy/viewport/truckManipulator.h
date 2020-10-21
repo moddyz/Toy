@@ -2,7 +2,7 @@
 
 /// \file imaging/truckManipulator.h
 
-#include <toy/imaging/lookAtTransform.h>
+#include <toy/viewport/lookAtTransform.h>
 
 #include <gm/functions/clamp.h>
 #include <gm/functions/distance.h>

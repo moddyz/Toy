@@ -5,7 +5,7 @@
 #include <toy/imaging/extent.h>
 #include <toy/memory/cudaError.h>
 #include <toy/memory/matrix.h>
-#include <toy/utils/log.h>
+#include <toy/base/log.h>
 
 #include <gm/types/vec2iRange.h>
 #include <gm/types/vec3f.h>

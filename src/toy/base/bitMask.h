@@ -1,6 +1,6 @@
 #pragma once
 
-/// \file utils/bitMask.h
+/// \file base/bitMask.h
 ///
 /// Macro definitions for simplifying the process the operator overloads for a enum
 /// type intended to function as a bit mask.

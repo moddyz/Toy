@@ -15,7 +15,7 @@ cpp_library(${ROOT_PREFIX}_${LIBRARY_SUFFIX}
         CUDA::cudart
         gm
         toy_memory
-        toy_utils
+        toy_base
 )
 
 add_subdirectories()

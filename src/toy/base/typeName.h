@@ -1,11 +1,11 @@
 #pragma once
 
-/// \file utils/typeName.h
+/// \file base/typeName.h
 ///
 /// Utilities for extracting the names of types.
 
 #include <toy/toy.h>
-#include <toy/utils/diagnostic.h>
+#include <toy/base/diagnostic.h>
 
 #include <cxxabi.h>
 #include <string>
