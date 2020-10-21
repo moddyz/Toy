@@ -4,6 +4,8 @@
 ///
 /// Core array class.
 
+#include <toy/base/diagnostic.h>
+#include <toy/base/typeName.h>
 #include <toy/memory/allocate.h>
 #include <toy/memory/compare.h>
 #include <toy/memory/copy.h>
@@ -11,8 +13,6 @@
 #include <toy/memory/fill.h>
 #include <toy/memory/index.h>
 #include <toy/memory/residency.h>
-#include <toy/base/diagnostic.h>
-#include <toy/base/typeName.h>
 
 #include <algorithm>
 #include <sstream>

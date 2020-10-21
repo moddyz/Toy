@@ -1,6 +1,6 @@
-#include <toy/memory/cudaError.h>
 #include <toy/base/diagnostic.h>
 #include <toy/base/log.h>
+#include <toy/memory/cudaError.h>
 #include <toy/viewport/cudaGLFrameBuffer.h>
 
 #include <GL/glew.h>

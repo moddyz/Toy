@@ -1,9 +1,9 @@
 #include <cxxopts.hpp>
 
 #include <toy/application/viewportWindow.h>
+#include <toy/base/log.h>
 #include <toy/imaging/extent.h>
 #include <toy/imaging/ray.h>
-#include <toy/base/log.h>
 
 #include <gm/functions/linearInterpolation.h>
 #include <gm/functions/rayAABBIntersection.h>

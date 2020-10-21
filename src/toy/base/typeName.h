@@ -4,8 +4,8 @@
 ///
 /// Utilities for extracting the names of types.
 
-#include <toy/toy.h>
 #include <toy/base/diagnostic.h>
+#include <toy/toy.h>
 
 #include <cxxabi.h>
 #include <string>

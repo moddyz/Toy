@@ -1,14 +1,13 @@
 #pragma once
 
-#include <toy/toy.h>
-
-#include <toy/base/log.h>
-
-#include <stdarg.h>
-
 /// \file base/diagnostic.h
 ///
 /// Diagnostic utilities.
+
+#include <stdarg.h>
+
+#include <toy/toy.h>
+#include <toy/base/log.h>
 
 /// \def TOY_ASSERT( expr )
 ///

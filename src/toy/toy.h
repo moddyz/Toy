@@ -2,14 +2,7 @@
 
 /// \file toy/toy.h
 ///
-/// CUDA-based toy ray tracer.
-
-#include <toy/base/export.h>
-
-/// \def TOY_API
-///
-/// Mark a symbol for external linkage.
-#define TOY_API TOY_EXPORT
+/// Building blocks for generating images.
 
 /// \def TOY_NS
 ///

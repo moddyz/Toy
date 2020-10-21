@@ -5,8 +5,8 @@
 ///
 /// Mouse related utilities.
 
-#include <toy/toy.h>
 #include <toy/base/bitMask.h>
+#include <toy/toy.h>
 
 TOY_NS_OPEN
 

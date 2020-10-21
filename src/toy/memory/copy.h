@@ -8,8 +8,8 @@
 /// These operations are all synchronous.  A more specific API is required for
 /// taking advantage of asynchronous CUDA copies.
 
-#include <toy/memory/residency.h>
 #include <toy/base/diagnostic.h>
+#include <toy/memory/residency.h>
 
 TOY_NS_OPEN
 

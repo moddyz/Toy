@@ -1,7 +1,7 @@
 #include <toy/application/viewportWindow.h>
+#include <toy/base/log.h>
 #include <toy/imaging/extent.h>
 #include <toy/imaging/transformPoints.h>
-#include <toy/base/log.h>
 
 #include <gm/functions/clamp.h>
 #include <gm/functions/inverse.h>

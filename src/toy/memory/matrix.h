@@ -4,8 +4,8 @@
 ///
 /// Matrix class.
 
-#include <toy/memory/array.h>
 #include <toy/base/diagnostic.h>
+#include <toy/memory/array.h>
 
 #include <algorithm>
 

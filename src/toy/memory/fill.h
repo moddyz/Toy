@@ -4,10 +4,10 @@
 ///
 /// Memory fill operation.
 
+#include <toy/base/diagnostic.h>
 #include <toy/memory/allocate.h>
 #include <toy/memory/copy.h>
 #include <toy/memory/residency.h>
-#include <toy/base/diagnostic.h>
 
 #include <cuda_runtime.h>
 
