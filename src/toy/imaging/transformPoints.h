@@ -47,11 +47,11 @@ __global__ void TransformPoints_Kernel( size_t           i_numPoints,
                                         gm::Vec3f*       o_points );
 
 template <>
-struct TransformPoints< Cuda >
+struct TransformPoints< CUDA >
 {
     static inline bool Execute( const gm::Mat4f&                i_transform,
-                                const Array< gm::Vec3f, Cuda >& i_points,
-                                Array< gm::Vec3f, Cuda >&       o_points )
+                                const Array< gm::Vec3f, CUDA >& i_points,
+                                Array< gm::Vec3f, CUDA >&       o_points )
     {
         dim3 block( 256, 1, 1 );
         dim3 grid( ( i_points.GetSize() + block.x - 1 ) / block.x, 1, 1 );

@@ -32,7 +32,7 @@ struct MemoryAllocate< Host >
 };
 
 template <>
-struct MemoryAllocate< Cuda >
+struct MemoryAllocate< CUDA >
 {
     static inline void* Execute( size_t i_numBytes )
     {

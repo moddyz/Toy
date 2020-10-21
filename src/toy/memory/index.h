@@ -31,7 +31,7 @@ struct MemoryIndex< Host >
 };
 
 template <>
-struct MemoryIndex< Cuda >
+struct MemoryIndex< CUDA >
 {
     template < typename ValueT >
     static inline ValueT& Execute( ValueT* i_buffer, size_t i_index )

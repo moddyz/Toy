@@ -33,7 +33,7 @@ struct MemoryDeallocate< Host >
 };
 
 template <>
-struct MemoryDeallocate< Cuda >
+struct MemoryDeallocate< CUDA >
 {
     static inline bool Execute( void* o_buffer )
     {

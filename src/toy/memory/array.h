@@ -261,7 +261,7 @@ public:
 private:
     // Hmm how does array become friends with _all_ the residencies.
     friend class Matrix< ValueT, Host >;
-    friend class Matrix< ValueT, Cuda >;
+    friend class Matrix< ValueT, CUDA >;
 
     // Helper method to copy the attributes and data from a source array into this array.
     template < Residency SrcResidencyT >
@@ -288,9 +288,9 @@ private:
     // Helper method to copy the values from the initializer list into this array.
     inline bool _CopyInitializerList( std::initializer_list< ValueT > i_initializerList )
     {
-        if ( ResidencyT == Cuda )
+        if ( ResidencyT == CUDA )
         {
-            // If _this_ array is Cuda-based, we need an extra staging host array.
+            // If _this_ array is CUDA-based, we need an extra staging host array.
 
             // Check for host array allocation failure (rare).
             Array< ValueT, Host > hostArray( i_initializerList.size() );
@@ -303,7 +303,7 @@ private:
                 hostArray[ index ] = *it;
             }
 
-            // Upload to Cuda.
+            // Upload to CUDA.
             return _Copy( hostArray );
         }
         else

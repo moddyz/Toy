@@ -15,9 +15,9 @@ struct cudaGraphicsResource;
 
 TOY_NS_OPEN
 
-/// \class CudaGLFrameBuffer
+/// \class CUDAGLFrameBuffer
 ///
-/// CudaGLFrameBuffer abstracts the process of using CUDA for producing an frame
+/// CUDAGLFrameBuffer abstracts the process of using CUDA for producing an frame
 /// to be displayed on screen via a OpenGL texture.
 ///
 /// To use - dynamically instantiate this class for a given target display dimension.
@@ -27,7 +27,7 @@ TOY_NS_OPEN
 /// 1. ComputeFrameBegin() which provide a frame buffer for CUDA operations to write into.
 /// 2. ComputeFrameEnd() once the CUDA computations end.
 /// 3. DrawFrame() to display the frame buffer as a texture via GL.
-class CudaGLFrameBuffer
+class CUDAGLFrameBuffer
 {
 public:
     //------------------------------------------------------------------------0
@@ -35,8 +35,8 @@ public:
     //------------------------------------------------------------------------0
 
     /// Initialize the CUDA and GL resources for a given dimension.
-    explicit CudaGLFrameBuffer( int i_width, int i_height );
-    ~CudaGLFrameBuffer();
+    explicit CUDAGLFrameBuffer( int i_width, int i_height );
+    ~CUDAGLFrameBuffer();
 
     //------------------------------------------------------------------------0
     /// \name Size and dimensions
@@ -87,7 +87,7 @@ private:
     uint32_t m_textureId     = 0;
     uint32_t m_pixelBufferId = 0;
 
-    // Cuda members.
+    // CUDA members.
     cudaGraphicsResource* m_graphicsResource = nullptr;
 };
 

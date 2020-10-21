@@ -13,12 +13,12 @@
 /// \macro CUDA_CHECK
 ///
 /// Check the error status.  On non-success, log to stderr and continue exceution.
-#define CUDA_CHECK( val ) TOY_NS::_CudaCheckError( ( val ), #val, __FILE__, __LINE__ )
+#define CUDA_CHECK( val ) TOY_NS::_CUDACheckError( ( val ), #val, __FILE__, __LINE__ )
 
 TOY_NS_OPEN
 
 /// Not intended to be used directly - use \ref CUDA_CHECK instead.
-inline bool _CudaCheckError( cudaError_t i_error, const char* i_function, const char* i_file, int i_line )
+inline bool _CUDACheckError( cudaError_t i_error, const char* i_function, const char* i_file, int i_line )
 {
     if ( i_error != cudaSuccess )
     {

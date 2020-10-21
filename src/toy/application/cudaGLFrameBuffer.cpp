@@ -10,7 +10,7 @@
 
 TOY_NS_OPEN
 
-CudaGLFrameBuffer::CudaGLFrameBuffer( int i_width, int i_height )
+CUDAGLFrameBuffer::CUDAGLFrameBuffer( int i_width, int i_height )
     : m_width( i_width )
     , m_height( i_height )
 {
@@ -53,7 +53,7 @@ CudaGLFrameBuffer::CudaGLFrameBuffer( int i_width, int i_height )
     TOY_VERIFY( glGetError() == GL_NO_ERROR );
 }
 
-CudaGLFrameBuffer::~CudaGLFrameBuffer()
+CUDAGLFrameBuffer::~CUDAGLFrameBuffer()
 {
     TOY_LOG_DEBUG( "Destroying frame buffer.\n" );
     cudaGraphicsUnregisterResource( m_graphicsResource );
@@ -61,7 +61,7 @@ CudaGLFrameBuffer::~CudaGLFrameBuffer()
     glDeleteTextures( 1, &m_textureId );
 }
 
-uint32_t* CudaGLFrameBuffer::WriteFrameBegin()
+uint32_t* CUDAGLFrameBuffer::WriteFrameBegin()
 {
     CUDA_CHECK( cudaGraphicsMapResources( 1, &m_graphicsResource, 0 ) );
     uint32_t* devicePtr = nullptr;
@@ -71,13 +71,13 @@ uint32_t* CudaGLFrameBuffer::WriteFrameBegin()
     return devicePtr;
 }
 
-void CudaGLFrameBuffer::WriteFrameEnd()
+void CUDAGLFrameBuffer::WriteFrameEnd()
 {
     cudaDeviceSynchronize();
     CUDA_CHECK( cudaGraphicsUnmapResources( 1, &m_graphicsResource, 0 ) );
 }
 
-void CudaGLFrameBuffer::DrawFrame()
+void CUDAGLFrameBuffer::DrawFrame()
 {
     glViewport( 0, 0, m_width, m_height );
 

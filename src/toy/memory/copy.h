@@ -34,7 +34,7 @@ struct MemoryCopy< Host, Host >
 
 /// Specialization for synchronous cuda -> cuda copy.
 template <>
-struct MemoryCopy< Cuda, Cuda >
+struct MemoryCopy< CUDA, CUDA >
 {
     static inline bool Execute( size_t i_numBytes, const void* i_srcBuffer, void* o_dstBuffer )
     {
@@ -45,7 +45,7 @@ struct MemoryCopy< Cuda, Cuda >
 
 /// Specialization for synchronous host -> cuda copy.
 template <>
-struct MemoryCopy< Host, Cuda >
+struct MemoryCopy< Host, CUDA >
 {
     static inline bool Execute( size_t i_numBytes, const void* i_srcBuffer, void* o_dstBuffer )
     {
@@ -56,7 +56,7 @@ struct MemoryCopy< Host, Cuda >
 
 /// Specialization for synchronous cuda -> host copy.
 template <>
-struct MemoryCopy< Cuda, Host >
+struct MemoryCopy< CUDA, Host >
 {
     static inline bool Execute( size_t i_numBytes, const void* i_srcBuffer, void* o_dstBuffer )
     {

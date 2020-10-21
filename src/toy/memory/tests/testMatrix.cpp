@@ -4,7 +4,7 @@
 
 using ValueT = float;
 
-using TestUnifiedTypes     = std::tuple< toy::Matrix< ValueT, toy::Host >, toy::Matrix< ValueT, toy::Cuda > >;
+using TestUnifiedTypes     = std::tuple< toy::Matrix< ValueT, toy::Host >, toy::Matrix< ValueT, toy::CUDA > >;
 using TestIndexAccessTypes = std::tuple< toy::Matrix< ValueT, toy::Host > >;
 
 TEMPLATE_LIST_TEST_CASE( "Matrix_DefaultConstructor", "[template][list]", TestUnifiedTypes )

@@ -39,7 +39,7 @@ struct MemoryCompare< Host >
 };
 
 template <>
-struct MemoryCompare< Cuda >
+struct MemoryCompare< CUDA >
 {
     template < typename ValueT >
     static inline bool Execute( size_t i_numElements, const ValueT* i_arrayA, const ValueT* i_arrayB )
@@ -58,9 +58,9 @@ struct MemoryCompare< Cuda >
         }
 
         // Copy to host buffers.
-        bool result = MemoryCopy< Cuda, Host >::Execute( numBytes, i_arrayA, hostArrayA );
+        bool result = MemoryCopy< CUDA, Host >::Execute( numBytes, i_arrayA, hostArrayA );
         TOY_VERIFY( result );
-        result = MemoryCopy< Cuda, Host >::Execute( numBytes, i_arrayB, hostArrayB );
+        result = MemoryCopy< CUDA, Host >::Execute( numBytes, i_arrayB, hostArrayB );
         TOY_VERIFY( result );
 
         // Do comparison on Host.

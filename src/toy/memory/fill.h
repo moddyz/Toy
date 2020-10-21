@@ -39,7 +39,7 @@ struct MemoryFill< Host >
 };
 
 template <>
-struct MemoryFill< Cuda >
+struct MemoryFill< CUDA >
 {
     template < typename ValueT >
     static inline bool Execute( size_t i_numElements, const ValueT& i_value, ValueT* o_dstBuffer )
@@ -55,7 +55,7 @@ struct MemoryFill< Cuda >
         TOY_VERIFY( MemoryFill< Host >::Execute( i_numElements, i_value, static_cast< ValueT* >( srcBuffer ) ) );
 
         // Then copy to GPU.
-        bool result = MemoryCopy< Host, Cuda >::Execute( numBytes, srcBuffer, o_dstBuffer );
+        bool result = MemoryCopy< Host, CUDA >::Execute( numBytes, srcBuffer, o_dstBuffer );
 
         // Delete temporary buffer.
         TOY_VERIFY( MemoryDeallocate< Host >::Execute( srcBuffer ) );

@@ -97,12 +97,12 @@ void Window::_Resize( const gm::Vec2i& i_size )
 
     if ( m_frameBuffer == nullptr )
     {
-        m_frameBuffer = new CudaGLFrameBuffer( i_size.X(), i_size.Y() );
+        m_frameBuffer = new CUDAGLFrameBuffer( i_size.X(), i_size.Y() );
     }
     else if ( m_frameBuffer->GetWidth() != i_size.X() || m_frameBuffer->GetHeight() != i_size.Y() )
     {
         delete m_frameBuffer;
-        m_frameBuffer = new CudaGLFrameBuffer( i_size.X(), i_size.Y() );
+        m_frameBuffer = new CUDAGLFrameBuffer( i_size.X(), i_size.Y() );
     }
 
     // Then call derived.

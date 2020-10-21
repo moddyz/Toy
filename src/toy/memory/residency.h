@@ -14,7 +14,7 @@ TOY_NS_OPEN
 enum Residency
 {
     Host,
-    Cuda
+    CUDA
 };
 
 TOY_NS_CLOSE

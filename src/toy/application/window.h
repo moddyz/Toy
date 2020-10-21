@@ -16,7 +16,7 @@ class GLFWwindow;
 TOY_NS_OPEN
 
 // Forward declarations.
-class CudaGLFrameBuffer;
+class CUDAGLFrameBuffer;
 
 /// \class Window
 ///
@@ -127,7 +127,7 @@ private:
     GLFWwindow* m_handle = nullptr;
 
     // CUDA GL Imaging pipeline.
-    CudaGLFrameBuffer* m_frameBuffer = nullptr;
+    CUDAGLFrameBuffer* m_frameBuffer = nullptr;
 
     // User input states.
     gm::Vec2f   m_lastMousePosition;

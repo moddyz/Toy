@@ -14,7 +14,7 @@
 TOY_NS_OPEN
 
 // Forward declarations.
-class CudaGLFrameBuffer;
+class CUDAGLFrameBuffer;
 
 /// \class ViewportWindow
 ///
@@ -79,8 +79,8 @@ private:
     LookAtTransform m_cameraTransform;
     PerspectiveView m_cameraView;
 
-    // Cuda <-> GL frame buffer.
-    CudaGLFrameBuffer* m_frameBuffer = nullptr;
+    // CUDA <-> GL frame buffer.
+    CUDAGLFrameBuffer* m_frameBuffer = nullptr;
 
     // Intermediate frame buffer(s).
     Matrix< gm::Vec3f, Host > m_image;
