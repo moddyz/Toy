@@ -6,8 +6,8 @@
 
 #include <stdarg.h>
 
-#include <toy/toy.h>
 #include <toy/base/log.h>
+#include <toy/toy.h>
 
 /// \def TOY_ASSERT( expr )
 ///

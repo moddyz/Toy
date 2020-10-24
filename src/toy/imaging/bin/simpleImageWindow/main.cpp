@@ -29,7 +29,9 @@ protected:
                                                          ( float ) coord.Y() / ( float ) m_image.GetRows(),
                                                          0.0f );
         }
-        toy::ConvertRGBFloatToRGBAUint32< toy::Host >::Execute( m_image.GetSize(), m_image.GetBuffer(), m_texture.GetBuffer() );
+        toy::ConvertRGBFloatToRGBAUint32< toy::Host >::Execute( m_image.GetSize(),
+                                                                m_image.GetBuffer(),
+                                                                m_texture.GetBuffer() );
         CUDA_CHECK( cudaMemcpy( o_frameData, m_texture.GetBuffer(), m_texture.GetByteSize(), cudaMemcpyHostToDevice ) );
     }
 

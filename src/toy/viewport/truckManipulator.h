@@ -24,7 +24,7 @@ public:
 
     inline void operator()( const gm::Vec2f& i_mouseDelta )
     {
-        gm::Vec3f translation = m_transform.GetNewUp() * m_sensitivity * -i_mouseDelta.Y() +
+        gm::Vec3f translation = m_transform.GetNewUp() * m_sensitivity * i_mouseDelta.Y() +
                                 m_transform.GetRight() * m_sensitivity * -i_mouseDelta.X();
         m_transform = toy::LookAtTransform( m_transform.GetOrigin() + translation,
                                             m_transform.GetTarget() + translation,

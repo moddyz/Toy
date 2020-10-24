@@ -29,7 +29,7 @@ public:
 
         // "Pitch" uses the camera right vector as the axis of rotation.
         // The degree of rotation is determined by vertical mouse delta.
-        float     pitchDegrees = -i_mouseDelta.Y() * m_sensitivity;
+        float     pitchDegrees = i_mouseDelta.Y() * m_sensitivity;
         gm::Mat4f pitchTransform( gm::Mat4f::Identity() );
         gm::SetRotate( pitchDegrees, m_transform.GetRight(), pitchTransform );
 

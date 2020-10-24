@@ -6,6 +6,7 @@
 #include <gm/functions/clamp.h>
 #include <gm/functions/inverse.h>
 #include <gm/functions/matrixProduct.h>
+#include <gm/functions/orthographicProjection.h>
 #include <gm/functions/perspectiveProjection.h>
 #include <gm/functions/radians.h>
 #include <gm/types/floatRange.h>
@@ -19,7 +20,7 @@ static gm::Mat4f ClipToRaster( const gm::Vec2i& i_viewportSize )
 {
     gm::Mat4f scaleXform = gm::Mat4f::Identity();
     scaleXform( 0, 0 )   = i_viewportSize.X() * 0.5f;
-    scaleXform( 1, 1 )   = i_viewportSize.Y() * 0.5f;
+    scaleXform( 1, 1 )   = -i_viewportSize.Y() * 0.5f;
     scaleXform( 2, 2 )   = 1;
 
     gm::Mat4f translateXform = gm::Mat4f::Identity();
@@ -69,12 +70,11 @@ public:
         const gm::Mat4f&       cameraToWorld = lookAtXform.GetObjectToWorld();
         gm::Mat4f              worldToCamera;
         TOY_VERIFY( gm::Inverse( cameraToWorld, worldToCamera ) );
-        TOY_LOG_INFO( "worldToCamera: %s\n", worldToCamera.GetString().c_str() );
 
         // Compute view matrix.
         gm::Mat4f cameraToClip =
             gm::PerspectiveProjection( 60.0f, ( float ) GetSize().X() / ( float ) GetSize().Y(), 0.1, 1000 );
-        TOY_LOG_INFO( "cameraToClip: %s\n", cameraToClip.GetString().c_str() );
+        // gm::Mat4f cameraToClip = gm::OrthographicProjection( -2, 2, -2, 2, -2, 2  );
 
         // Clip space -> screen space.
         gm::Mat4f clipToRaster = ClipToRaster( GetSize() );
@@ -82,17 +82,10 @@ public:
         // World -> clip space.
         gm::Mat4f worldToClip   = gm::MatrixProduct( cameraToClip, worldToCamera );
         gm::Mat4f worldToRaster = gm::MatrixProduct( clipToRaster, worldToClip );
-        TOY_LOG_INFO( "worldToRaster: %s\n", worldToRaster.GetString().c_str() );
 
         // Screen points.
         Array< gm::Vec3f, Host > screenPoints( m_points.GetSize() );
         TransformPoints< Host >::Execute( worldToRaster, m_points, screenPoints );
-
-        TOY_LOG_INFO( "Points:\n" );
-        for ( size_t i = 0; i < screenPoints.GetSize(); ++i )
-        {
-            TOY_LOG_INFO( "%s\n", screenPoints[ i ].GetString().c_str() );
-        }
 
         for ( gm::Vec2i coord : GetImageExtent( o_image ) )
         {
