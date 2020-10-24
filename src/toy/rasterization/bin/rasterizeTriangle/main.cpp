@@ -58,14 +58,13 @@ public:
         gm::Mat4f              worldToCamera;
         TOY_VERIFY( gm::Inverse( cameraToWorld, worldToCamera ) );
 
-        // Camera space -> clipping volume space.
+        // Compose transformation bringing 3D geometry to the 2D screen.
         gm::Mat4f cameraToClip =
-            gm::PerspectiveProjection( 60.0f, ( float ) GetSize().X() / ( float ) GetSize().Y(), 0.1, 1000 );
-
-        // Clip space -> screen space.
-        gm::Mat4f clipToRaster = gm::ViewportTransform( gm::Vec2f( GetSize().X(), GetSize().Y() ), gm::Vec2f( 0, 0 ) );
-
-        // World -> clip space.
+            gm::PerspectiveProjection( /* fov */ 60.0f,
+                                       /* aspectRatio */ ( float ) GetSize().X() / ( float ) GetSize().Y(),
+                                       0.1,
+                                       1000 );
+        gm::Mat4f clipToRaster  = gm::ViewportTransform( gm::Vec2f( GetSize().X(), GetSize().Y() ), gm::Vec2f( 0, 0 ) );
         gm::Mat4f worldToClip   = gm::MatrixProduct( cameraToClip, worldToCamera );
         gm::Mat4f worldToRaster = gm::MatrixProduct( clipToRaster, worldToClip );
 
