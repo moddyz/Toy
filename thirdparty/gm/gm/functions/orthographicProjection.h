@@ -47,16 +47,16 @@ GM_HOST_DEVICE inline Mat4f OrthographicProjection( const float& i_left,
     GM_ASSERT( i_far >= i_near );
 
     // Center viewing volume about origin, such that the scaling is applied uniformly.
-    gm::Mat4f centeringXform = gm::Mat4f::Identity();
-    SetTranslate( gm::Vec3f( -( i_right + i_left ) * 0.5f, -( i_top + i_bottom ) * 0.5f, -( i_far + i_near ) * 0.5f ),
+    Mat4f centeringXform = Mat4f::Identity();
+    SetTranslate( Vec3f( -( i_right + i_left ) * 0.5f, -( i_top + i_bottom ) * 0.5f, -( i_far + i_near ) * 0.5f ),
                   centeringXform );
 
     // Scale viewing volume into a volume of min=(-1, -1, -1), max=(1, 1, 1)
-    gm::Mat4f scaleXform = gm::Mat4f::Identity();
-    SetScale( gm::Vec3f( 2.0f / ( i_right - i_left ), 2.0f / ( i_top - i_bottom ), 2.0f / ( i_far - i_near ) ),
+    Mat4f scaleXform = Mat4f::Identity();
+    SetScale( Vec3f( 2.0f / ( i_right - i_left ), 2.0f / ( i_top - i_bottom ), 2.0f / ( i_far - i_near ) ),
               scaleXform );
 
-    return gm::MatrixProduct( scaleXform, centeringXform );
+    return MatrixProduct( scaleXform, centeringXform );
 }
 
 GM_NS_CLOSE
