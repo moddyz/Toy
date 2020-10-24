@@ -4,7 +4,7 @@
 #include <toy/viewport/orbitManipulator.h>
 #include <toy/viewport/truckManipulator.h>
 
-#include <toy/imaging/convert.h>
+#include <toy/imaging/formatConversion.h>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -24,7 +24,7 @@ ViewportWindow::ViewportWindow( const char* i_title, const gm::Vec2i& i_dimensio
 void ViewportWindow::WriteFrame( uint32_t* o_frameData )
 {
     Render( m_image );
-    ConvertImageVec3fToUint32( m_image, m_texture );
+    ConvertRGBFloatToRGBAUint32< Host >::Execute( m_image.GetSize(), m_image.GetBuffer(), m_texture.GetBuffer() );
     CUDA_CHECK( cudaMemcpy( o_frameData, m_texture.GetBuffer(), m_texture.GetByteSize(), cudaMemcpyHostToDevice ) );
 }
 

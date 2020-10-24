@@ -2,8 +2,8 @@
 
 #include <toy/application/window.h>
 #include <toy/base/log.h>
-#include <toy/imaging/convert.h>
 #include <toy/imaging/extent.h>
+#include <toy/imaging/formatConversion.h>
 #include <toy/memory/cudaError.h>
 #include <toy/memory/matrix.h>
 
@@ -29,7 +29,7 @@ protected:
                                                          ( float ) coord.Y() / ( float ) m_image.GetRows(),
                                                          0.0f );
         }
-        ConvertImageVec3fToUint32( m_image, m_texture );
+        toy::ConvertRGBFloatToRGBAUint32< toy::Host >::Execute( m_image.GetSize(), m_image.GetBuffer(), m_texture.GetBuffer() );
         CUDA_CHECK( cudaMemcpy( o_frameData, m_texture.GetBuffer(), m_texture.GetByteSize(), cudaMemcpyHostToDevice ) );
     }
 
