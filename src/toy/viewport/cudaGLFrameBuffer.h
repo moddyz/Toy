@@ -58,7 +58,7 @@ public:
     }
 
     //------------------------------------------------------------------------0
-    /// \name Compute and graphics
+    /// \name Graphics interop
     //------------------------------------------------------------------------0
 
     /// Begin the CUDA computation phase for writing into the frame buffer.
