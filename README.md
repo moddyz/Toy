@@ -1,8 +1,8 @@
-<a href="https://github.com/moddyz/Toy/actions?query=workflow%3A%22Build+and+test%22"><img src="https://github.com/moddyz/Toy/workflows/Build%20and%20test/badge.svg"/></a>
+<a href="https://github.com/moddyz/Tri/actions?query=workflow%3A%22Build+and+test%22"><img src="https://github.com/moddyz/Tri/workflows/Build%20and%20test/badge.svg"/></a>
 
-# Toy
+# Tri
 
-Building blocks for producing images.
+Graphics pipeline in C++ and CUDA.
 
 ## Table of Contents
 
@@ -30,7 +30,7 @@ mkdir build && cd build
 cmake \
   -DCMAKE_CUDA_COMPILER="/usr/local/cuda/bin/nvcc" \
   -DBUILD_TESTING=ON \
-  -DCMAKE_INSTALL_PREFIX="/apps/Toy/" \
+  -DCMAKE_INSTALL_PREFIX="/apps/Tri/" \
   .. 
 cmake --build  . -- VERBOSE=1 -j8 all test install
 ```
@@ -44,8 +44,8 @@ CMake options for configuring this project:
 
 ## Code structure
 
-[memory](./src/toy/memory) provides the custom heterogenous (CPU/CUDA) `Array` and `Matrix` (2D array) classes commonly used in image making.
+[memory](./src/tri/memory) provides the custom heterogenous (CPU/CUDA) `Array` and `Matrix` (2D array) classes commonly used in image making.
 
-The base [imaging](./src/toy/imaging) library provides common facilities used in both [rasterization](./src/toy/rasteriation) and [raytracing](./src/toy/raytracing) techniques.
+The base [imaging](./src/tri/imaging) library provides common facilities used in both [rasterization](./src/tri/rasteriation).
 
-[viewport](./src/toy/viewport) provides viewport back-end and user interactions, and finally, [application](./src/toy/application) provides tools for windowing.
+[viewport](./src/tri/viewport) provides viewport back-end and user interactions, and finally, [application](./src/tri/application) provides tools for windowing.

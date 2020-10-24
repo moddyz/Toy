@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.17)
 
 # Project Name
 project(
-    Toy
+    Tri
     VERSION 0.0
-    DESCRIPTION "Building blocks for producing images."
+    DESCRIPTION "Graphics pipeline in C++ and CUDA."
     LANGUAGES CXX CUDA
 )
 

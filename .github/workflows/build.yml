@@ -22,14 +22,14 @@ jobs:
         image: aswf/ci-base:${{ matrix.vfx }}
     steps:
       - uses: actions/checkout@v2
-      - name: Build Toy
+      - name: Build Tri
         run: |
           mkdir build
           cd build
           cmake \
             -DCMAKE_CUDA_COMPILER="/usr/local/cuda/bin/nvcc" \
             -DBUILD_TESTING=ON \
-            -DCMAKE_INSTALL_PREFIX="/tmp/Toy/" \
+            -DCMAKE_INSTALL_PREFIX="/tmp/Tri/" \
             ..
           cmake --build  . -- VERBOSE=1 -j8 all test install
 
