@@ -9,26 +9,13 @@
 #include <gm/functions/orthographicProjection.h>
 #include <gm/functions/perspectiveProjection.h>
 #include <gm/functions/radians.h>
+#include <gm/functions/viewportTransform.h>
 #include <gm/types/floatRange.h>
 #include <gm/types/vec2f.h>
 
 #include <vector>
 
 TOY_NS_OPEN
-
-static gm::Mat4f ClipToRaster( const gm::Vec2i& i_viewportSize )
-{
-    gm::Mat4f scaleXform = gm::Mat4f::Identity();
-    scaleXform( 0, 0 )   = i_viewportSize.X() * 0.5f;
-    scaleXform( 1, 1 )   = -i_viewportSize.Y() * 0.5f;
-    scaleXform( 2, 2 )   = 1;
-
-    gm::Mat4f translateXform = gm::Mat4f::Identity();
-    translateXform( 0, 3 )   = i_viewportSize.X() * 0.5f;
-    translateXform( 1, 3 )   = i_viewportSize.Y() * 0.5f;
-
-    return gm::MatrixProduct( translateXform, scaleXform );
-}
 
 static bool PointInsideTriangle( const gm::Vec3f& point, const gm::Vec3f triangle[ 3 ] )
 {
@@ -65,19 +52,18 @@ public:
             o_image( coord.Y(), coord.X() ) = gm::Vec3f( 0.0, 0.0, 0.0 );
         }
 
-        // Compute the world-to-camera-space matrix.
+        // World-space to camera-space.
         const LookAtTransform& lookAtXform   = GetCameraTransform();
         const gm::Mat4f&       cameraToWorld = lookAtXform.GetObjectToWorld();
         gm::Mat4f              worldToCamera;
         TOY_VERIFY( gm::Inverse( cameraToWorld, worldToCamera ) );
 
-        // Compute view matrix.
+        // Camera space -> clipping volume space.
         gm::Mat4f cameraToClip =
             gm::PerspectiveProjection( 60.0f, ( float ) GetSize().X() / ( float ) GetSize().Y(), 0.1, 1000 );
-        // gm::Mat4f cameraToClip = gm::OrthographicProjection( -2, 2, -2, 2, -2, 2  );
 
         // Clip space -> screen space.
-        gm::Mat4f clipToRaster = ClipToRaster( GetSize() );
+        gm::Mat4f clipToRaster = gm::ViewportTransform( gm::Vec2f( GetSize().X(), GetSize().Y() ), gm::Vec2f( 0, 0 ) );
 
         // World -> clip space.
         gm::Mat4f worldToClip   = gm::MatrixProduct( cameraToClip, worldToCamera );
