@@ -23,15 +23,13 @@ ViewportWindow::ViewportWindow( const char* i_title, const gm::Vec2i& i_dimensio
 
 void ViewportWindow::WriteFrame( uint32_t* o_frameData )
 {
-    Render( m_image );
-    ConvertRGBFloatToRGBAUint32< Host >::Execute( m_image.GetSize(), m_image.GetBuffer(), m_texture.GetBuffer() );
-    CUDA_CHECK( cudaMemcpy( o_frameData, m_texture.GetBuffer(), m_texture.GetByteSize(), cudaMemcpyHostToDevice ) );
+    Render( m_colorBuffer );
+    ConvertRGBFloatToRGBAUint32< CUDA >::Execute( m_colorBuffer.GetSize(), m_colorBuffer.GetBuffer(), o_frameData );
 }
 
 void ViewportWindow::OnResize( const gm::Vec2i& i_dimensions )
 {
-    m_image.Resize( i_dimensions.Y(), i_dimensions.X() );
-    m_texture.Resize( i_dimensions.Y(), i_dimensions.X() );
+    m_colorBuffer.Resize( i_dimensions.Y(), i_dimensions.X() );
 }
 
 void ViewportWindow::OnMouseMove( const gm::Vec2f& i_position )

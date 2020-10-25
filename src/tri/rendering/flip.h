@@ -5,7 +5,7 @@
 /// Flip an image across its vertical axis.
 
 #include <tri/base/bitMask.h>
-#include <tri/memory/matrix.h>
+#include <tri/rendering/frameBuffer.h>
 
 #include <gm/types/vec3f.h>
 
@@ -28,8 +28,8 @@ TRI_ENUM_BITMASK_OPERATORS( FlipAxis );
 /// \param i_axis One or more axis to flip.
 /// \param i_image The input image.
 /// \param o_image The output flipped image.
-template < typename MatrixT >
-void FlipImage( FlipAxis i_axis, const MatrixT& i_image, MatrixT& o_image )
+template < typename FrameBufferT >
+void FlipImage( FlipAxis i_axis, const FrameBufferT& i_image, FrameBufferT& o_image )
 {
     TRI_VERIFY( i_image.GetBuffer() != o_image.GetBuffer() );
     o_image.Resize( i_image.GetRows(), i_image.GetColumns() );

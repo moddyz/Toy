@@ -5,7 +5,7 @@
 #include <tri/rendering/extent.h>
 #include <tri/rendering/formatConversion.h>
 #include <tri/memory/cudaError.h>
-#include <tri/memory/matrix.h>
+#include <tri/rendering/frameBuffer.h>
 
 #include <gm/types/vec2iRange.h>
 #include <gm/types/vec3f.h>
@@ -42,8 +42,8 @@ protected:
     }
 
 private:
-    tri::Matrix< gm::Vec3f, tri::Host > m_image;
-    tri::Matrix< uint32_t, tri::Host >  m_texture;
+    tri::FrameBuffer< gm::Vec3f, tri::Host > m_image;
+    tri::FrameBuffer< uint32_t, tri::Host >  m_texture;
 };
 
 int main( int i_argc, char** i_argv )

@@ -11,9 +11,9 @@
 
 TRI_NS_OPEN
 
-bool ExportJpeg( const Matrix< gm::Vec3f, Host >& i_image, const std::string& i_filePath )
+bool ExportJpeg( const FrameBuffer< gm::Vec3f, Host >& i_image, const std::string& i_filePath )
 {
-    Matrix< gm::Vec3f, Host > flipped( i_image.GetRows(), i_image.GetColumns() );
+    FrameBuffer< gm::Vec3f, Host > flipped( i_image.GetRows(), i_image.GetColumns() );
     FlipImage( FlipAxis_Y, i_image, flipped );
 
     size_t                 numChannels = 3;

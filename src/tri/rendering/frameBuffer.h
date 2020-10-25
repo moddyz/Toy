@@ -1,8 +1,8 @@
 #pragma once
 
-/// \file memory/matrix.h
+/// \file rendering/frameBuffer.h
 ///
-/// Matrix class.
+/// FrameBuffer class.
 
 #include <tri/base/diagnostic.h>
 #include <tri/memory/array.h>
@@ -11,7 +11,7 @@
 
 TRI_NS_OPEN
 
-/// \class Matrix
+/// \class FrameBuffer
 ///
 /// Two-dimensional array class, with templated value type and memory residency.
 ///
@@ -20,21 +20,21 @@ TRI_NS_OPEN
 ///
 /// \pre ValueT Must be default constructable.
 template < typename ValueT, Residency ResidencyT >
-class Matrix final
+class FrameBuffer final
 {
 public:
     //-------------------------------------------------------------------------
     /// \name Construction
     //-------------------------------------------------------------------------
 
-    /// Default constructor of an empty matrix.
-    Matrix() = default;
+    /// Default constructor of an empty frameBuffer.
+    FrameBuffer() = default;
 
-    /// Initialize this matrix with a specified size.
+    /// Initialize this frameBuffer with a specified size.
     ///
-    /// \param i_rows Number of rows in this matrix.
-    /// \param i_cols Number of columns in this matrix.
-    explicit Matrix( size_t i_rows, size_t i_cols )
+    /// \param i_rows Number of rows in this frameBuffer.
+    /// \param i_cols Number of columns in this frameBuffer.
+    explicit FrameBuffer( size_t i_rows, size_t i_cols )
     {
         Resize( i_rows, i_cols );
     }
@@ -42,39 +42,39 @@ public:
     /// Initialize this array with a specified size, with an initialized value for all the
     /// elements.
     ///
-    /// \param i_rows Number of rows in this matrix.
-    /// \param i_cols Number of columns in this matrix.
-    /// \param i_value Value to set for the elements of this matrix.
-    explicit Matrix( size_t i_rows, size_t i_cols, const ValueT& i_value )
+    /// \param i_rows Number of rows in this frameBuffer.
+    /// \param i_cols Number of columns in this frameBuffer.
+    /// \param i_value Value to set for the elements of this frameBuffer.
+    explicit FrameBuffer( size_t i_rows, size_t i_cols, const ValueT& i_value )
     {
         Resize( i_rows, i_cols, i_value );
     }
 
     /// Homogenous residency copy constructor.
-    Matrix( const Matrix< ValueT, ResidencyT >& i_matrix )
+    FrameBuffer( const FrameBuffer< ValueT, ResidencyT >& i_frameBuffer )
     {
-        TRI_VERIFY( _Copy( i_matrix ) );
+        TRI_VERIFY( _Copy( i_frameBuffer ) );
     }
 
     /// Heterogenous residency copy constructor.
     template < Residency SrcResidencyT >
-    Matrix( const Matrix< ValueT, SrcResidencyT >& i_matrix )
+    FrameBuffer( const FrameBuffer< ValueT, SrcResidencyT >& i_frameBuffer )
     {
-        TRI_VERIFY( _Copy( i_matrix ) );
+        TRI_VERIFY( _Copy( i_frameBuffer ) );
     }
 
     /// Homogenous copy assignment operator.
-    Matrix< ValueT, ResidencyT >& operator=( const Matrix< ValueT, ResidencyT >& i_matrix )
+    FrameBuffer< ValueT, ResidencyT >& operator=( const FrameBuffer< ValueT, ResidencyT >& i_frameBuffer )
     {
-        TRI_VERIFY( _Copy( i_matrix ) );
+        TRI_VERIFY( _Copy( i_frameBuffer ) );
         return *this;
     }
 
     /// Heterogenous copy assignment operator.
     template < Residency SrcResidencyT >
-    Matrix< ValueT, ResidencyT >& operator=( const Matrix< ValueT, SrcResidencyT >& i_matrix )
+    FrameBuffer< ValueT, ResidencyT >& operator=( const FrameBuffer< ValueT, SrcResidencyT >& i_frameBuffer )
     {
-        TRI_VERIFY( _Copy( i_matrix ) );
+        TRI_VERIFY( _Copy( i_frameBuffer ) );
         return *this;
     }
 
@@ -114,7 +114,7 @@ public:
     /// \name Operations
     //-------------------------------------------------------------------------
 
-    /// Get the total number of elements in this matrix.
+    /// Get the total number of elements in this frameBuffer.
     ///
     /// \return The array size.
     inline size_t GetSize() const
@@ -122,7 +122,7 @@ public:
         return m_rows * m_cols;
     }
 
-    /// Get the number of bytes allocated for this matrix.
+    /// Get the number of bytes allocated for this frameBuffer.
     ///
     /// \return The number of bytes.
     inline size_t GetByteSize() const
@@ -130,7 +130,7 @@ public:
         return GetSize() * sizeof( ValueT );
     }
 
-    /// Get the height of this matrix.
+    /// Get the height of this frameBuffer.
     ///
     /// \return The height.
     inline size_t GetRows() const
@@ -138,7 +138,7 @@ public:
         return m_rows;
     }
 
-    /// Get the width of this matrix.
+    /// Get the width of this frameBuffer.
     ///
     /// \return The width.
     inline size_t GetColumns() const
@@ -146,7 +146,7 @@ public:
         return m_cols;
     }
 
-    /// Check if the matrix is empty.
+    /// Check if the frameBuffer is empty.
     ///
     /// This is equivalent to GetSize() == 0.
     inline bool IsEmpty() const
@@ -193,7 +193,7 @@ public:
         }
     }
 
-    /// Empty the matrix, removing the underlying buffer.
+    /// Empty the frameBuffer, removing the underlying buffer.
     inline void Clear()
     {
         m_array.Clear();
@@ -205,9 +205,9 @@ public:
     /// \name Buffer access
     //-------------------------------------------------------------------------
 
-    /// Get the underlying buffer pointer to the matrix.
+    /// Get the underlying buffer pointer to the frameBuffer.
     ///
-    /// If the matrix is empty, then the returned value is \p nullptr.
+    /// If the frameBuffer is empty, then the returned value is \p nullptr.
     ///
     /// \sa IsEmpty()
     ///
@@ -220,12 +220,12 @@ public:
 private:
     // Helper method to copy the attributes and data from a source array into this array.
     template < Residency SrcResidencyT >
-    inline bool _Copy( const Matrix< ValueT, SrcResidencyT >& i_matrix )
+    inline bool _Copy( const FrameBuffer< ValueT, SrcResidencyT >& i_frameBuffer )
     {
-        if ( m_array._Copy( i_matrix.m_array ) )
+        if ( m_array.Copy( i_frameBuffer.m_array ) )
         {
-            m_rows = i_matrix.m_rows;
-            m_cols = i_matrix.m_cols;
+            m_rows = i_frameBuffer.m_rows;
+            m_cols = i_frameBuffer.m_cols;
             return true;
         }
         else

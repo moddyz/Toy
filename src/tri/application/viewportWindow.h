@@ -2,12 +2,10 @@
 
 /// \file application/viewportWindow.h
 
-#include <tri/memory/matrix.h>
-
+#include <tri/application/window.h>
+#include <tri/rendering/frameBuffer.h>
 #include <tri/viewport/lookAtTransform.h>
 #include <tri/viewport/perspectiveView.h>
-
-#include <tri/application/window.h>
 
 #include <gm/types/vec2f.h>
 #include <gm/types/vec2i.h>
@@ -34,7 +32,7 @@ public:
     //-------------------------------------------------------------------------
 
     /// Derived class should implement logic to writejinto \p o_image.
-    virtual void Render( Matrix< gm::Vec3f, Host >& o_image ) = 0;
+    virtual void Render( FrameBuffer< gm::Vec3f, CUDA >& o_colorBuffer ) = 0;
 
     //-------------------------------------------------------------------------
     /// \name User Interaction
@@ -85,8 +83,7 @@ private:
     CUDAGLFrameBuffer* m_frameBuffer = nullptr;
 
     // Intermediate frame buffer(s).
-    Matrix< gm::Vec3f, Host > m_image;
-    Matrix< uint32_t, Host >  m_texture;
+    FrameBuffer< gm::Vec3f, CUDA > m_colorBuffer;
 };
 
 TRI_NS_CLOSE

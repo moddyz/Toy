@@ -19,10 +19,6 @@
 
 TRI_NS_OPEN
 
-// Forward declarations.
-template < typename ValueT, Residency ResidencyT >
-class Matrix;
-
 /// \class Array
 ///
 /// One-dimensional array class, with templated value type and memory residency.
@@ -95,20 +91,20 @@ public:
     /// Homogenous residency copy constructor.
     Array( const Array< ValueT, ResidencyT >& i_array )
     {
-        TRI_VERIFY( _Copy( i_array ) );
+        TRI_VERIFY( Copy( i_array ) );
     }
 
     /// Heterogenous residency copy constructor.
     template < Residency SrcResidencyT >
     Array( const Array< ValueT, SrcResidencyT >& i_array )
     {
-        TRI_VERIFY( _Copy( i_array ) );
+        TRI_VERIFY( Copy( i_array ) );
     }
 
     /// Homogenous copy assignment operator.
     Array< ValueT, ResidencyT >& operator=( const Array< ValueT, ResidencyT >& i_array )
     {
-        TRI_VERIFY( _Copy( i_array ) );
+        TRI_VERIFY( Copy( i_array ) );
         return *this;
     }
 
@@ -116,7 +112,7 @@ public:
     template < Residency SrcResidencyT >
     Array< ValueT, ResidencyT >& operator=( const Array< ValueT, SrcResidencyT >& i_array )
     {
-        TRI_VERIFY( _Copy( i_array ) );
+        TRI_VERIFY( Copy( i_array ) );
         return *this;
     }
 
@@ -235,6 +231,28 @@ public:
     /// \name Buffer access
     //-------------------------------------------------------------------------
 
+    template < Residency SrcResidencyT >
+    inline bool Copy( const Array< ValueT, SrcResidencyT >& i_array )
+    {
+        if ( !i_array.IsEmpty() )
+        {
+            if ( !Resize( i_array.GetSize() ) )
+            {
+                return false;
+            }
+
+            return MemoryCopy< SrcResidencyT, ResidencyT >::Execute(
+                /* numBytes */ m_size * sizeof( ValueT ),
+                /* src */ i_array.GetBuffer(),
+                /* dst */ m_buffer );
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+
     /// Get the underlying buffer pointer to the array.
     ///
     /// If the array is empty, then the returned value is \p nullptr.
@@ -259,32 +277,6 @@ public:
     }
 
 private:
-    // Hmm how does array become friends with _all_ the residencies.
-    friend class Matrix< ValueT, Host >;
-    friend class Matrix< ValueT, CUDA >;
-
-    // Helper method to copy the attributes and data from a source array into this array.
-    template < Residency SrcResidencyT >
-    inline bool _Copy( const Array< ValueT, SrcResidencyT >& i_array )
-    {
-        if ( !i_array.IsEmpty() )
-        {
-            if ( !Resize( i_array.GetSize() ) )
-            {
-                return false;
-            }
-
-            return MemoryCopy< SrcResidencyT, ResidencyT >::Execute(
-                /* numBytes */ m_size * sizeof( ValueT ),
-                /* src */ i_array.GetBuffer(),
-                /* dst */ m_buffer );
-        }
-        else
-        {
-            return true;
-        }
-    }
-
     // Helper method to copy the values from the initializer list into this array.
     inline bool _CopyInitializerList( std::initializer_list< ValueT > i_initializerList )
     {
@@ -304,7 +296,7 @@ private:
             }
 
             // Upload to CUDA.
-            return _Copy( hostArray );
+            return Copy( hostArray );
         }
         else
         {

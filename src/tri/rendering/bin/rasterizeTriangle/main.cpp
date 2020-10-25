@@ -44,7 +44,7 @@ public:
     {
     }
 
-    virtual void Render( Matrix< gm::Vec3f, Host >& o_image ) override
+    virtual void Render( FrameBuffer< gm::Vec3f, CUDA >& o_image ) override
     {
         // Clear.
         for ( gm::Vec2i coord : GetImageExtent( o_image ) )

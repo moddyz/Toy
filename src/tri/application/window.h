@@ -4,8 +4,6 @@
 ///
 /// An application window for presentation purposes.
 
-#include <tri/memory/matrix.h>
-
 #include <tri/application/mouse.h>
 
 #include <gm/types/vec2f.h>

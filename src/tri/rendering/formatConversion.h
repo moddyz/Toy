@@ -4,7 +4,7 @@
 ///
 /// Utilities for converting between image storage formats.
 
-#include <tri/memory/matrix.h>
+#include <tri/rendering/frameBuffer.h>
 
 #include <gm/types/vec3f.h>
 
