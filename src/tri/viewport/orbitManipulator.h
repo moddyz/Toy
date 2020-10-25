@@ -1,6 +1,6 @@
 #pragma once
 
-/// \file imaging/orbitManipulator.h
+/// \file viewport/orbitManipulator.h
 
 #include <tri/viewport/lookAtTransform.h>
 

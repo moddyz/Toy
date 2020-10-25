@@ -1,6 +1,6 @@
 #pragma once
 
-/// \file imaging/truckManipulator.h
+/// \file viewport/truckManipulator.h
 
 #include <tri/viewport/lookAtTransform.h>
 

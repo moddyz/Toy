@@ -46,6 +46,4 @@ CMake options for configuring this project:
 
 [memory](./src/tri/memory) provides the custom heterogenous (CPU/CUDA) `Array` and `Matrix` (2D array) classes commonly used in image making.
 
-The base [imaging](./src/tri/imaging) library provides common facilities used in both [rasterization](./src/tri/rasteriation).
-
 [viewport](./src/tri/viewport) provides viewport back-end and user interactions, and finally, [application](./src/tri/application) provides tools for windowing.

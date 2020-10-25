@@ -1,8 +1,6 @@
 #pragma once
 
-/// \file imaging/perspectiveView.h
-///
-/// A perspective viewing frustum imaging.
+/// \file viewport/perspectiveView.h
 
 #include <tri/tri.h>
 
@@ -15,7 +13,7 @@ TRI_NS_OPEN
 
 /// \class PerspectiveView
 ///
-/// A camera-space perspective viewing frustum / volume.
+/// A user-interfacing perspective viewing frustum.
 class PerspectiveView
 {
 public:

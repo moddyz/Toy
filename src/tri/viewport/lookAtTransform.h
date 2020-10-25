@@ -1,6 +1,6 @@
 #pragma once
 
-/// \file imaging/lookAtTransform.h
+/// \file viewport/lookAtTransform.h
 
 #include <tri/tri.h>
 
