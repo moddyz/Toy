@@ -1,5 +1,4 @@
 #include <tri/rendering/export.h>
-#include <tri/rendering/extent.h>
 #include <tri/rendering/flip.h>
 
 #include <gm/types/intRange.h>
@@ -18,7 +17,7 @@ bool ExportJpeg( const FrameBuffer< gm::Vec3f, Host >& i_image, const std::strin
 
     size_t                 numChannels = 3;
     std::vector< uint8_t > pixels( flipped.GetRows() * flipped.GetColumns() * numChannels );
-    for ( gm::Vec2i coord : GetImageExtent( flipped ) )
+    for ( gm::Vec2i coord : flipped.GetExtent() )
     {
         int              pixelOffset = ( coord.Y() * flipped.GetColumns() + coord.X() ) * numChannels;
         const gm::Vec3f& inPixel     = i_image( coord.Y(), coord.X() );

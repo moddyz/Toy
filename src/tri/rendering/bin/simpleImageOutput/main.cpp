@@ -2,7 +2,6 @@
 
 #include <tri/base/log.h>
 #include <tri/rendering/export.h>
-#include <tri/rendering/extent.h>
 #include <tri/rendering/frameBuffer.h>
 
 #include <gm/types/vec2iRange.h>
@@ -42,7 +41,7 @@ int main( int i_argc, char** i_argv )
     TRI_LOG_INFO( "\nOutput image file: %s\n", args.m_outFilePath.c_str() );
 
     tri::FrameBuffer< gm::Vec3f, tri::Host > image( 480, 640 );
-    for ( gm::Vec2i coord : tri::GetImageExtent( image ) )
+    for ( gm::Vec2i coord : image.GetExtent() )
     {
         image( coord.Y(), coord.X() ) = gm::Vec3f( ( float ) coord.X() / ( float ) image.GetColumns(),
                                                    ( float ) coord.Y() / ( float ) image.GetRows(),

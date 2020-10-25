@@ -2,7 +2,6 @@
 
 #include <tri/application/window.h>
 #include <tri/base/log.h>
-#include <tri/rendering/extent.h>
 #include <tri/rendering/formatConversion.h>
 #include <tri/memory/cudaError.h>
 #include <tri/rendering/frameBuffer.h>
@@ -23,7 +22,7 @@ public:
 protected:
     virtual void WriteFrame( uint32_t* o_frameData ) override
     {
-        for ( gm::Vec2i coord : tri::GetImageExtent( m_image ) )
+        for ( gm::Vec2i coord : m_image.GetExtent() )
         {
             m_image( coord.Y(), coord.X() ) = gm::Vec3f( ( float ) coord.X() / ( float ) m_image.GetColumns(),
                                                          ( float ) coord.Y() / ( float ) m_image.GetRows(),

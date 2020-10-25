@@ -7,6 +7,8 @@
 #include <tri/base/diagnostic.h>
 #include <tri/memory/array.h>
 
+#include <gm/types/vec2iRange.h>
+
 #include <algorithm>
 
 TRI_NS_OPEN
@@ -128,6 +130,12 @@ public:
     inline size_t GetByteSize() const
     {
         return GetSize() * sizeof( ValueT );
+    }
+
+    /// Get the extent of this frame buffer.
+    gm::Vec2iRange GetExtent() const
+    {
+        return gm::Vec2iRange( gm::Vec2i( 0, 0 ), gm::Vec2i( GetColumns(), GetRows() ) );
     }
 
     /// Get the height of this frameBuffer.
