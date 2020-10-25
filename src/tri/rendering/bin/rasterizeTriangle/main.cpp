@@ -1,5 +1,6 @@
 #include <tri/application/viewportWindow.h>
 #include <tri/base/log.h>
+#include <tri/rendering/constantFill.h>
 #include <tri/rendering/transformPoints.h>
 
 #include <gm/functions/clamp.h>
@@ -45,13 +46,12 @@ public:
 
     virtual void Render( FrameBuffer< gm::Vec3f, CUDA >& o_colorBuffer ) override
     {
-        FrameBuffer< gm::Vec3f, Host > colorBuffer( o_colorBuffer );
+        // Fill with constant color.
+        TRI_VERIFY( ConstantFill< CUDA >::Execute( o_colorBuffer.GetElementCount(),
+                                                   gm::Vec3f( 0, 0, 0 ),
+                                                   o_colorBuffer.GetBuffer() ) );
 
-        // Clear.
-        for ( gm::Vec3i coord : colorBuffer.GetExtent() )
-        {
-            colorBuffer( coord ) = gm::Vec3f( 0.0f, 0.0f, 0.0f );
-        }
+        FrameBuffer< gm::Vec3f, Host > colorBuffer( o_colorBuffer );
 
         // World-space to camera-space.
         const LookAtTransform& lookAtXform   = GetCameraTransform();
