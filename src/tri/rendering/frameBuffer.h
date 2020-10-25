@@ -7,7 +7,7 @@
 #include <tri/base/diagnostic.h>
 #include <tri/memory/array.h>
 
-#include <gm/types/vec2iRange.h>
+#include <gm/types/vec3iRange.h>
 
 #include <algorithm>
 
@@ -15,7 +15,7 @@ TRI_NS_OPEN
 
 /// \class FrameBuffer
 ///
-/// Two-dimensional array class, with templated value type and memory residency.
+/// 3D dimensional array class, with templated value type and memory residency.
 ///
 /// \tparam ValueT Type of the elements in this array.
 /// \tparam ResidencyT Where the memory resides.
@@ -34,22 +34,22 @@ public:
 
     /// Initialize this frameBuffer with a specified size.
     ///
-    /// \param i_rows Number of rows in this frameBuffer.
-    /// \param i_cols Number of columns in this frameBuffer.
-    explicit FrameBuffer( size_t i_rows, size_t i_cols )
+    /// \param i_width Number of rows in this frameBuffer.
+    /// \param i_height Number of columns in this frameBuffer.
+    explicit FrameBuffer( const gm::Vec3i& i_dims )
     {
-        Resize( i_rows, i_cols );
+        Resize( i_dims );
     }
 
     /// Initialize this array with a specified size, with an initialized value for all the
     /// elements.
     ///
-    /// \param i_rows Number of rows in this frameBuffer.
-    /// \param i_cols Number of columns in this frameBuffer.
+    /// \param i_width Number of rows in this frameBuffer.
+    /// \param i_height Number of columns in this frameBuffer.
     /// \param i_value Value to set for the elements of this frameBuffer.
-    explicit FrameBuffer( size_t i_rows, size_t i_cols, const ValueT& i_value )
+    explicit FrameBuffer( const gm::Vec3i& i_dims, const ValueT& i_value )
     {
-        Resize( i_rows, i_cols, i_value );
+        Resize( i_dims, i_value );
     }
 
     /// Homogenous residency copy constructor.
@@ -96,20 +96,40 @@ public:
         return m_array[ i_index ];
     }
 
-    /// Row-column indexed element access.
-    inline const ValueT& operator()( size_t i_row, size_t i_col ) const
+    /// 3D coordinate indexed element access.
+    inline const ValueT& operator()( int i_x, int i_y, int i_z ) const
     {
-        TRI_ASSERT( i_row < m_rows );
-        TRI_ASSERT( i_col < m_cols );
-        return m_array[ i_row * m_cols + i_col ];
+        TRI_ASSERT( i_x < m_dims.X() );
+        TRI_ASSERT( i_y < m_dims.Y() );
+        TRI_ASSERT( i_z < m_dims.Z() );
+        return m_array[ ( i_z * m_dims.X() * m_dims.Y() ) + ( i_y * m_dims.X() ) + i_x ];
     }
 
-    /// Row-column indexed element access.
-    inline ValueT& operator()( size_t i_row, size_t i_col )
+    /// 3D coordinate indexed element access.
+    inline ValueT& operator()( int i_x, int i_y, int i_z )
     {
-        TRI_ASSERT( i_row < m_rows );
-        TRI_ASSERT( i_col < m_cols );
-        return m_array[ i_row * m_cols + i_col ];
+        TRI_ASSERT( i_x < m_dims.X() );
+        TRI_ASSERT( i_y < m_dims.Y() );
+        TRI_ASSERT( i_z < m_dims.Z() );
+        return m_array[ ( i_z * m_dims.X() * m_dims.Y() ) + ( i_y * m_dims.X() ) + i_x ];
+    }
+
+    /// 3D coordinate indexed element access.
+    inline const ValueT& operator()( const gm::Vec3i& i_coord ) const
+    {
+        TRI_ASSERT( i_coord.X() < m_dims.X() );
+        TRI_ASSERT( i_coord.Y() < m_dims.Y() );
+        TRI_ASSERT( i_coord.Z() < m_dims.Z() );
+        return m_array[ ( i_coord.Z() * m_dims.X() * m_dims.Y() ) + ( i_coord.Y() * m_dims.X() ) + i_coord.X() ];
+    }
+
+    /// 3D coordinate indexed element access.
+    inline ValueT& operator()( const gm::Vec3i& i_coord )
+    {
+        TRI_ASSERT( i_coord.X() < m_dims.X() );
+        TRI_ASSERT( i_coord.Y() < m_dims.Y() );
+        TRI_ASSERT( i_coord.Z() < m_dims.Z() );
+        return m_array[ ( i_coord.Z() * m_dims.X() * m_dims.Y() ) + ( i_coord.Y() * m_dims.X() ) + i_coord.X() ];
     }
 
     //-------------------------------------------------------------------------
@@ -119,9 +139,9 @@ public:
     /// Get the total number of elements in this frameBuffer.
     ///
     /// \return The array size.
-    inline size_t GetSize() const
+    inline size_t GetElementCount() const
     {
-        return m_rows * m_cols;
+        return m_dims.X() * m_dims.Y() * m_dims.Z();
     }
 
     /// Get the number of bytes allocated for this frameBuffer.
@@ -129,51 +149,57 @@ public:
     /// \return The number of bytes.
     inline size_t GetByteSize() const
     {
-        return GetSize() * sizeof( ValueT );
+        return GetElementCount() * sizeof( ValueT );
     }
 
     /// Get the extent of this frame buffer.
-    gm::Vec2iRange GetExtent() const
+    inline gm::Vec3iRange GetExtent() const
     {
-        return gm::Vec2iRange( gm::Vec2i( 0, 0 ), gm::Vec2i( GetColumns(), GetRows() ) );
+        return gm::Vec3iRange( gm::Vec3i( 0, 0, 0 ), gm::Vec3i( GetWidth(), GetHeight(), GetDepth() ) );
     }
 
-    /// Get the height of this frameBuffer.
-    ///
-    /// \return The height.
-    inline size_t GetRows() const
+    /// Get the width of this frame buffer.
+    inline size_t GetWidth() const
     {
-        return m_rows;
+        return m_dims.X();
     }
 
-    /// Get the width of this frameBuffer.
-    ///
-    /// \return The width.
-    inline size_t GetColumns() const
+    /// Get the height of this frame buffer.
+    inline size_t GetHeight() const
     {
-        return m_cols;
+        return m_dims.Y();
+    }
+
+    /// Get the depth of this frame buffer.
+    inline size_t GetDepth() const
+    {
+        return m_dims.Z();
+    }
+
+    /// Get the dimensiosn fo this frame buffer.
+    inline const gm::Vec3i& GetDimensions() const
+    {
+        return m_dims;
     }
 
     /// Check if the frameBuffer is empty.
     ///
-    /// This is equivalent to GetSize() == 0.
+    /// This is equivalent to GetElementCount() == 0.
     inline bool IsEmpty() const
     {
-        return GetSize() == 0;
+        return GetElementCount() == 0;
     }
 
-    /// Resize this array.
+    /// Resize this frame buffer.
     ///
-    /// \param i_rows New row size.
-    /// \param i_cols New columns size.
+    /// \param i_dims New columns size.
     ///
     /// \return Success state of this operation.
-    inline bool Resize( size_t i_rows, size_t i_cols )
+    inline bool Resize( const gm::Vec3i& i_dims )
     {
-        if ( m_array.Resize( i_rows * i_cols ) )
+        if ( m_array.Resize( i_dims.X() * i_dims.Y() * i_dims.Z() ) )
         {
-            m_rows = i_rows;
-            m_cols = i_cols;
+            m_dims = i_dims;
             return true;
         }
         else
@@ -187,12 +213,11 @@ public:
     /// \param i_newSize The size to resize the array to.
     ///
     /// \return Success state of this operation.
-    inline bool Resize( size_t i_rows, size_t i_cols, const ValueT& i_value )
+    inline bool Resize( const gm::Vec3i& i_dims, const ValueT& i_value )
     {
-        if ( m_array.Resize( i_rows * i_cols, i_value ) )
+        if ( m_array.Resize( i_dims.X() * i_dims.Y() * i_dims.Z(), i_value ) )
         {
-            m_rows = i_rows;
-            m_cols = i_cols;
+            m_dims = i_dims;
             return true;
         }
         else
@@ -205,13 +230,28 @@ public:
     inline void Clear()
     {
         m_array.Clear();
-        m_rows = 0;
-        m_cols = 0;
+        m_dims = gm::Vec3i();
     }
 
     //-------------------------------------------------------------------------
-    /// \name Buffer access
+    /// \name Array and buffer access
     //-------------------------------------------------------------------------
+
+    /// Get the underlying array.
+    ///
+    /// \return The underlying array.
+    inline const Array< ValueT, ResidencyT >& GetArray() const
+    {
+        return m_array;
+    }
+
+    /// Get the underlying array.
+    ///
+    /// \return The underlying array.
+    inline Array< ValueT, ResidencyT >& GetArray()
+    {
+        return m_array;
+    }
 
     /// Get the underlying buffer pointer to the frameBuffer.
     ///
@@ -230,10 +270,9 @@ private:
     template < Residency SrcResidencyT >
     inline bool _Copy( const FrameBuffer< ValueT, SrcResidencyT >& i_frameBuffer )
     {
-        if ( m_array.Copy( i_frameBuffer.m_array ) )
+        if ( m_array.Copy( i_frameBuffer.GetArray() ) )
         {
-            m_rows = i_frameBuffer.m_rows;
-            m_cols = i_frameBuffer.m_cols;
+            m_dims = i_frameBuffer.GetDimensions();
             return true;
         }
         else
@@ -242,8 +281,7 @@ private:
         }
     }
 
-    size_t                      m_rows = 0;
-    size_t                      m_cols = 0;
+    gm::Vec3i                   m_dims;
     Array< ValueT, ResidencyT > m_array;
 };
 

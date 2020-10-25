@@ -21,15 +21,17 @@ ViewportWindow::ViewportWindow( const char* i_title, const gm::Vec2i& i_dimensio
 {
 }
 
-void ViewportWindow::WriteFrame( uint32_t* o_frameData )
+void ViewportWindow::WriteFrame( uint32_t* o_frameBuffer )
 {
     Render( m_colorBuffer );
-    ConvertRGBFloatToRGBAUint32< CUDA >::Execute( m_colorBuffer.GetSize(), m_colorBuffer.GetBuffer(), o_frameData );
+    ConvertRGBFloatToRGBAUint32< CUDA >::Execute( m_colorBuffer.GetElementCount(),
+                                                  m_colorBuffer.GetBuffer(),
+                                                  o_frameBuffer );
 }
 
 void ViewportWindow::OnResize( const gm::Vec2i& i_dimensions )
 {
-    m_colorBuffer.Resize( i_dimensions.Y(), i_dimensions.X() );
+    m_colorBuffer.Resize( gm::Vec3i( i_dimensions.X(), i_dimensions.Y(), 1 ) );
 }
 
 void ViewportWindow::OnMouseMove( const gm::Vec2f& i_position )

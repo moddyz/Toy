@@ -43,12 +43,14 @@ public:
     {
     }
 
-    virtual void Render( FrameBuffer< gm::Vec3f, CUDA >& o_image ) override
+    virtual void Render( FrameBuffer< gm::Vec3f, CUDA >& o_colorBuffer ) override
     {
+        FrameBuffer< gm::Vec3f, Host > colorBuffer( o_colorBuffer );
+
         // Clear.
-        for ( gm::Vec2i coord : o_image.GetExtent() )
+        for ( gm::Vec3i coord : colorBuffer.GetExtent() )
         {
-            o_image( coord.Y(), coord.X() ) = gm::Vec3f( 0.0, 0.0, 0.0 );
+            colorBuffer( coord ) = gm::Vec3f( 0.0f, 0.0f, 0.0f );
         }
 
         // World-space to camera-space.
@@ -71,13 +73,15 @@ public:
         Array< gm::Vec3f, Host > screenPoints( m_points.GetSize() );
         TransformPoints< Host >::Execute( worldToRaster, m_points, screenPoints );
 
-        for ( gm::Vec2i coord : GetImageExtent( o_image ) )
+        for ( gm::Vec3i coord : colorBuffer.GetExtent() )
         {
             if ( PointInsideTriangle( gm::Vec3f( coord.X(), coord.Y(), 0 ), &( screenPoints[ 0 ] ) ) )
             {
-                o_image( coord.Y(), coord.X() ) = gm::Vec3f( 1.0, 1.0, 1.0 );
+                colorBuffer( coord ) = gm::Vec3f( 1.0, 1.0, 1.0 );
             }
         }
+
+        o_colorBuffer = colorBuffer;
     }
 
 private:

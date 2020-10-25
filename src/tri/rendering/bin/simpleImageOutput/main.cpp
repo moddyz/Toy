@@ -7,10 +7,12 @@
 #include <gm/types/vec2iRange.h>
 #include <gm/types/vec3f.h>
 
+TRI_NS_USING
+
 /// \struct Program arguments
 struct ProgramArgs
 {
-    std::string m_outFilePath; //< The output image file to write.
+    std::string m_outFilePath; //< The output frameBuffer file to write.
 };
 
 /// Parse command line arguments into renderer program args.
@@ -38,16 +40,16 @@ int main( int i_argc, char** i_argv )
     ProgramArgs args = ParseCommandLineArguments( i_argc, i_argv );
 
     TRI_LOG_INFO( "[Starting simpleImageOutput...]\n" );
-    TRI_LOG_INFO( "\nOutput image file: %s\n", args.m_outFilePath.c_str() );
+    TRI_LOG_INFO( "\nOutput frameBuffer file: %s\n", args.m_outFilePath.c_str() );
 
-    tri::FrameBuffer< gm::Vec3f, tri::Host > image( 480, 640 );
-    for ( gm::Vec2i coord : image.GetExtent() )
+    FrameBuffer< gm::Vec3f, Host > frameBuffer( gm::Vec3i( 480, 640, 1 ) );
+    for ( gm::Vec3i coord : frameBuffer.GetExtent() )
     {
-        image( coord.Y(), coord.X() ) = gm::Vec3f( ( float ) coord.X() / ( float ) image.GetColumns(),
-                                                   ( float ) coord.Y() / ( float ) image.GetRows(),
-                                                   0.0f );
+        frameBuffer( coord ) = gm::Vec3f( ( float ) coord.X() / ( float ) frameBuffer.GetWidth(),
+                                          ( float ) coord.Y() / ( float ) frameBuffer.GetHeight(),
+                                          0.0f );
     }
-    tri::ExportJpeg( image, args.m_outFilePath );
+    ExportJpeg( frameBuffer, args.m_outFilePath );
 
     return 0;
 }

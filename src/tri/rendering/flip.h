@@ -32,41 +32,43 @@ template < typename FrameBufferT >
 void FlipImage( FlipAxis i_axis, const FrameBufferT& i_image, FrameBufferT& o_image )
 {
     TRI_VERIFY( i_image.GetBuffer() != o_image.GetBuffer() );
-    o_image.Resize( i_image.GetRows(), i_image.GetColumns() );
 
     int xBegin, xEnd, xStep;
     if ( i_axis & FlipAxis_X )
     {
-        xBegin = i_image.GetColumns() - 1;
+        xBegin = i_image.GetWidth() - 1;
         xEnd   = -1;
         xStep  = -1;
     }
     else
     {
         xBegin = 0;
-        xEnd   = i_image.GetColumns();
+        xEnd   = i_image.GetWidth();
         xStep  = 1;
     }
 
     int yBegin, yEnd, yStep;
     if ( i_axis & FlipAxis_Y )
     {
-        yBegin = i_image.GetRows() - 1;
+        yBegin = i_image.GetHeight() - 1;
         yEnd   = -1;
         yStep  = -1;
     }
     else
     {
         yBegin = 0;
-        yEnd   = i_image.GetRows();
+        yEnd   = i_image.GetHeight();
         yStep  = 1;
     }
 
-    for ( int yCoord = yBegin; yCoord < yEnd; yCoord += yStep )
+    for ( int z = 0; z < i_image.GetDepth(); z += 1 )
     {
-        for ( int xCoord = xBegin; xCoord < xEnd; xCoord += xStep )
+        for ( int y = yBegin; y < yEnd; y += yStep )
         {
-            o_image( yCoord, xCoord ) = i_image( yCoord, xCoord );
+            for ( int x = xBegin; x < xEnd; x += xStep )
+            {
+                o_image( x, y, z) = i_image( x, y, z );
+            }
         }
     }
 }

@@ -2,14 +2,16 @@
 
 #include <tri/application/window.h>
 #include <tri/base/log.h>
-#include <tri/rendering/formatConversion.h>
 #include <tri/memory/cudaError.h>
+#include <tri/rendering/formatConversion.h>
 #include <tri/rendering/frameBuffer.h>
 
 #include <gm/types/vec2iRange.h>
 #include <gm/types/vec3f.h>
 
 #include <cuda_runtime.h>
+
+TRI_NS_USING
 
 class SimpleImageWindow : public tri::Window
 {
@@ -22,26 +24,26 @@ public:
 protected:
     virtual void WriteFrame( uint32_t* o_frameData ) override
     {
-        for ( gm::Vec2i coord : m_image.GetExtent() )
+        for ( gm::Vec3i coord : m_colorBuffer.GetExtent() )
         {
-            m_image( coord.Y(), coord.X() ) = gm::Vec3f( ( float ) coord.X() / ( float ) m_image.GetColumns(),
-                                                         ( float ) coord.Y() / ( float ) m_image.GetRows(),
-                                                         0.0f );
+            m_colorBuffer( coord ) = gm::Vec3f( ( float ) coord.X() / ( float ) m_colorBuffer.GetWidth(),
+                                                ( float ) coord.Y() / ( float ) m_colorBuffer.GetHeight(),
+                                                0.0f );
         }
-        tri::ConvertRGBFloatToRGBAUint32< tri::Host >::Execute( m_image.GetSize(),
-                                                                m_image.GetBuffer(),
+        tri::ConvertRGBFloatToRGBAUint32< tri::Host >::Execute( m_colorBuffer.GetElementCount(),
+                                                                m_colorBuffer.GetBuffer(),
                                                                 m_texture.GetBuffer() );
         CUDA_CHECK( cudaMemcpy( o_frameData, m_texture.GetBuffer(), m_texture.GetByteSize(), cudaMemcpyHostToDevice ) );
     }
 
     virtual void OnResize( const gm::Vec2i& i_dimensions ) override
     {
-        m_image.Resize( i_dimensions.Y(), i_dimensions.X() );
-        m_texture.Resize( i_dimensions.Y(), i_dimensions.X() );
+        m_colorBuffer.Resize( gm::Vec3i( i_dimensions.X(), i_dimensions.Y(), 1 ) );
+        m_texture.Resize( gm::Vec3i( i_dimensions.X(), i_dimensions.Y(), 1 ) );
     }
 
 private:
-    tri::FrameBuffer< gm::Vec3f, tri::Host > m_image;
+    tri::FrameBuffer< gm::Vec3f, tri::Host > m_colorBuffer;
     tri::FrameBuffer< uint32_t, tri::Host >  m_texture;
 };
 

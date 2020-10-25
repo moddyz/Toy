@@ -16,6 +16,6 @@ TRI_NS_OPEN
 /// \param i_filePath The file path to write the image to.
 ///
 /// \return Whether the image was successfully written to disk.
-bool ExportJpeg( const FrameBuffer< gm::Vec3f, Host >& i_image, const std::string& i_filePath );
+bool ExportJpeg( const FrameBuffer< gm::Vec3f, Host >& i_frameBuffer, const std::string& i_filePath );
 
 TRI_NS_CLOSE
