@@ -1,6 +1,6 @@
 #pragma once
 
-/// \file imaging/convert.h
+/// \file rendering/convert.h
 ///
 /// Utilities for converting between in-memory image data formats.
 

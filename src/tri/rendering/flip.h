@@ -1,6 +1,6 @@
 #pragma once
 
-/// \file imaging/flip.h
+/// \file rendering/flip.h
 ///
 /// Flip an image across its vertical axis.
 

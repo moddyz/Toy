@@ -1,8 +1,8 @@
 #include <cxxopts.hpp>
 
 #include <tri/base/log.h>
-#include <tri/imaging/export.h>
-#include <tri/imaging/extent.h>
+#include <tri/rendering/export.h>
+#include <tri/rendering/extent.h>
 #include <tri/memory/matrix.h>
 
 #include <gm/types/vec2iRange.h>

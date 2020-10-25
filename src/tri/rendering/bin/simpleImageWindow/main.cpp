@@ -2,8 +2,8 @@
 
 #include <tri/application/window.h>
 #include <tri/base/log.h>
-#include <tri/imaging/extent.h>
-#include <tri/imaging/formatConversion.h>
+#include <tri/rendering/extent.h>
+#include <tri/rendering/formatConversion.h>
 #include <tri/memory/cudaError.h>
 #include <tri/memory/matrix.h>
 

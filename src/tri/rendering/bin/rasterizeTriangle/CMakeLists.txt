@@ -4,10 +4,11 @@ cpp_executable(
     CPPFILES
         main.cpp
     LIBRARIES
+        ${GLFW_LIBRARIES}
         CUDA::cudart
         tri_base
         tri_memory
-        tri_imaging
+        tri_rendering
+        tri_application
         gm
-        cxxopts
 )

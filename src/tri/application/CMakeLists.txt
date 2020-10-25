@@ -19,6 +19,6 @@ cpp_library(${ROOT_PREFIX}_${LIBRARY_SUFFIX}
         gm
         stb
         tri_memory
-        tri_imaging
+        tri_rendering
         tri_viewport
 )

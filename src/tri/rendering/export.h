@@ -1,6 +1,6 @@
 #pragma once
 
-/// \file imaging/export.h
+/// \file rendering/export.h
 ///
 /// Utilities for exporting an in-memory image onto disk.
 

@@ -2,7 +2,7 @@
 
 #include <gm/functions/setTranslate.h>
 
-#include <tri/imaging/transformPoints.h>
+#include <tri/rendering/transformPoints.h>
 #include <tri/memory/array.h>
 
 using PointsT     = gm::Vec3f;

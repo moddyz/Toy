@@ -1,7 +1,7 @@
 #include <tri/application/viewportWindow.h>
 #include <tri/base/log.h>
-#include <tri/imaging/extent.h>
-#include <tri/imaging/transformPoints.h>
+#include <tri/rendering/extent.h>
+#include <tri/rendering/transformPoints.h>
 
 #include <gm/functions/clamp.h>
 #include <gm/functions/inverse.h>

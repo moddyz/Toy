@@ -4,7 +4,7 @@
 #include <tri/viewport/orbitManipulator.h>
 #include <tri/viewport/truckManipulator.h>
 
-#include <tri/imaging/formatConversion.h>
+#include <tri/rendering/formatConversion.h>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>

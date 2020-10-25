@@ -1,6 +1,6 @@
 #pragma once
 
-/// \file imaging/transformPoints.h
+/// \file rendering/transformPoints.h
 
 #include <tri/memory/array.h>
 
