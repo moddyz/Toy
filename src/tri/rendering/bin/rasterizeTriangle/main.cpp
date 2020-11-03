@@ -51,8 +51,6 @@ public:
                                                    gm::Vec3f( 0, 0, 0 ),
                                                    o_colorBuffer.GetBuffer() ) );
 
-        FrameBuffer< gm::Vec3f, Host > colorBuffer( o_colorBuffer );
-
         // World-space to camera-space.
         const LookAtTransform& lookAtXform   = GetCameraTransform();
         const gm::Mat4f&       cameraToWorld = lookAtXform.GetObjectToWorld();
@@ -70,12 +68,15 @@ public:
         gm::Mat4f worldToRaster = gm::MatrixProduct( clipToRaster, worldToClip );
 
         // Screen points.
-        Array< gm::Vec3f, Host > screenPoints( m_points.GetSize() );
-        TransformPoints< Host >::Execute( worldToRaster, m_points, screenPoints );
+        Array< gm::Vec3f, CUDA > screenPoints( m_points.GetSize() );
+        TransformPoints< CUDA >::Execute( worldToRaster, m_points, screenPoints );
+
+        Array< gm::Vec3f, Host > screenPointsHost( screenPoints );
+        FrameBuffer< gm::Vec3f, Host > colorBuffer( o_colorBuffer );
 
         for ( gm::Vec3i coord : colorBuffer.GetExtent() )
         {
-            if ( PointInsideTriangle( gm::Vec3f( coord.X(), coord.Y(), 0 ), &( screenPoints[ 0 ] ) ) )
+            if ( PointInsideTriangle( gm::Vec3f( coord.X(), coord.Y(), 0 ), &( screenPointsHost[ 0 ] ) ) )
             {
                 colorBuffer( coord ) = gm::Vec3f( 1.0, 1.0, 1.0 );
             }
@@ -85,7 +86,7 @@ public:
     }
 
 private:
-    Array< gm::Vec3f, Host > m_points{gm::Vec3f( 0.0f, 0.57735027f, 0.0f ),
+    Array< gm::Vec3f, CUDA > m_points{gm::Vec3f( 0.0f, 0.57735027f, 0.0f ),
                                       gm::Vec3f( -0.5f, -0.28867513f, 0.0f ),
                                       gm::Vec3f( 0.5f, -0.28867513f, 0.0f )};
 };
