@@ -49,3 +49,16 @@ Fragment shaders must be able to compute screen-space derivatives for dependent 
 What does sort-first, sort-last, sort-middle, and sort-everywhere actually mean?
 
 Tradeioff between global communication (access to global mem) and using global mem to coordinate load balancing.
+
+## Implementation Highlights
+
+- Vertex input indices de-duplication
+- Shared memory for passing vertex shader outputs into primitive processing
+- During rasterization, frame buffer is divided into bins of configurable size.
+- Each bin is assigned a "rasterizer" (multiple bins can use the same rasterizer)
+- Each Rasterizer is associated with a single thread block.  Thus has exclusive access to associated frame buffer bins.
+
+Rough implementation:
+
+Input vertex data -> Vertex Processing -> Primitive Processing -> Bin Rasterizer -> Tile rasterizer -> Fragment Processing
+
