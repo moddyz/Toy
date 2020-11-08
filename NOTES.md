@@ -33,3 +33,19 @@ Streaming for lower memory overhead and higher occupancy.  Implemented using a _
 
 ## Achieving parallelism
 
+*Object-space parallelism* - distributing work per primitive (triangle)
+*Screen-space parallelism* - distributing work per screen region
+
+The transition from object-space to screen-space is the crux of the problem.
+
+## Design considerations
+
+*Preservation of primitive order* - fragments must be blended in the same order in which their generating primitives were specified,
+
+Fragment shaders must be able to compute screen-space derivatives for dependent variables, e.g., to support mipmapping
+
+*Low memory overhead*
+
+What does sort-first, sort-last, sort-middle, and sort-everywhere actually mean?
+
+Tradeioff between global communication (access to global mem) and using global mem to coordinate load balancing.
