@@ -7,8 +7,71 @@
 /// \b Tri is a software renderer implementing a fixed rasterization pipeline.
 ///
 /// This header provides all the API entry points of the Tri renderer.
+///
+/// Example of rendering a triangle:
+/// \code{.cpp}
+/// // Initialize context.
+/// TriContext ctx;
+/// TriCreateContextPreferred(ctx);
+///
+/// // Allocate frame buffer.
+/// TriBuffer frameBuffer;
+/// TriFrameBufferCreate( ctx, frameBuffer, 640, 480 );
+///
+/// // Allocate graphics pipeline.
+/// TriGraphicsPipeline pipeline;
+/// TriGraphisPipelineCreate( ctx, pipeline, 640, 480 );
+///
+/// // Define vertex and indices.
+/// gm::Vec3f positions[3] = { ... };
+/// uint32_t indices[3] = { 0, 1, 2 };
+///
+/// // Setup geometry input.
+/// TriGeometryInput geoInput;
+///
+/// geoInput.positions.ptr = static_cast< void* >( &positions );
+/// geoInput.positions.format = TriFormat::Float32_Vec3;
+/// geoInput.positions.numElements = 3;
+/// geoInput.positions.device = TriDevice::CPU;
+///
+/// geoInput.positions.ptr = static_cast< void* >( &positions );
+/// geoInput.positions.format = TriFormat::Float32_Vec3;
+/// geoInput.positions.numElements = 3;
+/// geoInput.positions.device = TriDevice::CPU;
+///
+/// // Initialize graphics state.
+/// TriGraphicsState graphicsState;
+/// state.cameraTransform = ...;
+/// state.projectionTransform = ...;
+/// state.viewportSize = gm::Vec2i( 640, 480 );
+///
+/// // Execute graphics pipeline and draw into frame buffer.
+/// TriGraphicsPipelineExecute(pipeline, graphicsState, geoInput, frameBuffer);
+///
+/// // Teardown.
+/// TriFrameBufferDestroy( frameBuffer );
+/// TriGraphicsPipelineDestroy( pipeline );
+/// TriContextDestroy( ctx );
+/// \endcode
 
-/// \class TriContext
+/// \typedef TriHandle
+///
+/// User handle to an opaque object.
+struct TriHandle
+{
+    int32_t id;
+};
+
+/// \enum TriResult
+///
+/// API status codes.
+enum class TriResult : char
+{
+    Success = 0,
+    ObjectNotFound,
+};
+
+/// \struct TriContext
 ///
 /// Describes root-level properties of a Tri renderer.
 ///
@@ -23,11 +86,13 @@
 /// // Expected behavior when running on a machine with CUDA runtime support.
 ///
 /// // Preferred context.
-/// TriContext preferredCtx = TriContextCreatePreferred();
+/// TriContext preferredCtx;
+/// assert(TriContextCreatePreferred(preferredCtx) == TriStatus::Success);
 /// assert(preferredCtx.device == TriDevice::CUDA);
 ///
 /// // Construct a context with CPU runtime device selection.
-/// TriContext cpuCtx = TriContextCreate(TriDevice::CPU);
+/// TriContext cpuCtx;
+/// TriContextCreate(cpuCtx, TriDevice::CPU);
 /// assert(cpuCtx.device == TriDevice::CPU);
 ///
 /// /* ... execute graphics ... */
@@ -36,10 +101,9 @@
 /// TriContextDestroy( cpuCtx );
 /// TriContextDestroy( preferredCtx );
 /// \endcode
-class TriContext : final
+struct TriContext : final
 {
-public:
-    TriDevice device;
+    TriId id = TriInvalidId;
 };
 
 /// \enum TriDevice
@@ -68,13 +132,13 @@ enum class TriFormat : char
     Count
 };
 
-/// \class TriBuffer
+/// \struct TriBuffer
 ///
 /// A non-ownership-assuming description of a block of memory.
 ///
 /// This is used to transport array-like data for consumption by the graphics
 /// pipeline.
-class TriBuffer : final
+struct TriBuffer : final
 {
 public:
     /// The format of the data.
@@ -84,26 +148,26 @@ public:
     TriDevice device{ TriDevice::CPU };
 
     /// Number of elements in the buffer.
-    size_t numElements = 0;
+    size_t numElements{ 0 };
 
     /// Pointer to the starting address of the buffer.
-    void* ptr = nullptr;
+    void* ptr{ nullptr };
 };
 
-/// \class TriGeometryInput
+/// \struct TriGeometryInput
 ///
 /// Geometry data serving as input to the graphics pipeline.
-class TriGeometryInput : final
+struct TriGeometryInput : final
 {
 public:
     TriBuffer positions;
     TriBuffer indices;
 };
 
-/// \class TriGraphicsState
+/// \struct TriGraphicsState
 ///
 /// Root-level parameters for drawing.
-class TriGraphicsState : final
+struct TriGraphicsState : final
 {
 public:
     gm::Mat4f cameraTransform;
@@ -111,54 +175,62 @@ public:
     gm::Vec2i viewportSize;
 };
 
-/// \class TriGraphicsPipeline
+/// \struct TriGraphicsPipeline
 ///
 /// An executable pipeline which
-class TriGraphicsPipeline
+struct TriGraphicsPipeline : final
 {
-private:
-    void* m_impl = nullptr;
+    TriId id = TriInvalidId;
 };
 
 /// Construct a TriContext object with the preferred runtime device.
 ///
 /// The "preferred" runtime device is selected based on priority and
-/// availability, by starting from the largest value of \ref
-/// TriDevice (bar TriDevice::Count) and incrementing
+/// availability, by starting from the largest value of
+/// \ref TriDevice (bar TriDevice::Count) and incrementing
 /// backwards.
 ///
 /// \return The context object.
-TriContext
-TriContextCreatePreferred();
+TriStatus
+TriContextCreatePreferred(TriContext& context);
 
 /// Construct a TriContext for a requested runtime device.
 ///
 /// \note The requested runtime device may not be available, in which the
 /// fallback CPU runtime device will be selected.
 ///
-/// \param i_requestedDevice The runtime device used to execute graphics
+/// \param requestedDevice The runtime device used to execute graphics
 /// commands.
 ///
 /// \return The context object.
-TriContext
-TriContextCreate(TriDevice i_requestedDevice);
+TriStatus
+TriContextCreate(TriContext& context, TriDevice requestedDevice);
 
 /// Destroy a TriContext object.
 ///
 /// \note Once a TriContext is destroyed, existing child objects produced
 /// via that context will yield undefined behavior.
 ///
-/// \param o_context The context object to destroy.
-bool
-TriContextDestroy(TriContext& o_context);
+/// \param context The context object to destroy.
+TriStatus
+TriContextDestroy(TriContext& context);
 
-/// Allocate a frame buffer to draw into.
+/// Create a frame buffer to draw into.
 ///
 /// \note A frame buffer allocated with this function must be deallocated
 /// via \TriFrameBufferDestroy
-TriBuffer
-TriFrameBufferCreate(const TriContext& i_context, int width, int height);
+///
+/// \param buffer The buffer to fill with.
+/// \param context The associated context.
+/// \param width Pixel width of the frame buffer.
+/// \param height Pixel height of the frame buffer.
+///
+/// \return Allocated frame buffer.
+TriStatus
+TriFrameBufferCreate(TriBuffer& buffer, const TriContext& context, int width, int height);
 
-/// Deallocate a frame buffer.
-bool
-TriFrameBufferDestroy(TriBuffer& o_buffer);
+/// Destroy an existing frame buffer.
+///
+/// \param
+TriStatus
+TriFrameBufferDestroy(TriBuffer& buffer);
