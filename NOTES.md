@@ -1,11 +1,54 @@
 # Notes
 
-Random notes and sketches for this project.
+Random notes and references used for this project.
 
 References:
-- https://markussteinberger.net/papers/cuRE.pdf
 - https://research.nvidia.com/sites/default/files/pubs/2011-08_High-Performance-Software-Rasterization/laine2011hpg_paper.pdf
-- https://alain-galvan.gitbook.io/a-trip-through-the-graphics-pipeline
+
+# A trip through the graphics pipeline notes
+
+URL: https://alain-galvan.gitbook.io/a-trip-through-the-graphics-pipeline
+
+## Layers of a 3D Application
+
+- Application code (ie. Quake)
+- API Runtime (ie. OpenGL, DirectX)
+- User mode graphics driver aka **UMD**.  Specific to graphics vendor.  Just a shared library.
+- Kernel mode graphics driver (KMD)
+- Bus
+
+## API Runtime
+
+One distinction between D3D and OpenGL:
+- DirectX API compiles shader code and passes verified bytecode down to UMD
+- OpenGL API does not, thus and it is the UMD's responsibility (resulting in differences bewteen implementations)
+
+## UMD
+
+- Where shader compilation happens.
+- Multiple variants of the same shader for different API params.
+- Handling of legacy shader versions.
+- Writes to command or DMA buffers (allocated by KMD)
+
+The GPU scheduler component arbitrates access to the 3D pipeline by time-slicing it between various apps needing to use the GPU.
+
+## KMD
+
+Deals with things that are just there once.
+- GPU memory
+- Allocate and map physical memory
+- Hardware mouse cursor
+- DRM / content protection
+- Manages command buffer
+
+## The Bus
+
+Transfer data to GPU
+
+
+# CURE notes
+
+URL: https://markussteinberger.net/papers/cuRE.pdf
 
 ## Outline of graphics pipeline
 
