@@ -60,10 +60,10 @@
 /// Type definition for a Tri opaque object identifier.
 using TriId = int32_t;
 
-/// \var TriId_Invalid
+/// \var TriId_Uninitialized
 ///
 /// Constant variable of an invalid object ID.
-constexpr TriId TriId_Invalid = -1;
+constexpr TriId TriId_Uninitialized = -1;
 
 /// \enum TriStatus
 ///
@@ -72,6 +72,10 @@ enum TriStatus
 {
     /// API call returned with no errors.
     TriStatus_Success = 0,
+
+    /// Returned when the requested device is not supported by the runtime
+    /// environment.
+    TriStatus_UnsupportedDevice = 0,
 
     /// This error is returned from query APIs where the object associated
     /// with the opaque object ID cannot be found.
@@ -87,7 +91,7 @@ enum TriStatus
 /// The device used to execute the graphics operations.
 enum TriDevice
 {
-    TriDevice_Invalid = 0,
+    TriDevice_Uninitialized = 0,
     TriDevice_CPU,
     TriDevice_CUDA,
     TriDevice_Count
@@ -98,7 +102,7 @@ enum TriDevice
 /// The elemental format of data structures.
 enum TriFormat
 {
-    TriFormat_Invalid = 0,
+    TriFormat_Uninitialized = 0,
     TriFormat_Float32,
     TriFormat_Float32_Vec2,
     TriFormat_Float32_Vec3,
@@ -107,17 +111,6 @@ enum TriFormat
     TriFormat_Uint8_Vec3,
     TriFormat_Uint8_Vec4,
     TriFormat_Count
-};
-
-/// \enum TriProperty
-///
-/// Properties of Tri opaque objects.
-enum TriProperty
-{
-    // TriPipeline.
-    TriProperty_CameraXform = 0,
-    TriProperty_ProjectionXform,
-    TriProperty_RenderTargetSize
 };
 
 /// \struct TriContext
@@ -153,7 +146,7 @@ enum TriProperty
 /// \endcode
 struct TriContext
 {
-    TriId id{ TriId_Invalid };
+    TriId id{ TriId_Uninitialized };
 };
 
 /// \struct TriPipeline
@@ -161,7 +154,7 @@ struct TriContext
 /// An executable pipeline which
 struct TriPipeline
 {
-    TriId id{ TriId_Invalid };
+    TriId id{ TriId_Uninitialized };
 };
 
 /// \struct TriBuffer
@@ -174,10 +167,10 @@ struct TriBuffer
 {
 public:
     /// The format of the data.
-    TriFormat format{ TriFormat_Invalid };
+    TriFormat format{ TriFormat_Uninitialized };
 
     /// The current device where the buffer memory resides.
-    TriDevice device{ TriDevice_Invalid };
+    TriDevice device{ TriDevice_Uninitialized };
 
     /// Number of elements in the buffer.
     size_t numElements{ 0 };
@@ -203,6 +196,10 @@ public:
 /// \ref TriDevice (bar TriDevice::Count) and incrementing
 /// backwards.
 ///
+/// \param context The opaque context object to initialize.
+///
+/// \pre \p context must be un-initialised (\ref TriId_Uninitialized);
+///
 /// \retval TriStatus_Success Successful creation of a preferred context.
 TriStatus
 TriContextCreatePreferred(TriContext& context);
@@ -216,23 +213,33 @@ TriContextCreatePreferred(TriContext& context);
 ///
 /// \retval TriStatus_Success Successful creation of a context with requested
 /// properties.
+/// \retval TriStatus_UnsupportedDevice Error status when the requested device
+/// is not supported by the runtime environment.
 TriStatus
-TriContextCreate(TriContext& context, TriDevice requestedDevice );
+TriContextCreate(TriContext& context, TriDevice requestedDevice);
 
-/// Destroy a TriContext object.
+/// Destroy an initialized TriContext object.
 ///
 /// \note Once a TriContext is destroyed, existing child objects produced
 /// via that context will yield undefined behavior.
 ///
 /// \param context The context object to destroy.
+///
+/// \retval TriStatus_Success Successful creation of a context with requested
+/// properties.
+/// \retval TriStatus_ObjectNotFound \p context does not exist.
 TriStatus
 TriContextDestroy(TriContext& context);
 
 /// Query the \p context's associated device.
 ///
+/// \param context The context to query the device for.
+/// \param device Output device variable.
+///
 /// \retval TriStatus_Success Successful device query.
+/// \retval TriStatus_ObjectNotFound \p context does not exist.
 TriStatus
-TriContextGetDevice(const TriContext& context, TriDevice& device );
+TriContextGetDevice(const TriContext& context, TriDevice& device);
 
 /// Create a RGBA frame buffer.
 ///

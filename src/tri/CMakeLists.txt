@@ -1,4 +1,4 @@
-file(GLOB CPPFILES *.cpp)
+file(GLOB CPPFILES *.cpp internal/*.cpp)
 
 cpp_library(tri
     TYPE
