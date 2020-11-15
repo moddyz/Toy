@@ -9,7 +9,7 @@ References:
 
 URL: https://alain-galvan.gitbook.io/a-trip-through-the-graphics-pipeline
 
-## Layers of a 3D Application
+## The Software Stack
 
 - Application code (ie. Quake)
 - API Runtime (ie. OpenGL, DirectX)
@@ -17,13 +17,13 @@ URL: https://alain-galvan.gitbook.io/a-trip-through-the-graphics-pipeline
 - Kernel mode graphics driver (KMD)
 - Bus
 
-## API Runtime
+### API Runtime
 
 One distinction between D3D and OpenGL:
 - DirectX API compiles shader code and passes verified bytecode down to UMD
 - OpenGL API does not, thus and it is the UMD's responsibility (resulting in differences bewteen implementations)
 
-## UMD
+### UMD
 
 - Where shader compilation happens.
 - Multiple variants of the same shader for different API params.
@@ -32,7 +32,7 @@ One distinction between D3D and OpenGL:
 
 The GPU scheduler component arbitrates access to the 3D pipeline by time-slicing it between various apps needing to use the GPU.
 
-## KMD
+### KMD
 
 Deals with things that are just there once.
 - GPU memory
@@ -41,10 +41,41 @@ Deals with things that are just there once.
 - DRM / content protection
 - Manages command buffer
 
-## The Bus
+### The Bus
 
 Transfer data to GPU
 
+## GPU memory architecture and command processor
+
+### Memory subsystem
+
+- GPU dram - high memory bandwidth, but also high latency.
+- Memory organized into a grid (rows & cols)
+- A single access fetches an entire row.
+- DMA Engine (I think this is the copy engine in cuda properties?) for copying memory between system and GPU without involving shader cores.
+
+### Command processor
+
+- Command processing front end parses commands.
+- Commands include 2D functionality, or 3D primitive handoff
+- Some commands change state - which can result in a non-trivial amount of work by the hardware.
+- Make a stage stateless by passing in the data along with the stage (but can be expensive for large data sets)
+
+### Synchronization
+
+- If Event X happens, do Y
+- Can be push (GPU tells CPU it's entering vertical blank interval)
+- Or pull (CPU asks GPU what was the latest parsed command buffer)
+- ..
+
+## 3D Pipeline Overview
+
+### Terminology
+
+- IA (Input Assembler): Reads vertex arrays (P, N, other user data) and indices array
+- VS (Vertex shader): Reads input vertex data, and writes out processed vertex data.
+- PA (Primitive Assembler) Reads vertices and constructs "primitives" per set of vertices.
+- HS (Hull Shader) Accepts patch primitives and writes transformed patch control points.  
 
 # CURE notes
 
