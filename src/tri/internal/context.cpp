@@ -41,7 +41,7 @@ Tri_ContextCreate(TriContext& context, TriDevice device)
 {
     // Allocate new internal context object.
     typename decltype(s_contexts)::EntryT entry = s_contexts.Create();
-    entry.second->device = Tri_SelectPreferredDevice();
+    entry.second->device = device;
 
     // Populate opaque object ID.
     context.id = entry.first;
@@ -52,13 +52,10 @@ Tri_ContextCreate(TriContext& context, TriDevice device)
 TriStatus
 Tri_ContextDestroy(TriContext& context)
 {
-    if ( s_contexts.Delete( context.id ) )
-    {
+    if (s_contexts.Delete(context.id)) {
         context.id = TriId_Uninitialized;
         return TriStatus_Success;
-    }
-    else
-    {
+    } else {
         return TriStatus_ObjectNotFound;
     }
 }
@@ -66,6 +63,5 @@ Tri_ContextDestroy(TriContext& context)
 Tri_Context*
 Tri_ContextGet(TriId id)
 {
-    return s_contexts.Get( id );
+    return s_contexts.Get(id);
 }
-

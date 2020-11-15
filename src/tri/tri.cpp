@@ -33,8 +33,7 @@ TriStatus
 TriContextGetDevice(const TriContext& context, TriDevice& device)
 {
     Tri_Context* ctx = Tri_ContextGet(context.id);
-    if ( ctx == nullptr )
-    {
+    if (ctx == nullptr) {
         return TriStatus_ObjectNotFound;
     }
 

@@ -36,7 +36,7 @@ public:
     }
 
     /// Delete an existing object referred by \p id.
-    bool Delete( TriId id )
+    bool Delete(TriId id)
     {
         typename ContainerT::iterator it = m_container.find(id);
         if (it == m_container.end()) {
@@ -44,7 +44,7 @@ public:
         }
 
         delete it->second;
-        m_container.erase( it );
+        m_container.erase(it);
 
         return true;
     }
@@ -67,4 +67,3 @@ private:
     TriId m_nextId = 0;
     ContainerT m_container;
 };
-
