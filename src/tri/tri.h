@@ -16,11 +16,11 @@
 ///
 /// // Allocate frame buffer.
 /// TriBuffer frameBuffer;
-/// TriFrameBufferCreate( ctx, frameBuffer, 640, 480 );
+/// TriFrameBufferCreate(ctx, frameBuffer, 640, 480);
 ///
 /// // Allocate graphics pipeline.
-/// TriGraphicsPipeline pipeline;
-/// TriGraphisPipelineCreate( ctx, pipeline, 640, 480 );
+/// TriPipeline pipeline;
+/// TriPipelineCreate(ctx, pipeline);
 ///
 /// // Define vertex and indices.
 /// gm::Vec3f positions[3] = { ... };
@@ -30,50 +30,100 @@
 /// TriGeometryInput geoInput;
 ///
 /// geoInput.positions.ptr = static_cast< void* >( &positions );
-/// geoInput.positions.format = TriFormat::Float32_Vec3;
+/// geoInput.positions.format = TriFormat_Float32_Vec3;
 /// geoInput.positions.numElements = 3;
 /// geoInput.positions.device = TriDevice::CPU;
 ///
-/// geoInput.positions.ptr = static_cast< void* >( &positions );
-/// geoInput.positions.format = TriFormat::Float32_Vec3;
-/// geoInput.positions.numElements = 3;
-/// geoInput.positions.device = TriDevice::CPU;
+/// geoInput.indices.ptr = static_cast< void* >( &indices );
+/// geoInput.indices.format = TriFormat_Uint32;
+/// geoInput.indices.numElements = 3;
+/// geoInput.indices.device = TriDevice::CPU;
 ///
-/// // Initialize graphics state.
-/// TriGraphicsState graphicsState;
-/// state.cameraTransform = ...;
-/// state.projectionTransform = ...;
-/// state.viewportSize = gm::Vec2i( 640, 480 );
+/// // Set rendering properties.
+/// TriPipelineSetCameraXform(pipeline, gm::Mat4f::Identity());
+/// TriPipelineSetProjectionXform(pipeline, gm::Mat4f::Identity());
 ///
 /// // Execute graphics pipeline and draw into frame buffer.
-/// TriGraphicsPipelineExecute(pipeline, graphicsState, geoInput, frameBuffer);
+/// TriPipelineExecute(pipeline, geoInput, frameBuffer);
 ///
 /// // Teardown.
-/// TriFrameBufferDestroy( frameBuffer );
-/// TriGraphicsPipelineDestroy( pipeline );
-/// TriContextDestroy( ctx );
+/// TriFrameBufferDestroy(frameBuffer);
+/// TriPipelineDestroy(pipeline);
+/// TriContextDestroy(ctx);
 /// \endcode
 
-/// \typedef TriHandle
+#include <stdint.h>
+#include <stddef.h>
+
+/// \typedef TriId
 ///
-/// User handle to an opaque object.
-struct TriHandle
+/// Type definition for a Tri opaque object identifier.
+using TriId = int32_t;
+
+/// \var TriId_Invalid
+///
+/// Constant variable of an invalid object ID.
+constexpr TriId TriId_Invalid = -1;
+
+/// \enum TriStatus
+///
+/// API return codes.
+enum TriStatus
 {
-    int32_t id;
+    /// API call returned with no errors.
+    TriStatus_Success = 0,
+
+    /// This error is returned from query APIs where the object associated
+    /// with the opaque object ID cannot be found.
+    TriStatus_ObjectNotFound,
+
+    /// This error is returned when querying a property not associated with
+    /// the object type.
+    TriStatus_InvalidProperty
 };
 
-/// \enum TriResult
+/// \enum TriDevice
 ///
-/// API status codes.
-enum class TriResult : char
+/// The device used to execute the graphics operations.
+enum TriDevice
 {
-    Success = 0,
-    ObjectNotFound,
+    TriDevice_Invalid = 0,
+    TriDevice_CPU,
+    TriDevice_CUDA,
+    TriDevice_Count
+};
+
+/// \enum TriFormat
+///
+/// The elemental format of data structures.
+enum TriFormat
+{
+    TriFormat_Invalid = 0,
+    TriFormat_Float32,
+    TriFormat_Float32_Vec2,
+    TriFormat_Float32_Vec3,
+    TriFormat_Float32_Vec4,
+    TriFormat_Uint32,
+    TriFormat_Uint8_Vec3,
+    TriFormat_Uint8_Vec4,
+    TriFormat_Count
+};
+
+/// \enum TriProperty
+///
+/// Properties of Tri opaque objects.
+enum TriProperty
+{
+    // TriPipeline.
+    TriProperty_CameraXform = 0,
+    TriProperty_ProjectionXform,
+    TriProperty_RenderTargetSize
 };
 
 /// \struct TriContext
 ///
-/// Describes root-level properties of a Tri renderer.
+/// Root-level opaque object, specifying the device and lifetime of
+/// internal memory structures.
 ///
 /// After the context is initialized with specified properties, those
 /// properties are \em immutable for the lifetime of the context object.
@@ -88,12 +138,12 @@ enum class TriResult : char
 /// // Preferred context.
 /// TriContext preferredCtx;
 /// assert(TriContextCreatePreferred(preferredCtx) == TriStatus::Success);
-/// assert(preferredCtx.device == TriDevice::CUDA);
+/// assert(preferredCtx.device == TriDevice_CUDA);
 ///
 /// // Construct a context with CPU runtime device selection.
 /// TriContext cpuCtx;
-/// TriContextCreate(cpuCtx, TriDevice::CPU);
-/// assert(cpuCtx.device == TriDevice::CPU);
+/// TriContextCreate(cpuCtx, TriDevice_CPU);
+/// assert(cpuCtx.device == TriDevice_CPU);
 ///
 /// /* ... execute graphics ... */
 ///
@@ -101,35 +151,17 @@ enum class TriResult : char
 /// TriContextDestroy( cpuCtx );
 /// TriContextDestroy( preferredCtx );
 /// \endcode
-struct TriContext : final
+struct TriContext
 {
-    TriId id = TriInvalidId;
+    TriId id{ TriId_Invalid };
 };
 
-/// \enum TriDevice
+/// \struct TriPipeline
 ///
-/// The device used to execute the graphics operations.
-enum class TriDevice : char
+/// An executable pipeline which
+struct TriPipeline
 {
-    CPU = 0,
-    CUDA,
-    Count
-};
-
-/// \enum TriFormat
-///
-/// The elemental format of data structures.
-enum class TriFormat : char
-{
-    Invalid = 0,
-    Float32,
-    Float32_Vec2,
-    Float32_Vec3,
-    Float32_Vec4,
-    Uint32,
-    Uint8_Vec3,
-    Uint8_Vec4,
-    Count
+    TriId id{ TriId_Invalid };
 };
 
 /// \struct TriBuffer
@@ -138,14 +170,14 @@ enum class TriFormat : char
 ///
 /// This is used to transport array-like data for consumption by the graphics
 /// pipeline.
-struct TriBuffer : final
+struct TriBuffer
 {
 public:
     /// The format of the data.
-    TriFormat format{ TriFormat::Invalid };
+    TriFormat format{ TriFormat_Invalid };
 
     /// The current device where the buffer memory resides.
-    TriDevice device{ TriDevice::CPU };
+    TriDevice device{ TriDevice_Invalid };
 
     /// Number of elements in the buffer.
     size_t numElements{ 0 };
@@ -157,40 +189,21 @@ public:
 /// \struct TriGeometryInput
 ///
 /// Geometry data serving as input to the graphics pipeline.
-struct TriGeometryInput : final
+struct TriGeometryInput
 {
 public:
     TriBuffer positions;
     TriBuffer indices;
 };
 
-/// \struct TriGraphicsState
-///
-/// Root-level parameters for drawing.
-struct TriGraphicsState : final
-{
-public:
-    gm::Mat4f cameraTransform;
-    gm::Mat4f projectionTransform;
-    gm::Vec2i viewportSize;
-};
-
-/// \struct TriGraphicsPipeline
-///
-/// An executable pipeline which
-struct TriGraphicsPipeline : final
-{
-    TriId id = TriInvalidId;
-};
-
-/// Construct a TriContext object with the preferred runtime device.
+/// Create a TriContext object with the preferred runtime device.
 ///
 /// The "preferred" runtime device is selected based on priority and
 /// availability, by starting from the largest value of
 /// \ref TriDevice (bar TriDevice::Count) and incrementing
 /// backwards.
 ///
-/// \return The context object.
+/// \retval TriStatus_Success Successful creation of a preferred context.
 TriStatus
 TriContextCreatePreferred(TriContext& context);
 
@@ -199,12 +212,12 @@ TriContextCreatePreferred(TriContext& context);
 /// \note The requested runtime device may not be available, in which the
 /// fallback CPU runtime device will be selected.
 ///
-/// \param requestedDevice The runtime device used to execute graphics
-/// commands.
+/// \param requestedDevice Requested device for the context.
 ///
-/// \return The context object.
+/// \retval TriStatus_Success Successful creation of a context with requested
+/// properties.
 TriStatus
-TriContextCreate(TriContext& context, TriDevice requestedDevice);
+TriContextCreate(TriContext& context, TriDevice requestedDevice );
 
 /// Destroy a TriContext object.
 ///
@@ -215,10 +228,16 @@ TriContextCreate(TriContext& context, TriDevice requestedDevice);
 TriStatus
 TriContextDestroy(TriContext& context);
 
-/// Create a frame buffer to draw into.
+/// Query the \p context's associated device.
+///
+/// \retval TriStatus_Success Successful device query.
+TriStatus
+TriContextGetDevice(const TriContext& context, TriDevice& device );
+
+/// Create a RGBA frame buffer.
 ///
 /// \note A frame buffer allocated with this function must be deallocated
-/// via \TriFrameBufferDestroy
+/// via \ref TriFrameBufferDestroy
 ///
 /// \param buffer The buffer to fill with.
 /// \param context The associated context.
@@ -227,7 +246,10 @@ TriContextDestroy(TriContext& context);
 ///
 /// \return Allocated frame buffer.
 TriStatus
-TriFrameBufferCreate(TriBuffer& buffer, const TriContext& context, int width, int height);
+TriFrameBufferCreate(TriBuffer& buffer,
+                     const TriContext& context,
+                     int width,
+                     int height);
 
 /// Destroy an existing frame buffer.
 ///
