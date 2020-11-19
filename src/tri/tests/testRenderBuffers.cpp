@@ -4,9 +4,15 @@
 
 TEST_CASE("TriRenderBuffersCreate")
 {
-    TriContext ctx;
-    CHECK(TriContextCreatePreferred(ctx) == TriStatus_Success);
+    for (int device = TriDevice_CPU; device < TriDevice_Count; ++device) {
+        TriContext ctx;
+        CHECK(TriContextCreate(ctx, (TriDevice)device) == TriStatus_Success);
 
-    TriRenderBuffers buffers;
-    REQUIRE(TriRenderBuffersCreate(buffers, ctx, 640, 480) == TriStatus_Success);
+        TriRenderBuffers buffers;
+        REQUIRE(TriRenderBuffersCreate(buffers, ctx, 640, 480) ==
+                TriStatus_Success);
+
+        CHECK(TriRenderBuffersDestroy(buffers) == TriStatus_Success);
+        CHECK(TriContextDestroy(ctx) == TriStatus_Success);
+    }
 }

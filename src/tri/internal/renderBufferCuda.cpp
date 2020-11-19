@@ -11,9 +11,9 @@ Tri_RenderBufferCreateCUDA(TriBuffer& buffer,
 {
     size_t numElements = width * height;
     size_t numBytes = Tri_BufferComputeNumBytes(numElements, format);
-    void* bufferPtr;
+    void* bufferPtr{ nullptr };
     cudaError_t err = cudaMalloc(&bufferPtr, numBytes);
-    if (bufferPtr != nullptr) {
+    if (err == cudaSuccess) {
         // Populate cpu buffer info.
         buffer.ptr = bufferPtr;
         buffer.numElements = numElements;
