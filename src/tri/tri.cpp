@@ -4,6 +4,9 @@
 #include "tri.h"
 
 #include "internal/context.h"
+#include "internal/renderBufferCpu.h"
+
+#include <cassert>
 
 TriStatus
 TriContextCreatePreferred(TriContext& context)
@@ -38,5 +41,32 @@ TriContextGetDevice(const TriContext& context, TriDevice& device)
     }
 
     device = ctx->device;
+    return TriStatus_Success;
+}
+
+TriStatus
+TriRenderBuffersCreate(TriRenderBuffers& buffers,
+                       const TriContext& context,
+                       int width,
+                       int height)
+{
+    Tri_Context* ctx = Tri_ContextGet(context.id);
+    if (ctx == nullptr) {
+        return TriStatus_ObjectNotFound;
+    }
+
+    if (ctx->device == TriDevice_CPU) {
+        return Tri_RenderBuffersCreateCPU(buffers, width, height);
+    } else {
+        assert(ctx->device == TriDevice_CUDA);
+        return Tri_RenderBuffersCreateCUDA(buffers, width, height);
+    }
+
+    return TriStatus_Success;
+}
+
+TriStatus
+TriRenderBuffersDestroy(TriRenderBuffers& buffers)
+{
     return TriStatus_Success;
 }

@@ -7,6 +7,8 @@
 /// \var s_contexts
 ///
 /// Global internal container of Tri_Context objects.
+///
+/// TODO: Exert explicit control over lifetime of this container.
 static Tri_ObjectContainer<Tri_Context> s_contexts;
 
 bool

@@ -14,13 +14,13 @@
 /// TriContext ctx;
 /// TriCreateContextPreferred(ctx);
 ///
-/// // Allocate frame buffer.
-/// TriBuffer frameBuffer;
-/// TriFrameBufferCreate(ctx, frameBuffer, 640, 480);
+/// // Allocate render buffers.
+/// TriRenderBuffers renderBuffers;
+/// TriRenderBuffersCreate(ctx, renderBuffers, 640, 480);
 ///
-/// // Allocate graphics pipeline.
-/// TriPipeline pipeline;
-/// TriPipelineCreate(ctx, pipeline);
+/// // Allocate renderer.
+/// TriRenderer renderer;
+/// TriRendererCreate(ctx, renderer);
 ///
 /// // Define vertex and indices.
 /// gm::Vec3f positions[3] = { ... };
@@ -40,15 +40,15 @@
 /// geoInput.indices.device = TriDevice::CPU;
 ///
 /// // Set rendering properties.
-/// TriPipelineSetCameraXform(pipeline, gm::Mat4f::Identity());
-/// TriPipelineSetProjectionXform(pipeline, gm::Mat4f::Identity());
+/// TriPipelineSetCameraXform(renderer, gm::Mat4f::Identity());
+/// TriPipelineSetProjectionXform(renderer, gm::Mat4f::Identity());
 ///
-/// // Execute graphics pipeline and draw into frame buffer.
-/// TriPipelineExecute(pipeline, geoInput, frameBuffer);
+/// // Execute graphics renderer and draw into frame buffer.
+/// TriPipelineExecute(renderer, geoInput, renderBuffers);
 ///
 /// // Teardown.
-/// TriFrameBufferDestroy(frameBuffer);
-/// TriPipelineDestroy(pipeline);
+/// TriRenderBuffersDestroy(renderBuffers);
+/// TriRendererDestroy(renderer);
 /// TriContextDestroy(ctx);
 /// \endcode
 
@@ -83,7 +83,11 @@ enum TriStatus
 
     /// This error is returned when querying a property not associated with
     /// the object type.
-    TriStatus_InvalidProperty
+    TriStatus_InvalidProperty,
+
+    /// This error is returned when attemping to allocate a buffer but the
+    /// system has run out of memory capacity.
+    TriStatus_OutOfMemory
 };
 
 /// \enum TriDevice
@@ -149,20 +153,22 @@ struct TriContext
     TriId id{ TriId_Uninitialized };
 };
 
-/// \struct TriPipeline
+/// \struct TriRenderer
 ///
-/// An executable pipeline which
-struct TriPipeline
+/// A opaque representation of an \em executable renderer.
+///
+/// Create this object
+struct TriRenderer
 {
     TriId id{ TriId_Uninitialized };
 };
 
 /// \struct TriBuffer
 ///
-/// A non-ownership-assuming description of a block of memory.
+/// A information about a block of memory.
 ///
 /// This is used to transport array-like data for consumption by the graphics
-/// pipeline.
+/// renderer.
 struct TriBuffer
 {
 public:
@@ -179,9 +185,17 @@ public:
     void* ptr{ nullptr };
 };
 
+/// \struct TriRenderBuffers
+///
+/// A collection of buffers serving as outputs of a rendering operation.
+struct TriRenderBuffers
+{
+    TriBuffer color;
+};
+
 /// \struct TriGeometryInput
 ///
-/// Geometry data serving as input to the graphics pipeline.
+/// Geometry data serving as input to the graphics renderer.
 struct TriGeometryInput
 {
 public:
@@ -241,25 +255,28 @@ TriContextDestroy(TriContext& context);
 TriStatus
 TriContextGetDevice(const TriContext& context, TriDevice& device);
 
-/// Create a RGBA frame buffer.
+/// Create buffers serving as outputs of a rendering operation.
 ///
 /// \note A frame buffer allocated with this function must be deallocated
 /// via \ref TriFrameBufferDestroy
 ///
-/// \param buffer The buffer to fill with.
+/// \param buffers The render buffers to allocate.
 /// \param context The associated context.
 /// \param width Pixel width of the frame buffer.
 /// \param height Pixel height of the frame buffer.
 ///
-/// \return Allocated frame buffer.
+/// \retval TriStatus_Success Successful allocation of render buffers.
+/// \retval TriStatus_ObjectNotFound \p context does not exist.
 TriStatus
-TriFrameBufferCreate(TriBuffer& buffer,
-                     const TriContext& context,
-                     int width,
-                     int height);
+TriRenderBuffersCreate(TriRenderBuffers& buffers,
+                       const TriContext& context,
+                       int width,
+                       int height);
 
 /// Destroy an existing frame buffer.
 ///
-/// \param
+/// \param buffers The render buffers to deallocate.
+///
+/// \retval TriStatus_Success Successful destruction of render buffers.
 TriStatus
-TriFrameBufferDestroy(TriBuffer& buffer);
+TriRenderBuffersDestroy(TriRenderBuffers& buffers);
