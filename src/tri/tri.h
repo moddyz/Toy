@@ -16,7 +16,7 @@
 ///
 /// // Allocate render buffers.
 /// TriRenderBuffers renderBuffers;
-/// TriRenderBuffersCreate(ctx, renderBuffers, 640, 480);
+/// TriRenderBuffersCreate(renderBuffers, ctx, 640, 480);
 ///
 /// // Allocate renderer.
 /// TriRenderer renderer;
