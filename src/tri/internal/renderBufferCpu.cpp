@@ -25,7 +25,7 @@ Tri_RenderBufferCreateCPU(TriBuffer& buffer,
 }
 
 TriStatus
-Tri_RenderBuffersCreateCPU(TriRenderBuffers& buffers, int width, int height);
+Tri_RenderBuffersCreateCPU(TriRenderBuffers& buffers, int width, int height)
 {
-    return Tri_RenderBufferCreateCPU(buffers.color, width, height);
+    return Tri_RenderBufferCreateCPU(buffers.color, width, height, TriFormat_Float32_Vec4);
 }

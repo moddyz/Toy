@@ -13,7 +13,7 @@ Tri_FormatGetNumBytes(TriFormat format);
 /// \param size Number of elements in the buffer.
 /// \param format The format / data type layout of each pixel.
 size_t
-Tri_BufferComputeNumBytes(int numElements, TriFormat format);
+Tri_BufferComputeNumBytes(size_t numElements, TriFormat format);
 
 /// Compute the number of bytes required to allocate a buffer with \p numElements.
 ///

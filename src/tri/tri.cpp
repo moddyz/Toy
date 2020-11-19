@@ -5,6 +5,7 @@
 
 #include "internal/context.h"
 #include "internal/renderBufferCpu.h"
+#include "internal/renderBufferCuda.h"
 
 #include <cassert>
 
