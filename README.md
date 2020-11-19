@@ -2,7 +2,7 @@
 
 # Tri
 
-Graphics pipeline in C++ and CUDA.
+**Tri** is a software renderer implementing a fixed rasterization pipeline.
 
 ## Table of Contents
 
@@ -41,9 +41,3 @@ CMake options for configuring this project:
 | `CMAKE_CUDA_COMPILER`   | Path to the nvcc executable.                                           | `OFF`   |
 | `BUILD_TESTING`         | Enable automated testing.                                              | `OFF`   |
 | `BUILD_DOCUMENTATION`   | Build documentation.                                                   | `OFF`   |
-
-## Code structure
-
-[memory](./src/tri/memory) provides the custom heterogenous (CPU/CUDA) `Array` and `Matrix` (2D array) classes commonly used in image making.
-
-[viewport](./src/tri/viewport) provides viewport back-end and user interactions, and finally, [application](./src/tri/application) provides tools for windowing.
