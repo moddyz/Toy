@@ -39,12 +39,12 @@
 /// geoInput.indices.numElements = 3;
 /// geoInput.indices.device = TriDevice::CPU;
 ///
-/// // Set rendering properties.
-/// TriPipelineSetCameraXform(renderer, gm::Mat4f::Identity());
-/// TriPipelineSetProjectionXform(renderer, gm::Mat4f::Identity());
+/// // Set rendering camera state.
+/// TriRendererSetCameraXform(renderer, gm::Mat4f::Identity());
+/// TriRendererSetProjectionXform(renderer, gm::Mat4f::Identity());
 ///
-/// // Execute graphics renderer and draw into frame buffer.
-/// TriPipelineExecute(renderer, geoInput, renderBuffers);
+/// // Execute rendering operation and write into buffers.
+/// TriRendererExecute(renderer, geoInput, renderBuffers);
 ///
 /// // Teardown.
 /// TriRenderBuffersDestroy(renderBuffers);
