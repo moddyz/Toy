@@ -280,3 +280,20 @@ TriRenderBuffersCreate(TriRenderBuffers& buffers,
 /// \retval TriStatus_Success Successful destruction of render buffers.
 TriStatus
 TriRenderBuffersDestroy(TriRenderBuffers& buffers);
+
+/// Create a renderer.
+///
+/// \param renderer The opaque object handle to the renderer.
+/// \param ctx The owning context.S
+///
+/// \retval TriStatus_Success Successful creation of the renderer.
+TriStatus
+TriRendererCreate(TriRenderer& renderer, const TriContext& context);
+
+/// Destroy an existing renderer.
+///
+/// \param renderer The opaque object handle to the renderer.
+///
+/// \retval TriStatus_Success Successful destruction of the renderer.
+TriStatus
+TriRendererDestroy(TriRenderer& renderer);

@@ -71,3 +71,15 @@ TriRenderBuffersDestroy(TriRenderBuffers& buffers)
 {
     return TriStatus_Success;
 }
+
+TriStatus
+TriRendererCreate(TriRenderer& renderer, const TriContext& context)
+{
+    return TriStatus_Success;
+}
+
+TriStatus
+TriRendererDestroy(TriRenderer& renderer)
+{
+    return TriStatus_Success;
+}
