@@ -284,7 +284,7 @@ TriRenderBuffersDestroy(TriRenderBuffers& buffers);
 /// Create a renderer.
 ///
 /// \param renderer The opaque object handle to the renderer.
-/// \param ctx The owning context.S
+/// \param ctx The owning context.
 ///
 /// \retval TriStatus_Success Successful creation of the renderer.
 TriStatus

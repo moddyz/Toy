@@ -20,12 +20,13 @@ public:
     /// Create a new object of type T, specified by a unique identifier.
     ///
     /// \return
+    template< typename ClassT >
     EntryT Create()
     {
         TriId objectId = m_nextId++;
 
         // Allocate a new object and store in container.
-        T* object = new T();
+        T* object = new ClassT();
         std::pair<typename ContainerT::iterator, bool> insertion =
             m_container.insert(EntryT(objectId, object));
 

@@ -42,7 +42,7 @@ TriStatus
 Tri_ContextCreate(TriContext& context, TriDevice device)
 {
     // Allocate new internal context object.
-    typename decltype(s_contexts)::EntryT entry = s_contexts.Create();
+    typename decltype(s_contexts)::EntryT entry = s_contexts.Create< Tri_Context >();
     entry.second->device = device;
 
     // Populate opaque object ID.
