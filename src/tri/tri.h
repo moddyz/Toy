@@ -274,6 +274,30 @@ TriRendererCreate(TriRenderer& renderer, const TriContext& context);
 TriStatus
 TriRendererDestroy(TriRenderer& renderer);
 
+/// Set the camera-to-world transform.
+///
+/// \param renderer The opaque object handle to the renderer.
+/// \param cameraXform The 4-by-4 camera-to-world transform.
+///
+/// \pre \p cameraXform must be 16 floats forming a row-major matrix.
+///
+/// \retval TriStatus_Success Successful state update.
+/// \retval TriStatus_RendererNotFound \p renderer is uninitialized.
+TriStatus
+TriRendererSetCameraXform(TriRenderer& renderer, float* cameraXform);
+
+/// Set the camera projection transform.
+///
+/// \param renderer The opaque object handle to the renderer.
+/// \param projectionXform The 4-by-4 camera projection transform.
+///
+/// \pre \p projectionXform must be 16 floats forming a row-major matrix.
+///
+/// \retval TriStatus_Success Successful state update.
+/// \retval TriStatus_RendererNotFound \p renderer is uninitialized.
+TriStatus
+TriRendererSetProjectionXform(TriRenderer& renderer, float* projectionXform);
+
 /// Create buffers serving as outputs of a rendering operation.
 ///
 /// \note A render buffer allocated with this function must be deallocated
@@ -299,4 +323,3 @@ TriRenderBuffersCreate(TriRenderBuffers& buffers,
 /// \retval TriStatus_Success Successful destruction of render buffers.
 TriStatus
 TriRenderBuffersDestroy(TriRenderBuffers& buffers);
-

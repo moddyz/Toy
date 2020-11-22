@@ -25,3 +25,56 @@ TEST_CASE("TriRendererCreate")
         CHECK(TriContextDestroy(ctx) == TriStatus_Success);
     }
 }
+
+TEST_CASE("TriRendererDestroy_UninitializedRenderer")
+{
+    // Destroy uninitialized renderer.
+    TriRenderer renderer;
+    CHECK(TriRendererDestroy(renderer) == TriStatus_RendererNotFound);
+}
+
+TEST_CASE("TriRendererDestroy")
+{
+    TriContext ctx;
+    CHECK(TriContextCreate(ctx, TriDevice_CPU) == TriStatus_Success);
+
+    TriRenderer renderer;
+    CHECK(TriRendererCreate(renderer, ctx) == TriStatus_Success);
+
+    REQUIRE(TriRendererDestroy(renderer) == TriStatus_Success);
+    REQUIRE(renderer.id == TriId_Uninitialized);
+
+    CHECK(TriContextDestroy(ctx) == TriStatus_Success);
+}
+
+TEST_CASE("TriRendererSetCameraXform")
+{
+    TriContext ctx;
+    CHECK(TriContextCreate(ctx, TriDevice_CPU) == TriStatus_Success);
+
+    TriRenderer renderer;
+    CHECK(TriRendererCreate(renderer, ctx) == TriStatus_Success);
+
+    float cameraXform[16];
+    REQUIRE(TriRendererSetCameraXform(renderer, cameraXform) ==
+            TriStatus_Success);
+
+    CHECK(TriRendererDestroy(renderer) == TriStatus_Success);
+    CHECK(TriContextDestroy(ctx) == TriStatus_Success);
+}
+
+TEST_CASE("TriRendererSetProjectionXform")
+{
+    TriContext ctx;
+    CHECK(TriContextCreate(ctx, TriDevice_CPU) == TriStatus_Success);
+
+    TriRenderer renderer;
+    CHECK(TriRendererCreate(renderer, ctx) == TriStatus_Success);
+
+    float projectionXform[16];
+    REQUIRE(TriRendererSetProjectionXform(renderer, projectionXform) ==
+            TriStatus_Success);
+
+    CHECK(TriRendererDestroy(renderer) == TriStatus_Success);
+    CHECK(TriContextDestroy(ctx) == TriStatus_Success);
+}

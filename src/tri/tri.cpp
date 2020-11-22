@@ -46,6 +46,49 @@ TriContextGetDevice(const TriContext& context, TriDevice& device)
 }
 
 TriStatus
+TriRendererCreate(TriRenderer& renderer, const TriContext& context)
+{
+    Tri_Context* ctx = Tri_ContextGet(context.id);
+    if (ctx == nullptr) {
+        return TriStatus_ContextNotFound;
+    }
+
+    return Tri_RendererCreate(renderer, ctx);
+}
+
+TriStatus
+TriRendererDestroy(TriRenderer& renderer)
+{
+    return Tri_RendererDestroy(renderer);
+}
+
+TriStatus
+TriRendererSetCameraXform(TriRenderer& renderer, float* cameraXform)
+{
+    Tri_Renderer* internalRenderer = Tri_RendererGet(renderer.id);
+    if (internalRenderer == nullptr) {
+        return TriStatus_RendererNotFound;
+    }
+
+    memcpy(&(internalRenderer->cameraXform), cameraXform, sizeof(float) * 16);
+    return TriStatus_Success;
+}
+
+TriStatus
+TriRendererSetProjectionXform(TriRenderer& renderer, float* projectionXform)
+{
+    Tri_Renderer* internalRenderer = Tri_RendererGet(renderer.id);
+    if (internalRenderer == nullptr) {
+        return TriStatus_RendererNotFound;
+    }
+
+    memcpy(&(internalRenderer->projectionXform),
+           projectionXform,
+           sizeof(float) * 16);
+    return TriStatus_Success;
+}
+
+TriStatus
 TriRenderBuffersCreate(TriRenderBuffers& buffers,
                        const TriContext& context,
                        int width,
@@ -63,21 +106,4 @@ TriStatus
 TriRenderBuffersDestroy(TriRenderBuffers& buffers)
 {
     return Tri_RenderBuffersDestroy(buffers);
-}
-
-TriStatus
-TriRendererCreate(TriRenderer& renderer, const TriContext& context)
-{
-    Tri_Context* ctx = Tri_ContextGet(context.id);
-    if (ctx == nullptr) {
-        return TriStatus_ContextNotFound;
-    }
-
-    return Tri_RendererCreate(renderer, ctx);
-}
-
-TriStatus
-TriRendererDestroy(TriRenderer& renderer)
-{
-    return Tri_RendererDestroy(renderer);
 }

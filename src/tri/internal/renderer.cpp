@@ -36,6 +36,6 @@ Tri_RendererDestroy(TriRenderer& renderer)
         renderer = TriRenderer();
         return TriStatus_Success;
     } else {
-        return TriStatus_ContextNotFound;
+        return TriStatus_RendererNotFound;
     }
 }

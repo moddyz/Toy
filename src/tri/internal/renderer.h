@@ -16,7 +16,7 @@ struct Tri_Renderer
 
     // Rendering state.
     gm::Mat4f cameraXform{ gm::Mat4f::Identity() };
-    gm::Mat4f perspectiveXform{ gm::Mat4f::Identity() };
+    gm::Mat4f projectionXform{ gm::Mat4f::Identity() };
 };
 
 /// Device agnostic method for creating a renderer.
