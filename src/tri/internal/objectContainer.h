@@ -20,7 +20,7 @@ public:
     /// Create a new object of type T, specified by a unique identifier.
     ///
     /// \return
-    template< typename ClassT >
+    template<typename ClassT>
     EntryT Create()
     {
         TriId objectId = m_nextId++;

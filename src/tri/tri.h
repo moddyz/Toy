@@ -29,10 +29,14 @@
 /// // Setup geometry input.
 /// TriGeometryInput geoInput;
 ///
-/// geoInput.positions.ptr = static_cast< void* >( &positions );
-/// geoInput.positions.format = TriFormat_Float32_Vec3;
-/// geoInput.positions.numElements = 3;
-/// geoInput.positions.device = TriDevice::CPU;
+/// TriBufferMap(
+///     geoInput.positions,
+///     ctx,
+///     static_cast< void* >( &positions ),
+///     TriFormat_Float32_Vec3,
+///     3,
+///     TriDevice_CPU
+/// );
 ///
 /// geoInput.indices.ptr = static_cast< void* >( &indices );
 /// geoInput.indices.format = TriFormat_Uint32;
@@ -165,24 +169,10 @@ struct TriRenderer
 
 /// \struct TriBuffer
 ///
-/// A information about a block of memory.
-///
-/// This is used to transport array-like data for consumption by the graphics
-/// renderer.
+/// A opaque representation about a block of memory tracked by the system.
 struct TriBuffer
 {
-public:
-    /// The format of the data.
-    TriFormat format{ TriFormat_Uninitialized };
-
-    /// The current device where the buffer memory resides.
-    TriDevice device{ TriDevice_Uninitialized };
-
-    /// Number of elements in the buffer.
-    size_t numElements{ 0 };
-
-    /// Pointer to the starting address of the buffer.
-    void* ptr{ nullptr };
+    TriId id{ TriId_Uninitialized };
 };
 
 /// \struct TriRenderBuffers
@@ -257,13 +247,13 @@ TriContextGetDevice(const TriContext& context, TriDevice& device);
 
 /// Create buffers serving as outputs of a rendering operation.
 ///
-/// \note A frame buffer allocated with this function must be deallocated
-/// via \ref TriFrameBufferDestroy
+/// \note A render buffer allocated with this function must be deallocated
+/// via \ref TriRenderBufferDestroy
 ///
 /// \param buffers The render buffers to allocate.
 /// \param context The associated context.
-/// \param width Pixel width of the frame buffer.
-/// \param height Pixel height of the frame buffer.
+/// \param width Pixel width of the render buffer.
+/// \param height Pixel height of the render buffer.
 ///
 /// \retval TriStatus_Success Successful allocation of render buffers.
 /// \retval TriStatus_ObjectNotFound \p context does not exist.
@@ -273,7 +263,7 @@ TriRenderBuffersCreate(TriRenderBuffers& buffers,
                        int width,
                        int height);
 
-/// Destroy an existing frame buffer.
+/// Destroy an existing render buffer.
 ///
 /// \param buffers The render buffers to deallocate.
 ///

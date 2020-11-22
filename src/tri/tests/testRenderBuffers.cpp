@@ -5,13 +5,10 @@
 TEST_CASE("TriRenderBuffers")
 {
     TriRenderBuffers buffers;
-    REQUIRE(buffers.color.ptr == nullptr);
-    REQUIRE(buffers.color.numElements == 0);
-    REQUIRE(buffers.color.format == TriFormat_Uninitialized);
-    REQUIRE(buffers.color.device == TriDevice_Uninitialized);
+    REQUIRE(buffers.color.id == TriId_Uninitialized);
 }
 
-TEST_CASE("TriRenderBuffersCreate")
+TEST_CASE("TriRenderBuffers_Create_Destroy")
 {
     for (int deviceInt = TriDevice_CPU; deviceInt < TriDevice_Count;
          ++deviceInt) {
@@ -20,16 +17,16 @@ TEST_CASE("TriRenderBuffersCreate")
         TriContext ctx;
         CHECK(TriContextCreate(ctx, device) == TriStatus_Success);
 
+        // Test creation.
         TriRenderBuffers buffers;
         REQUIRE(TriRenderBuffersCreate(buffers, ctx, 640, 480) ==
                 TriStatus_Success);
+        REQUIRE(buffers.color.id != TriId_Uninitialized);
 
-        REQUIRE(buffers.color.ptr != nullptr);
-        REQUIRE(buffers.color.numElements == 640 * 480);
-        REQUIRE(buffers.color.format == TriFormat_Float32_Vec4);
-        REQUIRE(buffers.color.device == device);
+        // Test destruction.
+        REQUIRE(TriRenderBuffersDestroy(buffers) == TriStatus_Success);
+        REQUIRE(buffers.color.id == TriId_Uninitialized);
 
-        CHECK(TriRenderBuffersDestroy(buffers) == TriStatus_Success);
         CHECK(TriContextDestroy(ctx) == TriStatus_Success);
     }
 }

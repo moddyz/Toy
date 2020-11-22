@@ -2,9 +2,11 @@
 #include "bufferUtils.h"
 
 #include <cuda_runtime.h>
+#include <cassert>
 
 TriStatus
 Tri_RenderBufferCreateCUDA(TriBuffer& buffer,
+                           const Tri_Context* context,
                            int width,
                            int height,
                            TriFormat format)
@@ -14,11 +16,8 @@ Tri_RenderBufferCreateCUDA(TriBuffer& buffer,
     void* bufferPtr{ nullptr };
     cudaError_t err = cudaMalloc(&bufferPtr, numBytes);
     if (err == cudaSuccess) {
-        // Populate cpu buffer info.
-        buffer.ptr = bufferPtr;
-        buffer.numElements = numElements;
-        buffer.device = TriDevice_CUDA;
-        buffer.format = format;
+        Tri_BufferCreate(
+            buffer, context, numElements, format, TriDevice_CUDA, bufferPtr);
         return TriStatus_Success;
     } else {
         return TriStatus_OutOfMemory;
@@ -26,8 +25,19 @@ Tri_RenderBufferCreateCUDA(TriBuffer& buffer,
 }
 
 TriStatus
-Tri_RenderBuffersCreateCUDA(TriRenderBuffers& buffers, int width, int height)
+Tri_RenderBufferDestroyCUDA(TriBuffer& buffer)
 {
-    return Tri_RenderBufferCreateCUDA(
-        buffers.color, width, height, TriFormat_Float32_Vec4);
+    Tri_Buffer* internalBuffer = Tri_BufferGet(buffer.id);
+    if (internalBuffer == nullptr) {
+        return TriStatus_ObjectNotFound;
+    }
+
+    // Deallocate memory.
+    assert(internalBuffer->ptr != nullptr);
+    cudaFree(internalBuffer->ptr);
+
+    // Unregister internal buffer information.
+    Tri_BufferDelete(buffer);
+
+    return TriStatus_Success;
 }

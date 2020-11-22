@@ -22,3 +22,20 @@ Tri_RendererCreate(TriRenderer& renderer, const Tri_Context* context)
 
     return TriStatus_Success;
 }
+
+Tri_Renderer*
+Tri_RendererGet(TriId id)
+{
+    return s_renderers.Get(id);
+}
+
+TriStatus
+Tri_RendererDestroy(TriRenderer& renderer)
+{
+    if (s_renderers.Delete(renderer.id)) {
+        renderer = TriRenderer();
+        return TriStatus_Success;
+    } else {
+        return TriStatus_ObjectNotFound;
+    }
+}

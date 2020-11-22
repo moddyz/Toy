@@ -1,13 +1,20 @@
 #pragma once
 
+// Internal details for CPU frame buffer management.
+
 #include <tri/tri.h>
 
-// Internal details for CPU frame buffer management.
+// Forward declaration.
+class Tri_Context;
 
 // Allocate a single CPU render buffer.
 TriStatus
-Tri_RenderBufferCreateCPU(TriBuffer& buffer, int width, int height, TriFormat format);
+Tri_RenderBufferCreateCPU(TriBuffer& buffer,
+                          const Tri_Context* context,
+                          int width,
+                          int height,
+                          TriFormat format);
 
-// Allocate CPU render buffers.
+// Deallocate a single CPU render buffer.
 TriStatus
-Tri_RenderBuffersCreateCPU(TriRenderBuffers& buffers, int width, int height);
+Tri_RenderBufferDestroyCPU(TriBuffer& buffer);

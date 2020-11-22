@@ -1,13 +1,20 @@
 #pragma once
 
+// Internal details for CUDA frame buffer management.
+
 #include <tri/tri.h>
 
-// Internal details for CUDA frame buffer management.
+// Forward declaration.
+class Tri_Context;
 
 // Allocate a single CUDA render buffer.
 TriStatus
-Tri_RenderBufferCreateCUDA(TriBuffer& buffer, int width, int height, TriFormat format);
+Tri_RenderBufferCreateCUDA(TriBuffer& buffer,
+                           const Tri_Context* context,
+                           int width,
+                           int height,
+                           TriFormat format);
 
-// Allocate CUDA render buffers.
+// Deallocate a single CUDA render buffer.
 TriStatus
-Tri_RenderBuffersCreateCUDA(TriRenderBuffers& buffers, int width, int height);
+Tri_RenderBufferDestroyCUDA(TriBuffer& buffer);

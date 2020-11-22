@@ -2,6 +2,8 @@
 
 #include <tri/tri.h>
 
+#include <gm/types/mat4f.h>
+
 class Tri_Context;
 
 /// \class Tri_Renderer
@@ -11,6 +13,10 @@ struct Tri_Renderer
 {
     // Associated context.
     const Tri_Context* context{ nullptr };
+
+    // Rendering state.
+    gm::Mat4f cameraXform{ gm::Mat4f::Identity() };
+    gm::Mat4f perspectiveXform{ gm::Mat4f::Identity() };
 };
 
 /// Device agnostic method for creating a renderer.
@@ -21,3 +27,11 @@ struct Tri_Renderer
 /// \retval TriStatus_Success Successful creation of the renderer.
 TriStatus
 Tri_RendererCreate(TriRenderer& renderer, const Tri_Context* context);
+
+/// Query the internal representation.
+Tri_Renderer*
+Tri_RendererGet(TriId id);
+
+/// Delete a renderer.
+TriStatus
+Tri_RendererDestroy(TriRenderer& renderer);

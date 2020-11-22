@@ -5,8 +5,7 @@
 
 #include "internal/context.h"
 #include "internal/renderer.h"
-#include "internal/renderBufferCpu.h"
-#include "internal/renderBufferCuda.h"
+#include "internal/renderBuffers.h"
 
 #include <cassert>
 
@@ -57,18 +56,13 @@ TriRenderBuffersCreate(TriRenderBuffers& buffers,
         return TriStatus_ObjectNotFound;
     }
 
-    if (ctx->device == TriDevice_CPU) {
-        return Tri_RenderBuffersCreateCPU(buffers, width, height);
-    } else {
-        assert(ctx->device == TriDevice_CUDA);
-        return Tri_RenderBuffersCreateCUDA(buffers, width, height);
-    }
+    return Tri_RenderBuffersCreate(buffers, ctx, width, height);
 }
 
 TriStatus
 TriRenderBuffersDestroy(TriRenderBuffers& buffers)
 {
-    return TriStatus_Success;
+    return Tri_RenderBuffersDestroy(buffers);
 }
 
 TriStatus
@@ -79,11 +73,11 @@ TriRendererCreate(TriRenderer& renderer, const TriContext& context)
         return TriStatus_ObjectNotFound;
     }
 
-    return Tri_RendererCreate( renderer, ctx );
+    return Tri_RendererCreate(renderer, ctx);
 }
 
 TriStatus
 TriRendererDestroy(TriRenderer& renderer)
 {
-    return TriStatus_Success;
+    return Tri_RendererDestroy(renderer);
 }

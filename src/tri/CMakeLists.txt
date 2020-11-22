@@ -9,6 +9,7 @@ cpp_library(tri
         ${CPPFILES}
     LIBRARIES
         CUDA::cudart
+        gm
 )
 
 if (BUILD_TESTING)
