@@ -47,7 +47,7 @@ Tri_BufferDelete(TriBuffer& buffer)
         buffer = TriBuffer();
         return TriStatus_Success;
     } else {
-        return TriStatus_ObjectNotFound;
+        return TriStatus_ContextNotFound;
     }
 }
 

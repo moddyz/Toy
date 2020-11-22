@@ -81,9 +81,11 @@ enum TriStatus
     /// environment.
     TriStatus_UnsupportedDevice = 0,
 
-    /// This error is returned from query APIs where the object associated
-    /// with the opaque object ID cannot be found.
-    TriStatus_ObjectNotFound,
+    /// These error statuses are returned from query APIs where the
+    /// object associated with the ID cannot be found.
+    TriStatus_ContextNotFound,
+    TriStatus_RendererNotFound,
+    TriStatus_BufferNotFound,
 
     /// This error is returned when querying a property not associated with
     /// the object type.
@@ -121,10 +123,19 @@ enum TriFormat
     TriFormat_Count
 };
 
+/// \class TriMemoryStats
+///
+/// Query the total memory usage for a particular context.
+struct TriMemoryStats
+{
+    uint32_t numMappedBuffers{ 0 };
+    uint32_t numBytes{ 0 };
+};
+
 /// \struct TriContext
 ///
-/// Root-level opaque object, specifying the device and lifetime of
-/// internal memory structures.
+/// Root-level opaque object, specifying the device and  allocated
+///
 ///
 /// After the context is initialized with specified properties, those
 /// properties are \em immutable for the lifetime of the context object.
@@ -215,8 +226,7 @@ TriContextCreatePreferred(TriContext& context);
 ///
 /// \param requestedDevice Requested device for the context.
 ///
-/// \retval TriStatus_Success Successful creation of a context with requested
-/// properties.
+/// \retval TriStatus_Success Successful creation.
 /// \retval TriStatus_UnsupportedDevice Error status when the requested device
 /// is not supported by the runtime environment.
 TriStatus
@@ -229,9 +239,8 @@ TriContextCreate(TriContext& context, TriDevice requestedDevice);
 ///
 /// \param context The context object to destroy.
 ///
-/// \retval TriStatus_Success Successful creation of a context with requested
-/// properties.
-/// \retval TriStatus_ObjectNotFound \p context does not exist.
+/// \retval TriStatus_Success Successful destruction.
+/// \retval TriStatus_ContextNotFound \p context does not exist.
 TriStatus
 TriContextDestroy(TriContext& context);
 
@@ -240,10 +249,29 @@ TriContextDestroy(TriContext& context);
 /// \param context The context to query the device for.
 /// \param device Output device variable.
 ///
-/// \retval TriStatus_Success Successful device query.
-/// \retval TriStatus_ObjectNotFound \p context does not exist.
+/// \retval TriStatus_Success Successful query.
+/// \retval TriStatus_ContextNotFound \p context does not exist.
 TriStatus
 TriContextGetDevice(const TriContext& context, TriDevice& device);
+
+/// Create a renderer.
+///
+/// \param renderer The opaque object handle to the renderer.
+/// \param context The owning context.
+///
+/// \retval TriStatus_Success Successful creation of the renderer.
+/// \retval TriStatus_ContextNotFound \p context does not exist.
+TriStatus
+TriRendererCreate(TriRenderer& renderer, const TriContext& context);
+
+/// Destroy an existing renderer.
+///
+/// \param renderer The opaque object handle to the renderer.
+///
+/// \retval TriStatus_Success Successful destruction of the renderer.
+/// \retval TriStatus_RendererNotFound \p renderer is uninitialized.
+TriStatus
+TriRendererDestroy(TriRenderer& renderer);
 
 /// Create buffers serving as outputs of a rendering operation.
 ///
@@ -256,7 +284,7 @@ TriContextGetDevice(const TriContext& context, TriDevice& device);
 /// \param height Pixel height of the render buffer.
 ///
 /// \retval TriStatus_Success Successful allocation of render buffers.
-/// \retval TriStatus_ObjectNotFound \p context does not exist.
+/// \retval TriStatus_ContextNotFound \p context does not exist.
 TriStatus
 TriRenderBuffersCreate(TriRenderBuffers& buffers,
                        const TriContext& context,
@@ -271,19 +299,3 @@ TriRenderBuffersCreate(TriRenderBuffers& buffers,
 TriStatus
 TriRenderBuffersDestroy(TriRenderBuffers& buffers);
 
-/// Create a renderer.
-///
-/// \param renderer The opaque object handle to the renderer.
-/// \param ctx The owning context.
-///
-/// \retval TriStatus_Success Successful creation of the renderer.
-TriStatus
-TriRendererCreate(TriRenderer& renderer, const TriContext& context);
-
-/// Destroy an existing renderer.
-///
-/// \param renderer The opaque object handle to the renderer.
-///
-/// \retval TriStatus_Success Successful destruction of the renderer.
-TriStatus
-TriRendererDestroy(TriRenderer& renderer);

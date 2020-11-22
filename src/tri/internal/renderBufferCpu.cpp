@@ -30,12 +30,12 @@ Tri_RenderBufferDestroyCPU(TriBuffer& buffer)
 {
     Tri_Buffer* internalBuffer = Tri_BufferGet(buffer.id);
     if (internalBuffer == nullptr) {
-        return TriStatus_ObjectNotFound;
+        return TriStatus_ContextNotFound;
     }
 
     // Deallocate memory.
     assert(internalBuffer->ptr != nullptr);
-    delete internalBuffer->ptr;
+    free(internalBuffer->ptr);
 
     // Unregister internal buffer information.
     Tri_BufferDelete(buffer);

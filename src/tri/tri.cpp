@@ -38,7 +38,7 @@ TriContextGetDevice(const TriContext& context, TriDevice& device)
 {
     Tri_Context* ctx = Tri_ContextGet(context.id);
     if (ctx == nullptr) {
-        return TriStatus_ObjectNotFound;
+        return TriStatus_ContextNotFound;
     }
 
     device = ctx->device;
@@ -53,7 +53,7 @@ TriRenderBuffersCreate(TriRenderBuffers& buffers,
 {
     Tri_Context* ctx = Tri_ContextGet(context.id);
     if (ctx == nullptr) {
-        return TriStatus_ObjectNotFound;
+        return TriStatus_ContextNotFound;
     }
 
     return Tri_RenderBuffersCreate(buffers, ctx, width, height);
@@ -70,7 +70,7 @@ TriRendererCreate(TriRenderer& renderer, const TriContext& context)
 {
     Tri_Context* ctx = Tri_ContextGet(context.id);
     if (ctx == nullptr) {
-        return TriStatus_ObjectNotFound;
+        return TriStatus_ContextNotFound;
     }
 
     return Tri_RendererCreate(renderer, ctx);

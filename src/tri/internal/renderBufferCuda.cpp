@@ -29,7 +29,7 @@ Tri_RenderBufferDestroyCUDA(TriBuffer& buffer)
 {
     Tri_Buffer* internalBuffer = Tri_BufferGet(buffer.id);
     if (internalBuffer == nullptr) {
-        return TriStatus_ObjectNotFound;
+        return TriStatus_ContextNotFound;
     }
 
     // Deallocate memory.

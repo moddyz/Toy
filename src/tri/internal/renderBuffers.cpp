@@ -27,7 +27,7 @@ Tri_RenderBuffersDestroy(TriRenderBuffers& buffers)
 {
     Tri_Buffer* internalBuffer = Tri_BufferGet(buffers.color.id);
     if (internalBuffer == nullptr) {
-        return TriStatus_ObjectNotFound;
+        return TriStatus_ContextNotFound;
     }
 
     if (internalBuffer->device == TriDevice_CPU) {

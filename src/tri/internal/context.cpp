@@ -59,7 +59,7 @@ Tri_ContextDestroy(TriContext& context)
         context = TriContext();
         return TriStatus_Success;
     } else {
-        return TriStatus_ObjectNotFound;
+        return TriStatus_ContextNotFound;
     }
 }
 
