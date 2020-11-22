@@ -14,13 +14,18 @@
 /// TriContext ctx;
 /// TriCreateContextPreferred(ctx);
 ///
-/// // Allocate render buffers.
-/// TriRenderBuffers renderBuffers;
-/// TriRenderBuffersCreate(renderBuffers, ctx, 640, 480);
-///
-/// // Allocate renderer.
+/// // Create renderer.
 /// TriRenderer renderer;
 /// TriRendererCreate(ctx, renderer);
+///
+/// // Set camera and viewport state.
+/// TriRendererSetCameraXform(renderer, gm::Mat4f::Identity());
+/// TriRendererSetProjectionXform(renderer, gm::Mat4f::Identity());
+/// TriRendererSetViewportSize(renderer, 640, 480);
+///
+/// // Allocate render buffers.
+/// TriBufferSet renderBuffers;
+/// TriRenderBuffersCreate(renderBuffers, renderer);
 ///
 /// // Define vertex and indices.
 /// gm::Vec3f positions[3] = { ... };
@@ -42,10 +47,6 @@
 /// geoInput.indices.format = TriFormat_Uint32;
 /// geoInput.indices.numElements = 3;
 /// geoInput.indices.device = TriDevice::CPU;
-///
-/// // Set rendering camera state.
-/// TriRendererSetCameraXform(renderer, gm::Mat4f::Identity());
-/// TriRendererSetProjectionXform(renderer, gm::Mat4f::Identity());
 ///
 /// // Execute rendering operation and write into buffers.
 /// TriRendererExecute(renderer, geoInput, renderBuffers);

@@ -2,6 +2,8 @@
 
 #include <tri/tri.h>
 
+#include <gm/types/vec3i.h>
+
 // Forward declaration.
 class Tri_Context;
 
@@ -10,8 +12,8 @@ class Tri_Context;
 /// Internal buffer representation.
 struct Tri_Buffer
 {
-    /// Number of elements in the buffer.
-    size_t numElements{ 0 };
+    /// Dimensions of the buffer elements.
+    gm::Vec3i dims;
 
     /// The data layout of each element in the buffer.
     TriFormat format{ TriFormat_Uninitialized };
@@ -33,7 +35,7 @@ struct Tri_Buffer
 Tri_Buffer*
 Tri_BufferCreate(TriBuffer& buffer,
                  const Tri_Context* context,
-                 size_t numElements,
+                 const gm::Vec3i& dims,
                  TriFormat format,
                  TriDevice device,
                  void* bufferPtr);
@@ -58,12 +60,4 @@ Tri_FormatGetNumBytes(TriFormat format);
 /// \param size Number of elements in the buffer.
 /// \param format The format / data type layout of each pixel.
 size_t
-Tri_BufferComputeNumBytes(size_t numElements, TriFormat format);
-
-/// Compute the number of bytes required to allocate a buffer with \p
-/// numElements.
-///
-/// \param width Pixel width.
-/// \param height Pixel height.
-size_t
-Tri_Buffer2DComputeNumBytes(int width, int height, TriFormat format);
+Tri_BufferComputeNumBytes(const gm::Vec3i& dims, TriFormat format);

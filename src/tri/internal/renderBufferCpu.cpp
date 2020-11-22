@@ -13,12 +13,12 @@ Tri_RenderBufferCreateCPU(TriBuffer& buffer,
 {
     assert(buffer.id == TriId_Uninitialized);
 
-    size_t numElements = width * height;
-    size_t numBytes = Tri_BufferComputeNumBytes(numElements, format);
+    gm::Vec3i dims(width, height, 1);
+    size_t numBytes = Tri_BufferComputeNumBytes(dims, format);
     void* bufferPtr = malloc(numBytes);
     if (bufferPtr != nullptr) {
         Tri_BufferCreate(
-            buffer, context, numElements, format, TriDevice_CPU, bufferPtr);
+            buffer, context, dims, format, TriDevice_CPU, bufferPtr);
         return TriStatus_Success;
     } else {
         return TriStatus_OutOfMemory;

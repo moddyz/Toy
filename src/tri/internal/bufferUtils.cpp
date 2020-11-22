@@ -13,7 +13,7 @@ static Tri_ObjectContainer<Tri_Buffer> s_buffers;
 Tri_Buffer*
 Tri_BufferCreate(TriBuffer& buffer,
                  const Tri_Context* context,
-                 size_t numElements,
+                 const gm::Vec3i& dims,
                  TriFormat format,
                  TriDevice device,
                  void* bufferPtr)
@@ -22,11 +22,11 @@ Tri_BufferCreate(TriBuffer& buffer,
 
     // Populate internal buffer info.
     Tri_Buffer* internalBuffer = entry.second;
-    internalBuffer->context = context;
-    internalBuffer->numElements = numElements;
+    internalBuffer->dims = dims;
     internalBuffer->format = format;
     internalBuffer->device = device;
     internalBuffer->ptr = bufferPtr;
+    internalBuffer->context = context;
 
     // Populate API buffer info.
     buffer.id = entry.first;
@@ -77,13 +77,7 @@ Tri_FormatGetNumBytes(TriFormat format)
 }
 
 size_t
-Tri_BufferComputeNumBytes(size_t numElements, TriFormat format)
+Tri_BufferComputeNumBytes(const gm::Vec3i& dims, TriFormat format)
 {
-    return numElements * Tri_FormatGetNumBytes(format);
-}
-
-size_t
-Tri_Buffer2DComputeNumBytes(int width, int height, TriFormat format)
-{
-    return Tri_BufferComputeNumBytes(width * height, format);
+    return dims.X() * dims.Y() * dims.Z() * Tri_FormatGetNumBytes(format);
 }

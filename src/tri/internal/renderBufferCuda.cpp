@@ -11,13 +11,13 @@ Tri_RenderBufferCreateCUDA(TriBuffer& buffer,
                            int height,
                            TriFormat format)
 {
-    size_t numElements = width * height;
-    size_t numBytes = Tri_BufferComputeNumBytes(numElements, format);
+    gm::Vec3i dims(width, height, 1);
+    size_t numBytes = Tri_BufferComputeNumBytes(dims, format);
     void* bufferPtr{ nullptr };
     cudaError_t err = cudaMalloc(&bufferPtr, numBytes);
     if (err == cudaSuccess) {
         Tri_BufferCreate(
-            buffer, context, numElements, format, TriDevice_CUDA, bufferPtr);
+            buffer, context, dims, format, TriDevice_CUDA, bufferPtr);
         return TriStatus_Success;
     } else {
         return TriStatus_OutOfMemory;
