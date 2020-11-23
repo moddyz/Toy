@@ -124,15 +124,6 @@ enum TriFormat
     TriFormat_Count
 };
 
-/// \class TriMemoryStats
-///
-/// Query the total memory usage for a particular context.
-struct TriMemoryStats
-{
-    uint32_t numMappedBuffers{ 0 };
-    uint32_t numBytes{ 0 };
-};
-
 /// \struct TriContext
 ///
 /// Root-level opaque object, specifying the device and  allocated
