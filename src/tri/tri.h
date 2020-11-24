@@ -276,7 +276,7 @@ TriRendererDestroy(TriRenderer& renderer);
 TriStatus
 TriRendererSetCameraXform(TriRenderer& renderer, float* cameraXform);
 
-/// Set-up the renderer with a perspective projection transformation.
+/// Set-up the renderer camera with a perspective projection transformation.
 ///
 /// \param renderer The opaque object handle to the renderer.
 /// \param verticalFov Vertical angle in degrees of the camera eye.
@@ -292,6 +292,26 @@ TriRendererPerspective(TriRenderer& renderer,
                        float aspectRatio,
                        float near,
                        float far);
+
+/// Set-up the renderer viewport transformation.
+///
+/// The viewport transformation maps from NDC (normalized device coordinates)
+/// space into the a rectangular region in window space (pixel units).
+///
+/// \param renderer The opaque object handle to the renderer.
+/// \param offsetX  Bottom left corner x-coord of the rectangular region.
+/// \param offsetY  Bottom left corner y-coord of the rectangular region.
+/// \param width Width of the rectangular region.
+/// \param height Height of the viewport.
+///
+/// \retval TriStatus_Success Successful state update.
+/// \retval TriStatus_RendererNotFound \p renderer is uninitialized.
+TriStatus
+TriRendererViewport(TriRenderer& renderer,
+                    float offsetX,
+                    float offsetY,
+                    float width,
+                    float height);
 
 /// Create buffers serving as outputs of a rendering operation.
 ///

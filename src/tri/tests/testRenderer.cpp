@@ -77,3 +77,17 @@ TEST_CASE("TriRendererPerspective")
     CHECK(TriRendererDestroy(renderer) == TriStatus_Success);
     CHECK(TriContextDestroy(ctx) == TriStatus_Success);
 }
+
+TEST_CASE("TriRendererViewport")
+{
+    TriContext ctx;
+    CHECK(TriContextCreate(ctx, TriDevice_CPU) == TriStatus_Success);
+
+    TriRenderer renderer;
+    CHECK(TriRendererCreate(renderer, ctx) == TriStatus_Success);
+
+    REQUIRE(TriRendererViewport(renderer, 0, 0, 640, 480) == TriStatus_Success);
+
+    CHECK(TriRendererDestroy(renderer) == TriStatus_Success);
+    CHECK(TriContextDestroy(ctx) == TriStatus_Success);
+}

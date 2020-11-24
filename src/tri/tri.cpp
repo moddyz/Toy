@@ -8,6 +8,7 @@
 #include "internal/renderBuffers.h"
 
 #include <gm/functions/perspectiveProjection.h>
+#include <gm/functions/viewportTransform.h>
 
 #include <cassert>
 
@@ -89,12 +90,28 @@ TriRendererPerspective(TriRenderer& renderer,
     }
 
     // Compute perspective projection.
-    gm::Mat4f projectionXform =
+    internalRenderer->projectionXform =
         gm::PerspectiveProjection(verticalFov, aspectRatio, near, far);
 
-    memcpy(&(internalRenderer->projectionXform),
-           &projectionXform,
-           sizeof(float) * 16);
+    return TriStatus_Success;
+}
+
+TriStatus
+TriRendererViewport(TriRenderer& renderer,
+                    float offsetX,
+                    float offsetY,
+                    float width,
+                    float height)
+{
+    Tri_Renderer* internalRenderer = Tri_RendererGet(renderer.id);
+    if (internalRenderer == nullptr) {
+        return TriStatus_RendererNotFound;
+    }
+
+    // Compute viewport transformation.
+    internalRenderer->viewportXform = gm::ViewportTransform(
+        gm::Vec2f(width, height), gm::Vec2f(offsetX, offsetY));
+
     return TriStatus_Success;
 }
 
