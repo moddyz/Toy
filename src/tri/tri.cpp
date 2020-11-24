@@ -7,6 +7,8 @@
 #include "internal/renderer.h"
 #include "internal/renderBuffers.h"
 
+#include <gm/functions/perspectiveProjection.h>
+
 #include <cassert>
 
 TriStatus
@@ -75,15 +77,23 @@ TriRendererSetCameraXform(TriRenderer& renderer, float* cameraXform)
 }
 
 TriStatus
-TriRendererSetProjectionXform(TriRenderer& renderer, float* projectionXform)
+TriRendererPerspective(TriRenderer& renderer,
+                       float verticalFov,
+                       float aspectRatio,
+                       float near,
+                       float far)
 {
     Tri_Renderer* internalRenderer = Tri_RendererGet(renderer.id);
     if (internalRenderer == nullptr) {
         return TriStatus_RendererNotFound;
     }
 
+    // Compute perspective projection.
+    gm::Mat4f projectionXform =
+        gm::PerspectiveProjection(verticalFov, aspectRatio, near, far);
+
     memcpy(&(internalRenderer->projectionXform),
-           projectionXform,
+           &projectionXform,
            sizeof(float) * 16);
     return TriStatus_Success;
 }

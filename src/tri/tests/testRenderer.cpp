@@ -63,7 +63,7 @@ TEST_CASE("TriRendererSetCameraXform")
     CHECK(TriContextDestroy(ctx) == TriStatus_Success);
 }
 
-TEST_CASE("TriRendererSetProjectionXform")
+TEST_CASE("TriRendererPerspective")
 {
     TriContext ctx;
     CHECK(TriContextCreate(ctx, TriDevice_CPU) == TriStatus_Success);
@@ -71,8 +71,7 @@ TEST_CASE("TriRendererSetProjectionXform")
     TriRenderer renderer;
     CHECK(TriRendererCreate(renderer, ctx) == TriStatus_Success);
 
-    float projectionXform[16];
-    REQUIRE(TriRendererSetProjectionXform(renderer, projectionXform) ==
+    REQUIRE(TriRendererPerspective(renderer, 90, 1.5, 0.1, 1000.0) ==
             TriStatus_Success);
 
     CHECK(TriRendererDestroy(renderer) == TriStatus_Success);

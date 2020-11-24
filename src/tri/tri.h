@@ -191,7 +191,6 @@ struct TriRenderBuffers
 /// Geometry data serving as input to the graphics renderer.
 struct TriGeometryInput
 {
-public:
     TriBuffer positions;
     TriBuffer indices;
 };
@@ -277,17 +276,22 @@ TriRendererDestroy(TriRenderer& renderer);
 TriStatus
 TriRendererSetCameraXform(TriRenderer& renderer, float* cameraXform);
 
-/// Set the camera projection transform.
+/// Set-up the renderer with a perspective projection transformation.
 ///
 /// \param renderer The opaque object handle to the renderer.
-/// \param projectionXform The 4-by-4 camera projection transform.
-///
-/// \pre \p projectionXform must be 16 floats forming a row-major matrix.
+/// \param verticalFov Vertical angle in degrees of the camera eye.
+/// \param aspectRatio The ratio of the width to the height of viewing plane.
+/// \param near Distance from the camera eye to the \em near clipping plane.
+/// \param far Distance from the camera eye to the \em far clipping plane.
 ///
 /// \retval TriStatus_Success Successful state update.
 /// \retval TriStatus_RendererNotFound \p renderer is uninitialized.
 TriStatus
-TriRendererSetProjectionXform(TriRenderer& renderer, float* projectionXform);
+TriRendererPerspective(TriRenderer& renderer,
+                       float verticalFov,
+                       float aspectRatio,
+                       float near,
+                       float far);
 
 /// Create buffers serving as outputs of a rendering operation.
 ///
