@@ -23,9 +23,9 @@
 /// TriRendererSetProjectionXform(renderer, gm::Mat4f::Identity());
 /// TriRendererSetViewportSize(renderer, 640, 480);
 ///
-/// // Allocate render buffers.
-/// TriBufferSet renderBuffers;
-/// TriRenderBuffersCreate(renderBuffers, renderer);
+/// // Create render target.
+/// TriRenderTarget target;
+/// TriRenderTargetCreate(target, ctx, 640, 480);
 ///
 /// // Define vertex and indices.
 /// gm::Vec3f positions[3] = { ... };
@@ -43,22 +43,27 @@
 ///     TriDevice_CPU
 /// );
 ///
-/// geoInput.indices.ptr = static_cast< void* >( &indices );
-/// geoInput.indices.format = TriFormat_Uint32;
-/// geoInput.indices.numElements = 3;
-/// geoInput.indices.device = TriDevice::CPU;
+/// TriBufferMap(
+///     geoInput.indices,
+///     ctx,
+///     static_cast< void* >( &indices ),
+///     TriFormat_Uint32,
+///     3,
+///     TriDevice_CPU
+/// );
 ///
 /// // Execute rendering operation and write into buffers.
-/// TriRendererExecute(renderer, geoInput, renderBuffers);
+/// TriRendererExecute(renderer, geoInput, target);
 ///
 /// // Teardown.
-/// TriRenderBuffersDestroy(renderBuffers);
+/// TriRenderTargetDestroy(target);
 /// TriRendererDestroy(renderer);
 /// TriContextDestroy(ctx);
 /// \endcode
 
 #include <stdint.h>
 #include <stddef.h>
+#include <string>
 
 /// \typedef TriId
 ///
@@ -69,6 +74,11 @@ using TriId = int32_t;
 ///
 /// Constant variable of an invalid object ID.
 constexpr TriId TriId_Uninitialized = -1;
+
+/// \typedef TriToken
+///
+/// Storage of a sequence of characters.
+using TriToken = std::string;
 
 /// \enum TriStatus
 ///
@@ -86,6 +96,7 @@ enum TriStatus
     /// object associated with the ID cannot be found.
     TriStatus_ContextNotFound,
     TriStatus_RendererNotFound,
+    TriStatus_RenderTargetNotFound,
     TriStatus_BufferNotFound,
 
     /// This error is returned when querying a property not associated with
@@ -178,12 +189,12 @@ struct TriBuffer
     TriId id{ TriId_Uninitialized };
 };
 
-/// \struct TriRenderBuffers
+/// \struct TriRenderTarget
 ///
-/// A collection of buffers serving as outputs of a rendering operation.
-struct TriRenderBuffers
+/// An opaque representation of the outputs of a render operation.
+struct TriRenderTarget
 {
-    TriBuffer color;
+    TriId id{ TriId_Uninitialized };
 };
 
 /// \struct TriGeometryInput
@@ -313,28 +324,28 @@ TriRendererViewport(TriRenderer& renderer,
                     float width,
                     float height);
 
-/// Create buffers serving as outputs of a rendering operation.
+/// Create a render target serving as the output of a rendering operation.
 ///
 /// \note A render buffer allocated with this function must be deallocated
 /// via \ref TriRenderBufferDestroy
 ///
-/// \param buffers The render buffers to allocate.
+/// \param target The render target.
 /// \param context The associated context.
-/// \param width Pixel width of the render buffer.
-/// \param height Pixel height of the render buffer.
+/// \param width Pixel width of the associated 2D buffers.
+/// \param height Pixel height of the associated 2D buffers.
 ///
-/// \retval TriStatus_Success Successful allocation of render buffers.
+/// \retval TriStatus_Success Successful allocation of the render target (and underlying buffers).
 /// \retval TriStatus_ContextNotFound \p context does not exist.
 TriStatus
-TriRenderBuffersCreate(TriRenderBuffers& buffers,
-                       const TriContext& context,
-                       int width,
-                       int height);
+TriRenderTargetCreate(TriRenderTarget& target,
+                      const TriContext& context,
+                      int width,
+                      int height);
 
-/// Destroy an existing render buffer.
+/// Destroy an existing render target.
 ///
-/// \param buffers The render buffers to deallocate.
+/// \param target The render target to deallocate.
 ///
-/// \retval TriStatus_Success Successful destruction of render buffers.
+/// \retval TriStatus_Success Successful destruction of render target.
 TriStatus
-TriRenderBuffersDestroy(TriRenderBuffers& buffers);
+TriRenderTargetDestroy(TriRenderTarget& target);

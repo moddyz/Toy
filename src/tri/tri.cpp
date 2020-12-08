@@ -5,7 +5,7 @@
 
 #include "internal/context.h"
 #include "internal/renderer.h"
-#include "internal/renderBuffers.h"
+#include "internal/renderTarget.h"
 
 #include <gm/functions/perspectiveProjection.h>
 #include <gm/functions/viewportTransform.h>
@@ -116,21 +116,21 @@ TriRendererViewport(TriRenderer& renderer,
 }
 
 TriStatus
-TriRenderBuffersCreate(TriRenderBuffers& buffers,
-                       const TriContext& context,
-                       int width,
-                       int height)
+TriRenderTargetCreate(TriRenderTarget& target,
+                      const TriContext& context,
+                      int width,
+                      int height)
 {
     Tri_Context* ctx = Tri_ContextGet(context.id);
     if (ctx == nullptr) {
         return TriStatus_ContextNotFound;
     }
 
-    return Tri_RenderBuffersCreate(buffers, ctx, width, height);
+    return Tri_RenderTargetCreate(target, ctx, width, height);
 }
 
 TriStatus
-TriRenderBuffersDestroy(TriRenderBuffers& buffers)
+TriRenderTargetDestroy(TriRenderTarget& target)
 {
-    return Tri_RenderBuffersDestroy(buffers);
+    return Tri_RenderTargetDestroy(target);
 }

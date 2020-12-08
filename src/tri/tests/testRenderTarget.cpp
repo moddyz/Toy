@@ -2,13 +2,13 @@
 
 #include <tri/tri.h>
 
-TEST_CASE("TriRenderBuffers")
+TEST_CASE("TriRenderTarget")
 {
-    TriRenderBuffers buffers;
-    REQUIRE(buffers.color.id == TriId_Uninitialized);
+    TriRenderTarget target;
+    REQUIRE(target.id == TriId_Uninitialized);
 }
 
-TEST_CASE("TriRenderBuffers_Create_Destroy")
+TEST_CASE("TriRenderTarget_Create_Destroy")
 {
     for (int deviceInt = TriDevice_CPU; deviceInt < TriDevice_Count;
          ++deviceInt) {
@@ -18,14 +18,14 @@ TEST_CASE("TriRenderBuffers_Create_Destroy")
         CHECK(TriContextCreate(ctx, device) == TriStatus_Success);
 
         // Test creation.
-        TriRenderBuffers buffers;
-        REQUIRE(TriRenderBuffersCreate(buffers, ctx, 640, 480) ==
+        TriRenderTarget target;
+        REQUIRE(TriRenderTargetCreate(target, ctx, 640, 480) ==
                 TriStatus_Success);
-        REQUIRE(buffers.color.id != TriId_Uninitialized);
+        REQUIRE(target.id != TriId_Uninitialized);
 
         // Test destruction.
-        REQUIRE(TriRenderBuffersDestroy(buffers) == TriStatus_Success);
-        REQUIRE(buffers.color.id == TriId_Uninitialized);
+        REQUIRE(TriRenderTargetDestroy(target) == TriStatus_Success);
+        REQUIRE(target.id == TriId_Uninitialized);
 
         CHECK(TriContextDestroy(ctx) == TriStatus_Success);
     }
