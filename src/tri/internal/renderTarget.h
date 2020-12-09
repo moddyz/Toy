@@ -16,7 +16,7 @@ class Tri_Context;
 struct Tri_RenderTarget
 {
     /// Buffers associated with this render target.
-    std::unordered_map< TriToken, TriBuffer > buffers;
+    std::unordered_map<TriToken, TriBuffer> buffers;
 
     /// Associated context.
     const Tri_Context* context{ nullptr };
@@ -28,6 +28,12 @@ Tri_RenderTargetCreate(TriRenderTarget& target,
                        const Tri_Context* context,
                        int width,
                        int height);
+
+// Query one of the buffers of the render target.
+TriStatus
+Tri_RenderTargetBuffer(const TriRenderTarget& target,
+                       const TriToken& name,
+                       TriBuffer& buffer);
 
 // Destroy render target.
 TriStatus

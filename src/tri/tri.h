@@ -330,19 +330,37 @@ TriRendererViewport(TriRenderer& renderer,
 /// \param width Pixel width of the associated 2D buffers.
 /// \param height Pixel height of the associated 2D buffers.
 ///
-/// \retval TriStatus_Success Successful allocation of the render target (and underlying buffers).
-/// \retval TriStatus_ContextNotFound \p context does not exist.
+/// \retval TriStatus_Success Successful allocation of the render target (and
+/// underlying buffers). \retval TriStatus_ContextNotFound \p context does not
+/// exist.
 TriStatus
 TriRenderTargetCreate(TriRenderTarget& target,
                       const TriContext& context,
                       int width,
                       int height);
 
+/// Query a buffer associated with the \p target, by \p name.
+///
+/// \param target The render target.
+/// \param token The name of the buffer.
+/// \param buffer The queried buffer.
+///
+/// \retval TriStatus_Success Successful query of the buffer.
+/// \retval TriStatus_RenderTargetNotFound \p target is not a valid render
+/// target.
+/// \retval TriStatus_BufferNotFound There is no buffer associated with
+/// \p name.
+TriStatus
+TriRenderTargetBuffer(const TriRenderTarget& target,
+                      const TriToken& name,
+                      TriBuffer& buffer);
+
 /// Destroy an existing render target.
 ///
 /// \param target The render target to deallocate.
 ///
 /// \retval TriStatus_Success Successful destruction of render target.
-/// \retval TriStatus_RenderTargetNotFound \p target is not a valid render target.
+/// \retval TriStatus_RenderTargetNotFound \p target is not a valid render
+/// target.
 TriStatus
 TriRenderTargetDestroy(TriRenderTarget& target);

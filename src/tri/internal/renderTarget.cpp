@@ -51,6 +51,26 @@ Tri_RenderTargetCreate(TriRenderTarget& target,
 }
 
 TriStatus
+Tri_RenderTargetBuffer(const TriRenderTarget& target,
+                       const TriToken& name,
+                       TriBuffer& buffer)
+{
+    Tri_RenderTarget* renderTarget = s_renderTargets.Get(target.id);
+    if (renderTarget == nullptr) {
+        return TriStatus_RenderTargetNotFound;
+    }
+
+    auto bufferIt = renderTarget->buffers.find(name);
+    if (bufferIt == renderTarget->buffers.end())
+    {
+        return TriStatus_BufferNotFound;
+    }
+
+    buffer = bufferIt->second;
+    return TriStatus_Success;
+}
+
+TriStatus
 Tri_RenderTargetDestroy(TriRenderTarget& target)
 {
     Tri_RenderTarget* renderTarget = s_renderTargets.Get(target.id);

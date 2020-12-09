@@ -130,6 +130,14 @@ TriRenderTargetCreate(TriRenderTarget& target,
 }
 
 TriStatus
+TriRenderTargetBuffer(const TriRenderTarget& target,
+                      const TriToken& name,
+                      TriBuffer& buffer)
+{
+    return Tri_RenderTargetBuffer(target, name, buffer);
+}
+
+TriStatus
 TriRenderTargetDestroy(TriRenderTarget& target)
 {
     return Tri_RenderTargetDestroy(target);
