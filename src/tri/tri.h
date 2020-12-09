@@ -99,10 +99,6 @@ enum TriStatus
     TriStatus_RenderTargetNotFound,
     TriStatus_BufferNotFound,
 
-    /// This error is returned when querying a property not associated with
-    /// the object type.
-    TriStatus_InvalidProperty,
-
     /// This error is returned when attemping to allocate a buffer but the
     /// system has run out of memory capacity.
     TriStatus_OutOfMemory
@@ -327,7 +323,7 @@ TriRendererViewport(TriRenderer& renderer,
 /// Create a render target serving as the output of a rendering operation.
 ///
 /// \note A render buffer allocated with this function must be deallocated
-/// via \ref TriRenderBufferDestroy
+/// via \ref TriRenderTargetDestroy
 ///
 /// \param target The render target.
 /// \param context The associated context.
@@ -347,5 +343,6 @@ TriRenderTargetCreate(TriRenderTarget& target,
 /// \param target The render target to deallocate.
 ///
 /// \retval TriStatus_Success Successful destruction of render target.
+/// \retval TriStatus_RenderTargetNotFound \p target is not a valid render target.
 TriStatus
 TriRenderTargetDestroy(TriRenderTarget& target);
