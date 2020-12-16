@@ -66,7 +66,7 @@ TriRendererDestroy(TriRenderer& renderer)
 }
 
 TriStatus
-TriRendererSetCameraXform(TriRenderer& renderer, float* cameraXform)
+TriRendererCamera(TriRenderer& renderer, float* cameraXform)
 {
     Tri_Renderer* internalRenderer = Tri_RendererGet(renderer.id);
     if (internalRenderer == nullptr) {

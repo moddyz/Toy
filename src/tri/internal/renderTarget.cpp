@@ -61,8 +61,7 @@ Tri_RenderTargetBuffer(const TriRenderTarget& target,
     }
 
     auto bufferIt = renderTarget->buffers.find(name);
-    if (bufferIt == renderTarget->buffers.end())
-    {
+    if (bufferIt == renderTarget->buffers.end()) {
         return TriStatus_BufferNotFound;
     }
 

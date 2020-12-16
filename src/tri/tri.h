@@ -19,9 +19,9 @@
 /// TriRendererCreate(ctx, renderer);
 ///
 /// // Set camera and viewport state.
-/// TriRendererSetCameraXform(renderer, gm::Mat4f::Identity());
-/// TriRendererSetProjectionXform(renderer, gm::Mat4f::Identity());
-/// TriRendererSetViewportSize(renderer, 640, 480);
+/// TriRendererCamera(renderer, gm::Mat4f::Identity());
+/// TriRendererPerspective(renderer, gm::Mat4f::Identity());
+/// TriRendererViewport(renderer, 640, 480);
 ///
 /// // Create render target.
 /// TriRenderTarget target;
@@ -281,7 +281,7 @@ TriRendererDestroy(TriRenderer& renderer);
 /// \retval TriStatus_Success Successful state update.
 /// \retval TriStatus_RendererNotFound \p renderer is uninitialized.
 TriStatus
-TriRendererSetCameraXform(TriRenderer& renderer, float* cameraXform);
+TriRendererCamera(TriRenderer& renderer, float* cameraXform);
 
 /// Set-up the renderer camera with a perspective projection transformation.
 ///

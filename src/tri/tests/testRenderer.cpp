@@ -47,7 +47,7 @@ TEST_CASE("TriRendererDestroy")
     CHECK(TriContextDestroy(ctx) == TriStatus_Success);
 }
 
-TEST_CASE("TriRendererSetCameraXform")
+TEST_CASE("TriRendererCamera")
 {
     TriContext ctx;
     CHECK(TriContextCreate(ctx, TriDevice_CPU) == TriStatus_Success);
@@ -56,8 +56,7 @@ TEST_CASE("TriRendererSetCameraXform")
     CHECK(TriRendererCreate(renderer, ctx) == TriStatus_Success);
 
     float cameraXform[16];
-    REQUIRE(TriRendererSetCameraXform(renderer, cameraXform) ==
-            TriStatus_Success);
+    REQUIRE(TriRendererCamera(renderer, cameraXform) == TriStatus_Success);
 
     CHECK(TriRendererDestroy(renderer) == TriStatus_Success);
     CHECK(TriContextDestroy(ctx) == TriStatus_Success);
